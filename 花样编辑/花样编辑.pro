@@ -27,7 +27,8 @@ HEADERS  += mainwindow.h \
     patternEdit/editdelegate.h \
     patternEdit/gotodialog.h \
     patternEdit/copydialog.h \
-    patternEdit/pastedialog.h
+    patternEdit/pastedialog.h \
+    patternEdit/pattern.h
 
 FORMS    += mainwindow.ui \
     patternEdit/patternedit.ui \

@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/">
+        <file>colorImage/1.bmp</file>
+        <file>colorImage/2.bmp</file>
+        <file>colorImage/3.bmp</file>
+        <file>colorImage/4.bmp</file>
+        <file>colorImage/5.bmp</file>
+        <file>colorImage/6.bmp</file>
+        <file>colorImage/7.bmp</file>
+        <file>colorImage/8.bmp</file>
+        <file>colorImage/9.bmp</file>
+        <file>colorImage/10.bmp</file>
+        <file>colorImage/11.bmp</file>
+        <file>colorImage/12.bmp</file>
+        <file>colorImage/13.bmp</file>
+        <file>colorImage/14.bmp</file>
+        <file>colorImage/15.bmp</file>
+        <file>colorImage/101.bmp</file>
+        <file>colorImage/102.bmp</file>
+        <file>colorImage/103.bmp</file>
+        <file>colorImage/104.bmp</file>
+        <file>colorImage/105.bmp</file>
+        <file>colorImage/106.bmp</file>
+        <file>colorImage/107.bmp</file>
+        <file>colorImage/108.bmp</file>
+        <file>colorImage/109.bmp</file>
+        <file>colorImage/110.bmp</file>
+        <file>colorImage/111.bmp</file>
+        <file>colorImage/112.bmp</file>
+        <file>colorImage/113.bmp</file>
+        <file>colorImage/114.bmp</file>
+        <file>colorImage/115.bmp</file>
+        <file>colorImage/100.bmp</file>
+        <file>colorImage/0.bmp</file>
+    </qresource>
+</RCC>

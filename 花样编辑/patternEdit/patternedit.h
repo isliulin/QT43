@@ -19,15 +19,25 @@ public:
     explicit patternEdit(QWidget *parent = 0);
     ~patternEdit();
 
+    bool eventFilter(QObject *obj, QEvent *event);
+
 protected:
     void changeEvent(QEvent *e);
+    //void keyPressEvent(QKeyEvent *);
+
+signals:
+    void viewMove(QTableView *tbPatt, int dir, int type);
+    void readFile(void *model_patt, void *model_ctrl);
+    void initTable(QTableView *patt, QTableView *ctrl);
 
 public slots:
-    void addItem(int model, int row, int column, QStandardItem * item);
+    void setPattData(const QByteArray &, const QByteArray &);
+    void updatePattPosition(int originColumn, int originRow);
 
 private slots:
     void on_button_back_clicked();
     void currentItem(const QModelIndex & current, const QModelIndex & previous);
+    void startWork();
 
     void on_button_goto_clicked();
 
@@ -46,14 +56,17 @@ private slots:
     void on_button_upinc_clicked();
 
     void on_button_downinc_clicked();
+public:
+    QStandardItemModel model_patt; // 花样文件显示
+    QStandardItemModel model_ctrl; // 控制文件显示
 
 private:
     Ui::patternEdit *ui;
-    QStandardItemModel model_patt; // 花样文件显示
-    QStandardItemModel model_ctrl; // 控制文件显示
     patternWorker worker;
     EditDelegate delegate;         // 输入代理
     int width_patt, height_patt;   // 花样宽度和高度
+    int currentRow, currentColumn;
+    QModelIndex currentIndex;
 };
 
 #endif // PATTERNEDIT_H

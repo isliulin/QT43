@@ -1,13 +1,12 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include <QtCore>
 
 int main(int argc, char *argv[])
 {
+    Q_INIT_RESOURCE(colorImage);
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    qRegisterMetaType< QVector<int> >("QVector<int>");
 
     return a.exec();
 }

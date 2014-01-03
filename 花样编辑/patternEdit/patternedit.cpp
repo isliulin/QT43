@@ -1,27 +1,46 @@
 #include "patternedit.h"
 #include "ui_patternedit.h"
 #include <QScrollBar>
+#include <QKeyEvent>
 #include "gotodialog.h"
 #include "copydialog.h"
 #include "pastedialog.h"
+#include "pattern.h"
 
 patternEdit::patternEdit(QWidget *parent) :
-    QWidget(parent, Qt::FramelessWindowHint),
+    QWidget(parent/*, Qt::FramelessWindowHint*/),
     ui(new Ui::patternEdit)
 {
     ui->setupUi(this);
 
+    for (int row = 0; row < 25; row++)
+    {
+        for (int column = 0; column < 50; column++)
+        {
+            QStandardItem *item = new QStandardItem();
+            model_patt.setItem(row, column, item);
+        }
+    }
+
+    for (int row = 0; row < 25; row++)
+    {
+        for (int column = 0; column < 5; column++)
+        {
+            QStandardItem *item = new QStandardItem();
+            model_ctrl.setItem(row, column, item);
+        }
+    }
+
     ui->table_patt->setModel(&model_patt);
     ui->table_ctrl->setModel(&model_ctrl);
     ui->table_patt->setItemDelegate(&delegate);
+    ui->table_patt->installEventFilter(this);
 
     ui->spinBox_repeat->setMinimum(1);
     /* 初始化花样文件大小信息 */
     width_patt = 0;
     height_patt = 0;
-    /* 添加单元格 */
-    connect(&worker, SIGNAL(addItem(int,int,int,QStandardItem*)),
-            this, SLOT(addItem(int,int,int,QStandardItem*)));
+
     /* 左右两个表垂直联动 */
     connect(ui->table_patt->verticalScrollBar(), SIGNAL(valueChanged(int)),
             ui->table_ctrl->verticalScrollBar(), SLOT(setValue(int)));
@@ -31,14 +50,106 @@ patternEdit::patternEdit(QWidget *parent) :
             this,
             SLOT(currentItem(const QModelIndex &, const QModelIndex &)));
 
-    worker.start();
+    connect(this, SIGNAL(viewMove(QTableView*, int, int)),
+            &worker, SLOT(viewMove(QTableView*, int, int)));
+    connect(&worker, SIGNAL(setPattData(const QByteArray &, const QByteArray &)),
+            this, SLOT(setPattData(const QByteArray &, const QByteArray &)));
+    connect(this, SIGNAL(initTable(QTableView*,QTableView*)),
+            &worker, SLOT(initTable(QTableView*,QTableView*)));
+    connect(&worker, SIGNAL(updatePattPosition(int,int)),
+            this, SLOT(updatePattPosition(int,int)));
+
+    QTimer::singleShot(50, this, SLOT(startWork()));
 }
 
 patternEdit::~patternEdit()
 {
-    delete ui;
-
     worker.exit();
+    delete ui;
+}
+
+void patternEdit::startWork()
+{
+    worker.start();
+
+    emit initTable(ui->table_patt, ui->table_ctrl);
+}
+
+bool patternEdit::eventFilter(QObject *obj, QEvent *event)
+{
+    int row, column;
+
+    if (event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        switch (keyEvent->key())
+        {
+        case Qt::Key_Up:
+            //viewMove(ui->table_patt, 1, 0);
+            break;
+        case Qt::Key_Down:
+            //viewMove(ui->table_patt, 2, 0);
+            break;
+        case Qt::Key_Left:
+            if (currentIndex.column() == 0)
+            {
+                viewMove(ui->table_patt, 3, 0);
+            }
+            break;
+        case Qt::Key_Right:
+            if ((currentIndex.column() + 1) == model_patt.columnCount())
+            {
+                emit viewMove(ui->table_patt, 4, 0);
+            }
+            break;
+        }
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+//void patternEdit::keyPressEvent(QKeyEvent *e)
+//{
+
+//}
+
+void patternEdit::setPattData(const QByteArray &baPatt, const QByteArray &bactrl)
+{
+    QStandardItemModel *model = &model_patt;
+    patt_dat_t *patt = (patt_dat_t*)baPatt.data();
+    int width, height;
+    int pos;
+
+    width = patt->width;
+    height = patt->height;
+    if (width > 50)
+        width = 50;
+    if (height > 25)
+        height = 25;
+    height --;
+    ui->table_patt->setUpdatesEnabled(0);
+    for (int row = 0; row <= height; row++)
+    {
+        pos = row * patt->width;
+        for (int column = 0; column < width; column++)
+        {
+            QStandardItem *item = model->item(height - row, column);
+            QString value;
+            int num;
+
+            if (column & 1)
+            {
+                num = patt->color[pos+(column>>1)].right;
+            }
+            else
+            {
+                num = patt->color[pos+(column>>1)].left;
+            }
+            value.setNum(num);
+            item->setText(value);
+        }
+    }
+    ui->table_patt->setUpdatesEnabled(1);
 }
 
 void patternEdit::changeEvent(QEvent *e)
@@ -60,20 +171,23 @@ void patternEdit::on_button_back_clicked()
 
 void patternEdit::currentItem(const QModelIndex & current, const QModelIndex &)
 {
-    ui->label_x->setNum(current.column() + 1);
-    ui->label_y->setNum(model_patt.rowCount() - current.row());
+    int x, y;
+
+    currentIndex = current;
+    x = currentIndex.column() + 1 + worker.startIndex.column;
+    y = model_patt.rowCount() - currentIndex.row() + worker.startIndex.row;
+    ui->label_x->setNum(x);
+    ui->label_y->setNum(y);
 }
 
-void patternEdit::addItem(int model, int row, int column, QStandardItem *item)
+void patternEdit::updatePattPosition(int originColumn, int originRow)
 {
-    if (model == MODEL_PATT)
-    {
-        model_patt.setItem(row, column, item);
-    }
-    else if (model == MODEL_CTRL)
-    {
-        model_ctrl.setItem(row, column, item);
-    }
+    int x, y;
+
+    x = currentIndex.column() + 1 + originColumn;
+    y = model_patt.rowCount() - currentIndex.row() + originRow;
+    ui->label_x->setNum(x);
+    ui->label_y->setNum(y);
 }
 
 void patternEdit::on_button_goto_clicked()
