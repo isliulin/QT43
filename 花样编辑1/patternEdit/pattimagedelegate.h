@@ -33,10 +33,6 @@ public slots:
 
 public:
     QModelIndex currentIndex;
-
-private:
-    bool enableBkChange ; // 允许背景改变
-
 };
 
 #endif // PATTIMAGEDELEGATE_H

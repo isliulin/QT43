@@ -71,27 +71,19 @@ bool pattImageModel::setData(const QModelIndex &index, const QVariant &var, int 
     {
         QString input;
         uchar data;
+        bool ok;
 
         input = var.toString();
-        data = input.at(0).cell();
-        if (data >= '0' && data <= '9')
-        {
-            data = data - '0';
-        }
-        else if (data >= 'A' && data <= 'F')
-        {
-            data = data - 'A' + 10;
-        }
-        else if (data >= 'a' && data <= 'f')
-        {
-            data = data - 'a' + 10;
-        }
+        data = input.toInt(&ok, 16);
 
-        itemColorData[index.row()][index.column()] = data;
-        itemColorStr[index.row()][index.column()] = input;
+        if (ok)
+        {
+            itemColorData[index.row()][index.column()] = data;
+            itemColorStr[index.row()][index.column()] = input;
 
-        emit dataChanged(index, index);
-        return true;
+            emit dataChanged(index, index);
+            return true;
+        }
     }
     else if (index.isValid() && role == Qt::UserRole)
     {

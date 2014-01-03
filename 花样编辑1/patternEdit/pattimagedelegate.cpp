@@ -5,7 +5,6 @@
 pattImageDelegate::pattImageDelegate(QObject *parent) :
     QAbstractItemDelegate(parent)
 {
-    enableBkChange = true;
 }
 
 void pattImageDelegate::paint(QPainter *painter,
@@ -28,8 +27,6 @@ void pattImageDelegate::paint(QPainter *painter,
         painter->drawPixmap(option.rect, dispaly);
         model->setData(index, true, Qt::UserRole + 1);
     }
-//    static int cnt=0;
-//    qDebug("XXXXX %d\n", cnt ++);
 }
 
 QSize pattImageDelegate::sizeHint(const QStyleOptionViewItem & /* option */,
@@ -47,7 +44,6 @@ QWidget* pattImageDelegate::createEditor(QWidget *parent,
 
     editor->setValidator(new QRegExpValidator(regxp, parent));
     editor->setMaxLength(1);
-    //enableBkChange = false;
 
     return editor;
 }
@@ -67,7 +63,6 @@ void pattImageDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
 
     model->setData(index, QVariant(lineEdit->text()), Qt::EditRole);
-    //enableBkChange = false;
 }
 
 void pattImageDelegate::updateEditorGeometry(QWidget *editor,

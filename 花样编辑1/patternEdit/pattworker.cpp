@@ -95,6 +95,7 @@ void pattWorker::setPage(QAbstractItemModel *model, int destRow, int destColumn)
     height --;
 
     QModelIndex index;
+    QString input;
 
     for (int row = 0; row <= 24; row++)
     {
@@ -126,7 +127,9 @@ void pattWorker::setPage(QAbstractItemModel *model, int destRow, int destColumn)
             }
 
             index = model->index(24 - row, column);
-            //model->setData(index, num, Qt::EditRole);
+            input.setNum(num, 16);
+
+            model->setData(index, input, Qt::EditRole);
         }
     }
 
