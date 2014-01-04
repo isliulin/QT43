@@ -14,6 +14,7 @@ public:
 
     void start();
     void exit();
+    void pattSize(ushort &width, ushort &height);
 
 private:
     void setPage(QAbstractItemModel *model, int destRow, int destColumn);

@@ -23,7 +23,8 @@ HEADERS  += mainwindow.h \
     patternEdit/patternedit.h \
     patternEdit/pattimagemodel.h \
     patternEdit/pattimagedelegate.h \
-    patternEdit/pattworker.h
+    patternEdit/pattworker.h \
+    patternEdit/pattern.h
 
 FORMS    += mainwindow.ui \
     patternEdit/patternedit.ui

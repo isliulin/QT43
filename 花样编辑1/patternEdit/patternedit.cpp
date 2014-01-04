@@ -37,6 +37,7 @@ patternEdit::patternEdit(QWidget *parent) :
             this, SLOT(update()));
 
     worker.start();
+    // 延迟初始化表格
     QTimer::singleShot(200, this, SLOT(initTable()));
 }
 
@@ -48,7 +49,12 @@ patternEdit::~patternEdit()
 
 void patternEdit::initTable()
 {
+    ushort width, height;
+
     worker.initTable(ui->tv_patt, 0);
+    worker.pattSize(width, height);
+    ui->label_width->setNum(width);
+    ui->label_height->setNum(height);
 }
 
 bool patternEdit::eventFilter(QObject *obj, QEvent *event)

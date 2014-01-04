@@ -146,6 +146,15 @@ void pattWorker::initTable(QTableView *tvPatt, QTableView *tvCtrl)
     setPage(tvPatt->model(), 0, 0);
 }
 
+void pattWorker::pattSize(ushort &width, ushort &height)
+{
+    patt_dat_t *dat;
+
+    dat = (patt_dat_t*)baPatt.data();
+    width = dat->width;
+    height = dat->height;
+}
+
 void pattWorker::start(void)
 {
     thread.start();
