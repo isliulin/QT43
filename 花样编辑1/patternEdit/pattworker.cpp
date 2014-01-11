@@ -38,9 +38,28 @@ void pattWorker::viewMove(QTableView *tbPatt, int dir, int type)
 
     switch (dir)
     {
-    case 1:
+    case 1: // 上方向键
+        if (type == 0)
+        {
+            setPage(model, originIndex.row + 1, originIndex.column);
+        }
+        else if (type == 1)
+        {
+            setPage(model, originIndex.row + 50, originIndex.column);
+        }
         break;
-    case 2:
+    case 2: // 下方向键
+        if (originIndex.row == 0)
+            break;
+
+        if (type == 0)
+        {
+            setPage(model, originIndex.row - 1, originIndex.column);
+        }
+        else if (type == 1)
+        {
+            setPage(model, originIndex.row - 50, originIndex.column);
+        }
         break;
     case 3: // 左方向键
         if (originIndex.column == 0)
@@ -70,19 +89,33 @@ void pattWorker::viewMove(QTableView *tbPatt, int dir, int type)
     tbPatt->setUpdatesEnabled(1);
 }
 
+void pattWorker::originPosition(ushort *row, ushort *column)
+{
+    *row = originIndex.row;
+    *column = originIndex.column;
+}
+
 void pattWorker::setPage(QAbstractItemModel *model, int destRow, int destColumn)
 {
     int num = 0;
     int width, height;
     int pos;
     bool rightFirst = false;
+    int tableHeight, tableWidth;
 
     patt_dat_t* patt = (patt_dat_t*)baPatt.data();
     width = patt->width;
     height = patt->height;
+    tableHeight = model->rowCount();
+    tableWidth = model->columnCount();
+
     // 到达宽边的末尾
-    if ((destColumn + 50) > width)
+    if ((destColumn + tableWidth) > width)
         return;
+    // 到达高边的末尾
+    if ((destRow + tableHeight) > height)
+        return;
+
     // 一个字节包含两个宽度的花样
     if (width & 1)
         width ++;
@@ -90,18 +123,18 @@ void pattWorker::setPage(QAbstractItemModel *model, int destRow, int destColumn)
     if (destColumn & 1)
         rightFirst = true;
 
-    if (height > 25)
-        height = 25;
+    if (height > tableHeight)
+        height = tableHeight;
     height --;
 
     QModelIndex index;
     QString input;
 
-    for (int row = 0; row <= 24; row++)
+    for (int row = 0; row <= tableHeight; row++)
     {
-        pos = row * (width>>1) + (destColumn>>1);
+        pos = (row + destRow) * (width>>1) + (destColumn>>1);
 
-        for (int column = 0; column < 50; column++)
+        for (int column = 0; column < tableWidth; column++)
         {
             if (rightFirst)
             {

@@ -89,6 +89,7 @@ bool pattImageModel::setData(const QModelIndex &index, const QVariant &var, int 
     {
         if (enableRevColor)
         {
+            // 切换反色图片
             itemRevColor = var.toInt();
             emit dataChanged(index, index);
             enableRevColor = false;
@@ -98,6 +99,7 @@ bool pattImageModel::setData(const QModelIndex &index, const QVariant &var, int 
     else if (index.isValid() && role == Qt::UserRole + 1)
     {
         enableRevColor = var.toBool();
+        return true;
     }
 
     return false;

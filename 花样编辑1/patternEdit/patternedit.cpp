@@ -20,7 +20,7 @@ patternEdit::patternEdit(QWidget *parent) :
     ui->tv_patt->setModel(modelPatt);
     ui->tv_patt->installEventFilter(this);
 
-    /* 获取当前单元格 */
+    // 获取当前单元格
     connect(ui->tv_patt->selectionModel(),
             SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this,
@@ -55,34 +55,35 @@ void patternEdit::initTable()
     worker.pattSize(width, height);
     ui->label_width->setNum(width);
     ui->label_height->setNum(height);
+    timer->start(1000);
 }
 
 bool patternEdit::eventFilter(QObject *obj, QEvent *event)
 {
-    int row, column;
-
     if (event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         switch (keyEvent->key())
         {
         case Qt::Key_Up:
-            timer->stop();
-            //viewMove(ui->tv_patt, 1, 0);
+            if (currentIndex.row() == 0)
+            {
+                emit viewMove(ui->tv_patt, 1, 0);
+            }
             break;
         case Qt::Key_Down:
-            timer->stop();
-            //viewMove(ui->tv_patt, 2, 0);
+            if ((currentIndex.row() + 1) == modelPatt->rowCount())
+            {
+                emit viewMove(ui->tv_patt, 2, 0);
+            }
             break;
         case Qt::Key_Left:
-            timer->stop();
             if (currentIndex.column() == 0)
             {
                 emit viewMove(ui->tv_patt, 3, 0);
             }
             break;
         case Qt::Key_Right:
-            timer->stop();
             if ((currentIndex.column() + 1) == modelPatt->columnCount())
             {
                 emit viewMove(ui->tv_patt, 4, 0);
@@ -96,16 +97,17 @@ bool patternEdit::eventFilter(QObject *obj, QEvent *event)
 
 void patternEdit::currentItem(const QModelIndex &current, const QModelIndex &)
 {
+    ushort row, column;
+
     currentIndex = current;
-    ui->label_x->setNum(current.column() + 1);
-    ui->label_y->setNum(25 - current.row());
+    worker.originPosition(&row, &column);
+    row += (modelPatt->rowCount() - current.row());
+    column += (current.column() + 1);
+
+    ui->label_x->setNum(column);
+    ui->label_y->setNum(row);
 
     delegate->currentIndex = current;
-    timer->start(1000);
-//    revColor->setParent(ui->tv_patt->focusWidget());
-//    revColor->setGeometry(ui->tv_patt->focusWidget()->rect());
-//    revColor->setPixmap(modelPatt->itemDisplay[1][9]);
-//    revColor->show();
 }
 
 void patternEdit::updatePattPosition(int originRow, int originColumn)
