@@ -31,10 +31,11 @@
 /* 数据包头 */
 typedef struct
 {
-    unsigned char dtype:4;
-    unsigned char id:4;
-    unsigned char size;
-    unsigned short chksum;
+    unsigned char dtype;  /* 数据包用途 */
+    unsigned char size;   /* 整个数据包大小 */
+    unsigned short chksum;/* 对整个包的校验和 */
+    unsigned char sid;    /* 传感器编号 */
+    unsigned char cid;    /* 客户端编号 */
 }pkthead_t;
 
 /* 校准请求和校准后的结果反馈 */
@@ -48,7 +49,7 @@ typedef struct
     unsigned char cmd;     //操作码
 
     float nvalue;          //标称值
-    char datemval[4];      //日期或测量值
+    char xdata[4];         //日期或测量值或密码
 }calib_t;
 
 /* 校准样本 */
