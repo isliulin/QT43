@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Simple Terminal</string>
+   <string>电力监控设备校准</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="groupBox">
@@ -71,6 +71,9 @@
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400; color:#ff0000;&quot;&gt;身份认证成功后才能进入校准模式&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>进入校准</string>
@@ -510,11 +513,6 @@
     </property>
     <item>
      <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>1</string>
      </property>
     </item>
@@ -589,6 +587,36 @@
      </property>
     </item>
    </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>密        码</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lEdit_pawd">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>33</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -596,7 +624,7 @@
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">

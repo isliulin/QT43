@@ -49,6 +49,8 @@
 #include <QByteArray>
 #include <QTimer>
 
+#include "calib.h"
+
 QT_BEGIN_NAMESPACE
 
 namespace Ui {
@@ -96,6 +98,8 @@ private:
     void initEdit();
     void initComboBoxs();
     void initTable();
+    void modbus(QByteArray &adu, calib_t *data);
+    unsigned short crc16(unsigned char *pucFrame, unsigned short usLen);
 
 private:
     Ui::MainWindow *ui;
