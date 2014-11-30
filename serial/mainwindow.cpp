@@ -214,11 +214,14 @@ void MainWindow::initComboBoxs()
 
 void MainWindow::initEdit()
 {
-    QRegExp regxp("^[0-9]+(.[0-9]{1,2})?$");
+    QRegExp regnval("^[0-9]+(.[0-9]{1,2})?$");
+    QRegExp regpawd("[1-9]*[1-9][0-9]*$");
 
-    ui->lEdit_value->setValidator(new QRegExpValidator(regxp, this));
+    ui->lEdit_value->setValidator(new QRegExpValidator(regnval, this));
     ui->lEdit_value->setMaxLength(6);
     ui->lEdit_value->setText("0.0");
+
+    ui->lEdit_pawd->setValidator(new QRegExpValidator(regpawd, this));
 }
 
 void MainWindow::openSerialPort()
@@ -339,6 +342,7 @@ void MainWindow::on_cBox_chn_currentTextChanged(const QString &arg1)
 void MainWindow::on_pBt_enter_clicked()
 {
     calib_t req;
+    long *pawd;
 
     req.hdr.dtype  = DT_CALIB_REQ;
     req.hdr.size   = sizeof(calib_t);
@@ -347,7 +351,12 @@ void MainWindow::on_pBt_enter_clicked()
     req.cmd        = CALCMD_ENTER;
 
     req.chn        = 0;
+    req.seg        = 0;
+    req.phawire    = 0;
     req.nvalue     = 2014.09998;
+
+    pawd = (long*)req.xdata;
+    *pawd = ui->lEdit_pawd->text().toLong();
 
     modbus(txbuf, &req);
     writeData(txbuf);
@@ -372,6 +381,10 @@ void MainWindow::on_pBt_calib_clicked()
     req.phawire    = ui->cBox_conn->currentIndex();
     req.seg        = ui->cBox_range->currentIndex();
     req.nvalue     = ui->lEdit_value->text().toFloat();
+    req.xdata[0]   = 0;
+    req.xdata[1]   = 0;
+    req.xdata[2]   = 0;
+    req.xdata[3]   = 0;
 
     modbus(txbuf, &req);
     writeData(txbuf);
