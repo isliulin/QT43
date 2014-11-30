@@ -259,7 +259,7 @@ void MainWindow::on_pBt_enter_clicked()
 
     req->hdr.dtype = DT_CALIB_REQ;
     req->hdr.size  = sizeof(calib_t);
-    req->hdr.sid    = ui->cBox_boardid->currentIndex();
+    req->hdr.sid    = ui->cBox_sensorid->currentIndex();
     req->hdr.chksum = 0;
     req->cmd = CALCMD_ENTER;
 
