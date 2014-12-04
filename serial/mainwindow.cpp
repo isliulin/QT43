@@ -172,33 +172,56 @@ void MainWindow::modbus(QByteArray &adu, calib_t *data)
 
 void MainWindow::frameEnd()
 {
-    pkthead_t *pkt = (pkthead_t*)rxbuf.data();
+    pkthead_t *pkt;
     QTableWidgetItem *item;
     calib_sam_t cal;//TODO
     QString str;
 
-    if (crc16((unsigned char*)pkt, rxbuf.size()) != 0)
+    pkt = (pkthead_t*)(&rxbuf.data()[2]);
+
+    if (crc16((unsigned char*)rxbuf.data(), rxbuf.size()) != 0)
     {
         ui->statusBar->showMessage(tr("数据校验错误"));
     }
     else
     {
-        if (rxbuf.size() != sizeof(mbadu_t))
+        if (rxbuf.data()[1] != 100)
         {
-            ui->statusBar->showMessage(tr("应答超时"));
+            ui->statusBar->showMessage(tr("操作失败"));
         }
         else
         {
             ui->statusBar->showMessage(tr("收到应答"));
-            ui->tbW_display->insertRow(0);
 
             switch (pkt->dtype)
             {
             case DT_CALIB_RSP:
+            {
+                ui->tbW_display->insertRow(0);
                 str.setNum(cal.mval[0], 'f');
                 ui->tbW_display->setItem(0, 2, new QTableWidgetItem(str));
+            }
             break;
-            case 13:
+            case DT_STATUS_RSP:
+            {
+                status_rsp_t *rsp;
+
+                rsp = (status_rsp_t*)pkt;
+                if (rsp->dtype == DT_CALIB_REQ)
+                {
+                    if (rsp->status == 0)
+                    {
+                        if (rsp->value == CALCMD_ENTER)
+                        {
+                            ui->statusBar->showMessage(tr("成功进入校准模式"));
+                        }
+                        else if (rsp->value == CALCMD_EXIT)
+                        {
+                            ui->statusBar->showMessage(tr("退出校准模式"));
+                        }
+                    }
+                }
+            }
             break;
             }
         }
@@ -270,6 +293,7 @@ void MainWindow::about()
 
 void MainWindow::writeData(const QByteArray &data)
 {
+    ui->statusBar->clearMessage();
     serial->write(data);
 }
 
@@ -342,21 +366,19 @@ void MainWindow::on_cBox_chn_currentTextChanged(const QString &arg1)
 void MainWindow::on_pBt_enter_clicked()
 {
     calib_t req;
-    long *pawd;
 
     req.hdr.dtype  = DT_CALIB_REQ;
     req.hdr.size   = sizeof(calib_t);
     req.hdr.sid    = ui->cBox_sensorid->currentIndex();
+    req.hdr.cid    = CID_REMOTE;
     req.hdr.chksum = 0;
     req.cmd        = CALCMD_ENTER;
 
     req.chn        = 0;
     req.seg        = 0;
     req.phawire    = 0;
-    req.nvalue     = 2014.09998;
-
-    pawd = (long*)req.xdata;
-    *pawd = ui->lEdit_pawd->text().toLong();
+    req.nvalue     = 0.05;
+    req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
     modbus(txbuf, &req);
     writeData(txbuf);
@@ -364,7 +386,23 @@ void MainWindow::on_pBt_enter_clicked()
 
 void MainWindow::on_pBt_exit_clicked()
 {
+    calib_t req;
 
+    req.hdr.dtype  = DT_CALIB_REQ;
+    req.hdr.size   = sizeof(calib_t);
+    req.hdr.sid    = ui->cBox_sensorid->currentIndex();
+    req.hdr.cid    = CID_REMOTE;
+    req.hdr.chksum = 0;
+    req.cmd        = CALCMD_EXIT;
+
+    req.chn        = 0;
+    req.seg        = 0;
+    req.phawire    = 0;
+    req.nvalue     = 0;
+    req.xvalue     = ui->lEdit_pawd->text().toFloat();
+
+    modbus(txbuf, &req);
+    writeData(txbuf);
 }
 
 void MainWindow::on_pBt_calib_clicked()
@@ -374,6 +412,7 @@ void MainWindow::on_pBt_calib_clicked()
     req.hdr.dtype  = DT_CALIB_REQ;
     req.hdr.size   = sizeof(calib_t);
     req.hdr.sid    = ui->cBox_sensorid->currentIndex();
+    req.hdr.cid    = CID_REMOTE;
     req.hdr.chksum = 0;
     req.cmd        = CALCMD_DO;
 
@@ -381,10 +420,7 @@ void MainWindow::on_pBt_calib_clicked()
     req.phawire    = ui->cBox_conn->currentIndex();
     req.seg        = ui->cBox_range->currentIndex();
     req.nvalue     = ui->lEdit_value->text().toFloat();
-    req.xdata[0]   = 0;
-    req.xdata[1]   = 0;
-    req.xdata[2]   = 0;
-    req.xdata[3]   = 0;
+    req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
     modbus(txbuf, &req);
     writeData(txbuf);
