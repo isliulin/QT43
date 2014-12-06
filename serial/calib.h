@@ -1,4 +1,4 @@
-#ifndef CALIB_H
+﻿#ifndef CALIB_H
 #define CALIB_H
 
 /* 数据包类型定义 */
@@ -73,18 +73,17 @@ typedef struct
     float xvalue;            //测量值或密码
 }calib_t;
 
-/* 校准样本 */
+/* 校准样本返回 */
 typedef struct
 {
     pkthead_t hdr;
 
-    unsigned char chn;     //通道
-    unsigned char seg;     //区段
-    unsigned char phawire; //接线方式
-    unsigned char cmd;     //操作码
+    unsigned char chn:4;     //通道
+    unsigned char seg:4;     //样本中包含的区段总数
+    unsigned char phawire:4; //接线方式
+    unsigned char cmd:4;     //操作码（固定为CALCMD_SAM_DAT）
 
-    float mval[7];         //测量值
-    float nval[7];         //标称值
+    float         data[0];   //数据区(标称值在前测量值在后)
 }calib_sam_t;
 
 /* modbus数据帧 */

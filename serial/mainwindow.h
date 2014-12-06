@@ -80,8 +80,6 @@ private slots:
 
     void handleError(QSerialPort::SerialPortError error);
 
-    void on_cBox_range_currentIndexChanged(int index);
-
     void on_cBox_chn_currentTextChanged(const QString &arg1);
 
     void on_pBt_enter_clicked();
@@ -92,6 +90,8 @@ private slots:
 
     void on_pBt_readcal_clicked();
 
+    void on_cBox_seg_currentIndexChanged(int index);
+
 private:
     void initActionsConnections();
     void initButtons();
@@ -100,6 +100,8 @@ private:
     void initTable();
     void modbus(QByteArray &adu, calib_t *data);
     unsigned short crc16(unsigned char *pucFrame, unsigned short usLen);
+    void calib_do_rsp_received(calib_t *rsp);
+    void calib_sam_rsp_received(calib_sam_t *rsp);
 
 private:
     Ui::MainWindow *ui;

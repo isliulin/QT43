@@ -170,12 +170,70 @@ void MainWindow::modbus(QByteArray &adu, calib_t *data)
     mb->crc16 = crc16((unsigned char*)mb, sizeof(mbadu_t) - 2);
 }
 
+void MainWindow::calib_do_rsp_received(calib_t *rsp)
+{
+    QString str;
+
+    ui->tbW_display->insertRow(0);
+
+    /* 支路 */
+    str = ui->cBox_sensorid->itemText(rsp->hdr.sid);
+    ui->tbW_display->setItem(0, 0, new QTableWidgetItem(str));
+    /* 通道 */
+    str = ui->cBox_chn->itemText(rsp->chn);
+    ui->tbW_display->setItem(0, 1, new QTableWidgetItem(str));
+    /* 量程段 */
+    str = ui->cBox_seg->itemText(rsp->seg);
+    ui->tbW_display->setItem(0, 2, new QTableWidgetItem(str));
+    /* 测量值 */
+    str.setNum(rsp->xvalue, 'f');
+    ui->tbW_display->setItem(0, 3, new QTableWidgetItem(str));
+    /* 标称值 */
+    str.setNum(rsp->nvalue, 'f');
+    ui->tbW_display->setItem(0, 4, new QTableWidgetItem(str));
+
+    ui->tbW_display->item(0, 0)->setBackgroundColor(QColor(11, 240, 11));
+    if (ui->tbW_display->rowCount() != 1)
+    {
+        ui->tbW_display->item(1, 0)->setBackgroundColor(QColor(255, 255, 255));
+    }
+}
+
+void MainWindow::calib_sam_rsp_received(calib_sam_t *rsp)
+{
+    QString str;
+    float *nvalue, *mvalue;
+
+    /* 数据定位 */
+    nvalue = rsp->data;
+    mvalue = nvalue + rsp->seg;
+
+    for (int i = 0; i < rsp->seg; i ++)
+    {
+        ui->tbW_display->insertRow(0);
+
+        /* 支路 */
+        str = ui->cBox_sensorid->itemText(rsp->hdr.sid);
+        ui->tbW_display->setItem(0, 0, new QTableWidgetItem(str));
+        /* 通道 */
+        str = ui->cBox_chn->itemText(rsp->chn);
+        ui->tbW_display->setItem(0, 1, new QTableWidgetItem(str));
+        /* 量程段 */
+        str.setNum(i + 1);
+        ui->tbW_display->setItem(0, 2, new QTableWidgetItem(str));
+        /* 测量值 */
+        str.setNum(mvalue[i], 'f');
+        ui->tbW_display->setItem(0, 3, new QTableWidgetItem(str));
+        /* 标称值 */
+        str.setNum(nvalue[i], 'f');
+        ui->tbW_display->setItem(0, 4, new QTableWidgetItem(str));
+    }
+}
+
 void MainWindow::frameEnd()
 {
     pkthead_t *pkt;
-    QTableWidgetItem *item;
-    calib_sam_t cal;//TODO
-    QString str;
+    calib_t *cal;
 
     pkt = (pkthead_t*)(&rxbuf.data()[2]);
 
@@ -192,14 +250,21 @@ void MainWindow::frameEnd()
         else
         {
             ui->statusBar->showMessage(tr("收到应答"));
+            cal = (calib_t*)pkt;
 
             switch (pkt->dtype)
             {
             case DT_CALIB_RSP:
             {
-                ui->tbW_display->insertRow(0);
-                str.setNum(cal.mval[0], 'f');
-                ui->tbW_display->setItem(0, 2, new QTableWidgetItem(str));
+                if (cal->cmd == CALCMD_DO)
+                {
+                    calib_do_rsp_received(cal);
+                }
+                else if (cal->cmd == CALCMD_SAM_DAT)
+                {
+                    calib_sam_rsp_received((calib_sam_t*)cal);
+                }
+
             }
             break;
             case DT_STATUS_RSP:
@@ -240,9 +305,9 @@ void MainWindow::initEdit()
     QRegExp regnval("^[0-9]+(.[0-9]{1,2})?$");
     QRegExp regpawd("[1-9]*[1-9][0-9]*$");
 
-    ui->lEdit_value->setValidator(new QRegExpValidator(regnval, this));
-    ui->lEdit_value->setMaxLength(6);
-    ui->lEdit_value->setText("0.0");
+    ui->lEdit_nvalue->setValidator(new QRegExpValidator(regnval, this));
+    ui->lEdit_nvalue->setMaxLength(6);
+    ui->lEdit_nvalue->setText("0.0");
 
     ui->lEdit_pawd->setValidator(new QRegExpValidator(regpawd, this));
 }
@@ -329,37 +394,20 @@ void MainWindow::initActionsConnections()
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(clear()));
 }
 
-void MainWindow::on_cBox_range_currentIndexChanged(int index)
-{
-    QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "1.5", "4.0"};
-    QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
-    int cbindex;
-
-    cbindex = ui->cBox_chn->currentIndex();
-    if (cbindex < 4 || cbindex == 7)
-    {
-        ui->lEdit_value->setText(c[index]);
-    }
-    else
-    {
-        ui->lEdit_value->setText(v[index]);
-    }
-}
-
 void MainWindow::on_cBox_chn_currentTextChanged(const QString &arg1)
 {
     QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "1.5", "4.0"};
     QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
     int cbindex;
 
-    cbindex = ui->cBox_range->currentIndex();
+    cbindex = ui->cBox_seg->currentIndex();
     if (arg1.at(0) == 'I')
     {
-        ui->lEdit_value->setText(c[cbindex]);
+        ui->lEdit_nvalue->setText(c[cbindex]);
     }
     else
     {
-        ui->lEdit_value->setText(v[cbindex]);
+        ui->lEdit_nvalue->setText(v[cbindex]);
     }
 }
 
@@ -417,9 +465,9 @@ void MainWindow::on_pBt_calib_clicked()
     req.cmd        = CALCMD_DO;
 
     req.chn        = ui->cBox_chn->currentIndex();
-    req.phawire    = ui->cBox_conn->currentIndex();
-    req.seg        = ui->cBox_range->currentIndex();
-    req.nvalue     = ui->lEdit_value->text().toFloat();
+    req.phawire    = ui->cBox_phawire->currentIndex();
+    req.seg        = ui->cBox_seg->currentIndex();
+    req.nvalue     = ui->lEdit_nvalue->text().toFloat();
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
     modbus(txbuf, &req);
@@ -428,5 +476,38 @@ void MainWindow::on_pBt_calib_clicked()
 
 void MainWindow::on_pBt_readcal_clicked()
 {
+    calib_t req;
 
+    req.hdr.dtype  = DT_CALIB_REQ;
+    req.hdr.size   = sizeof(calib_t);
+    req.hdr.sid    = ui->cBox_sensorid->currentIndex();
+    req.hdr.cid    = CID_REMOTE;
+    req.hdr.chksum = 0;
+    req.cmd        = CALCMD_SAM_GET;
+
+    req.chn        = ui->cBox_chn->currentIndex();
+    req.phawire    = 0;
+    req.seg        = 0;
+    req.nvalue     = 0;
+    req.xvalue     = ui->lEdit_pawd->text().toFloat();
+
+    modbus(txbuf, &req);
+    writeData(txbuf);
+}
+
+void MainWindow::on_cBox_seg_currentIndexChanged(int index)
+{
+    QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "1.5", "4.0"};
+    QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
+    int cbindex;
+
+    cbindex = ui->cBox_chn->currentIndex();
+    if (cbindex < 4 || cbindex == 7)
+    {
+        ui->lEdit_nvalue->setText(c[index]);
+    }
+    else
+    {
+        ui->lEdit_nvalue->setText(v[index]);
+    }
 }

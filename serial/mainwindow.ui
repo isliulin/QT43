@@ -161,7 +161,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QComboBox" name="cBox_range">
+    <widget class="QComboBox" name="cBox_seg">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -214,7 +214,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QComboBox" name="cBox_conn">
+    <widget class="QComboBox" name="cBox_phawire">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -245,7 +245,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QLineEdit" name="lEdit_value">
+    <widget class="QLineEdit" name="lEdit_nvalue">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -445,6 +445,9 @@
       <width>110</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;读取指定通道的校准数据&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>读取校准数据</string>
