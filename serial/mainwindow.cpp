@@ -97,6 +97,10 @@ static const unsigned char aucCRCLo[] =
     0x41, 0x81, 0x80, 0x40
 };
 
+static const QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "2.0", "5.0"};
+
+static const QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -396,8 +400,6 @@ void MainWindow::initActionsConnections()
 
 void MainWindow::on_cBox_chn_currentTextChanged(const QString &arg1)
 {
-    QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "1.5", "4.0"};
-    QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
     int cbindex;
 
     cbindex = ui->cBox_seg->currentIndex();
@@ -497,8 +499,6 @@ void MainWindow::on_pBt_readcal_clicked()
 
 void MainWindow::on_cBox_seg_currentIndexChanged(int index)
 {
-    QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "1.5", "4.0"};
-    QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
     int cbindex;
 
     cbindex = ui->cBox_chn->currentIndex();
