@@ -28,7 +28,7 @@
       <x>20</x>
       <y>70</y>
       <width>251</width>
-      <height>301</height>
+      <height>341</height>
      </rect>
     </property>
     <property name="title">
@@ -82,9 +82,9 @@
     <widget class="QComboBox" name="cBox_chn">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>100</x>
        <y>90</y>
-       <width>101</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -97,76 +97,86 @@
      </property>
      <item>
       <property name="text">
-       <string>IA</string>
+       <string>IA(电流)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>IB</string>
+       <string>IB(电流)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>IC</string>
+       <string>IC(电流)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>IN</string>
+       <string>IN(电流)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>UA</string>
+       <string>UA(电压)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>UB</string>
+       <string>UB(电压)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>UC</string>
+       <string>UC(电压)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>IABC</string>
+       <string>IABC(三相电流)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>UABC</string>
+       <string>UABC(三相电压)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>PHA</string>
+       <string>PhA(相位)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>PHB</string>
+       <string>PhB(相位)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>PHC</string>
+       <string>PhC(相位)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>PF</string>
+       <string>PA(有功功率)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PB(有功功率)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PC(有功功率)</string>
       </property>
      </item>
     </widget>
     <widget class="QComboBox" name="cBox_seg">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>100</x>
        <y>130</y>
-       <width>101</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -217,9 +227,9 @@
     <widget class="QComboBox" name="cBox_phawire">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>100</x>
        <y>170</y>
-       <width>101</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -248,9 +258,9 @@
     <widget class="QLineEdit" name="lEdit_nvalue">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>100</x>
        <y>210</y>
-       <width>101</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -269,7 +279,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>290</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -283,16 +293,16 @@
       </font>
      </property>
      <property name="text">
-      <string>校准</string>
+      <string>确定</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>10</x>
        <y>97</y>
-       <width>41</width>
-       <height>21</height>
+       <width>34</width>
+       <height>19</height>
       </rect>
      </property>
      <property name="text">
@@ -302,10 +312,10 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>140</y>
+       <x>10</x>
+       <y>137</y>
        <width>51</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
      </property>
      <property name="text">
@@ -315,10 +325,10 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>167</y>
-       <width>71</width>
-       <height>31</height>
+       <x>10</x>
+       <y>177</y>
+       <width>68</width>
+       <height>19</height>
       </rect>
      </property>
      <property name="text">
@@ -328,15 +338,59 @@
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>207</y>
+       <x>10</x>
+       <y>218</y>
        <width>51</width>
-       <height>31</height>
+       <height>19</height>
       </rect>
      </property>
      <property name="text">
       <string>标称值</string>
      </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>259</y>
+       <width>68</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>取值类型</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cBox_valtype">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>250</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>宋体</family>
+       <pointsize>12</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;当输入电流/电压/功率为幅值时标称值将被除以根2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>幅值</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>有效值</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QComboBox" name="cBox_sensorid">

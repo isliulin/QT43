@@ -89,6 +89,8 @@ private slots:
     void apply();
     void checkCustomBaudRatePolicy(int idx);
 
+    void on_serialPortInfoListBox_activated(int index);
+
 private:
     void fillPortsParameters();
     void fillPortsInfo();

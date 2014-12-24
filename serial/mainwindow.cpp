@@ -44,6 +44,7 @@
 #include "ui_mainwindow.h"
 #include "settingsdialog.h"
 #include <QMessageBox>
+#include <math.h>
 
 static const unsigned char aucCRCHi[] =
 {
@@ -97,9 +98,9 @@ static const unsigned char aucCRCLo[] =
     0x41, 0x81, 0x80, 0x40
 };
 
-static const QString c[7] = {"0.0", "0.05", "0.1", "0.5", "1.0", "2.0", "5.0"};
+static const QString nValI[7] = {"0.0", "0.05", "0.1", "1.0", "2.0", "4.0", "5.0"};
 
-static const QString v[7] = {"0.0", "0.5", "1.0", "20.0", "50.0", "110", "220"};
+static const QString nValU[7] = {"0.0", "1.0", "5.0", "30.0", "50.0", "80", "110"};
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -405,11 +406,11 @@ void MainWindow::on_cBox_chn_currentTextChanged(const QString &arg1)
     cbindex = ui->cBox_seg->currentIndex();
     if (arg1.at(0) == 'I')
     {
-        ui->lEdit_nvalue->setText(c[cbindex]);
+        ui->lEdit_nvalue->setText(nValI[cbindex]);
     }
     else
     {
-        ui->lEdit_nvalue->setText(v[cbindex]);
+        ui->lEdit_nvalue->setText(nValU[cbindex]);
     }
 }
 
@@ -472,6 +473,15 @@ void MainWindow::on_pBt_calib_clicked()
     req.nvalue     = ui->lEdit_nvalue->text().toFloat();
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
+    if ((req.chn <= CHN_VABC) || (req.chn >= CHN_PA && req.chn <= CHN_PC))
+    {
+        /* 输入的电流/电压/功率为幅值 */
+        if (ui->cBox_valtype->currentIndex() == 0)
+        {
+            req.nvalue /= sqrt(2);
+        }
+    }
+
     modbus(txbuf, &req);
     writeData(txbuf);
 }
@@ -504,10 +514,10 @@ void MainWindow::on_cBox_seg_currentIndexChanged(int index)
     cbindex = ui->cBox_chn->currentIndex();
     if (cbindex < 4 || cbindex == 7)
     {
-        ui->lEdit_nvalue->setText(c[index]);
+        ui->lEdit_nvalue->setText(nValI[index]);
     }
     else
     {
-        ui->lEdit_nvalue->setText(v[index]);
+        ui->lEdit_nvalue->setText(nValU[index]);
     }
 }

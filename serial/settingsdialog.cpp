@@ -143,25 +143,30 @@ void SettingsDialog::fillPortsParameters()
 
 void SettingsDialog::fillPortsInfo()
 {
-    ui->serialPortInfoListBox->clear();
     static const QString blankString = QObject::tr("N/A");
     QString description;
-    QString manufacturer;
-    QString serialNumber;
-    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+    QStringList list;
+
+    ui->serialPortInfoListBox->clear();
+
+    list << QString(tr("刷新"))
+         << QString(tr("点击更新列表"));
+    ui->serialPortInfoListBox->addItem(list.first(), list);
+
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+    {
         QStringList list;
         description = info.description();
-        manufacturer = info.manufacturer();
-        serialNumber = info.serialNumber();
+
         list << info.portName()
-             << (!description.isEmpty() ? description : blankString)
-             << (!manufacturer.isEmpty() ? manufacturer : blankString)
-             << (!serialNumber.isEmpty() ? serialNumber : blankString)
-             << info.systemLocation()
-             << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : blankString)
-             << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : blankString);
+             << (!description.isEmpty() ? description : blankString);
 
         ui->serialPortInfoListBox->addItem(list.first(), list);
+    }
+
+    if (ui->serialPortInfoListBox->count() != 1)
+    {
+        ui->serialPortInfoListBox->setCurrentIndex(1);
     }
 }
 
@@ -196,4 +201,12 @@ void SettingsDialog::updateSettings()
     currentSettings.flowControl = static_cast<QSerialPort::FlowControl>(
                 ui->flowControlBox->itemData(ui->flowControlBox->currentIndex()).toInt());
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
+}
+
+void SettingsDialog::on_serialPortInfoListBox_activated(int index)
+{
+    if (index == 0)
+    {
+        fillPortsInfo();
+    }
 }

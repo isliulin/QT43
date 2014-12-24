@@ -19,7 +19,9 @@
 #define CHN_PHA   0x09 //电流电压A相位
 #define CHN_PHB   0x0A //电流电压B相位
 #define CHN_PHC   0x0B //电流电压C相位
-#define CHN_PF    0x0C //功率因素
+#define CHN_PA    0x0C //A相有功功率
+#define CHN_PB    0x0D //B相有功功率
+#define CHN_PC    0x0E //C相有功功率
 
 /* 接线方式定义 */
 #define PHAWIRE_33      0x00 //三相三线
