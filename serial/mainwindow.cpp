@@ -355,10 +355,8 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About Simple Terminal"),
-                       tr("The <b>Simple Terminal</b> example demonstrates how to "
-                          "use the Qt Serial Port module in modern GUI applications "
-                          "using Qt, with a menu bar, toolbars, and a status bar."));
+    QMessageBox::about(this, tr("关于"),
+                       tr("<b>作者：</b> heyuanjie87"));
 }
 
 void MainWindow::writeData(const QByteArray &data)
@@ -427,7 +425,6 @@ void MainWindow::on_pBt_enter_clicked()
 
     req.chn        = 0;
     req.seg        = 0;
-    req.phawire    = 0;
     req.nvalue     = 0.05;
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
@@ -448,7 +445,6 @@ void MainWindow::on_pBt_exit_clicked()
 
     req.chn        = 0;
     req.seg        = 0;
-    req.phawire    = 0;
     req.nvalue     = 0;
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
 
@@ -468,7 +464,6 @@ void MainWindow::on_pBt_calib_clicked()
     req.cmd        = CALCMD_DO;
 
     req.chn        = ui->cBox_chn->currentIndex();
-    req.phawire    = ui->cBox_phawire->currentIndex();
     req.seg        = ui->cBox_seg->currentIndex();
     req.nvalue     = ui->lEdit_nvalue->text().toFloat();
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
@@ -476,7 +471,7 @@ void MainWindow::on_pBt_calib_clicked()
     if ((req.chn <= CHN_VABC) || (req.chn >= CHN_PA && req.chn <= CHN_PC))
     {
         /* 输入的电流/电压/功率为幅值 */
-        if (ui->cBox_valtype->currentIndex() == 0)
+        if (ui->cBox_valtype->currentIndex() == 1)
         {
             req.nvalue /= sqrt(2);
         }
@@ -498,7 +493,6 @@ void MainWindow::on_pBt_readcal_clicked()
     req.cmd        = CALCMD_SAM_GET;
 
     req.chn        = ui->cBox_chn->currentIndex();
-    req.phawire    = 0;
     req.seg        = 0;
     req.nvalue     = 0;
     req.xvalue     = ui->lEdit_pawd->text().toFloat();

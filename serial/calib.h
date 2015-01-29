@@ -23,11 +23,7 @@
 #define CHN_PB    0x0D //B相有功功率
 #define CHN_PC    0x0E //C相有功功率
 
-/* 接线方式定义 */
-#define PHAWIRE_33      0x00 //三相三线
-#define PHAWIRE_34      0x01 //三相四线
-
-/* 操作码定义 */
+/* 校准操作码定义 */
 #define CALCMD_DO       0x01 //执行校准
 #define CALCMD_ENTER    0x02 //进入校准模式
 #define CALCMD_EXIT     0x03 //退出校准模式
@@ -68,7 +64,7 @@ typedef struct
 
     unsigned char chn:4;     //通道
     unsigned char seg:4;     //区段
-    unsigned char phawire:4; //接线方式
+    unsigned char rsv:4;     //保留
     unsigned char cmd:4;     //操作码
 
     float nvalue;            //标称值
@@ -80,9 +76,9 @@ typedef struct
 {
     pkthead_t hdr;
 
-    unsigned char chn:4;     //通道
+    unsigned char chn:4;     //通道号
     unsigned char seg:4;     //样本中包含的区段总数
-    unsigned char phawire:4; //接线方式
+    unsigned char rsv:4;     //保留
     unsigned char cmd:4;     //操作码（固定为CALCMD_SAM_DAT）
 
     float         data[0];   //数据区(标称值在前测量值在后)

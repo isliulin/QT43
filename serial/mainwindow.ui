@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>电力监控设备校准</string>
+   <string>数字测量设备校准</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="groupBox">
@@ -224,37 +224,6 @@
       </property>
      </item>
     </widget>
-    <widget class="QComboBox" name="cBox_phawire">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>170</y>
-       <width>131</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>宋体</family>
-       <pointsize>12</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;当选择&amp;quot;三相三线&amp;quot;时输入值将被乘以根3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>三相四线</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>三相三线</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QLineEdit" name="lEdit_nvalue">
      <property name="geometry">
       <rect>
@@ -322,19 +291,6 @@
       <string>量程段</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>177</y>
-       <width>68</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>接线方式</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
@@ -383,12 +339,12 @@
      </property>
      <item>
       <property name="text">
-       <string>幅值</string>
+       <string>有效值</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>有效值</string>
+       <string>幅值</string>
       </property>
      </item>
     </widget>
@@ -707,7 +663,7 @@
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>19</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
