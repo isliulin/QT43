@@ -656,6 +656,19 @@
      <enum>QLineEdit::Password</enum>
     </property>
    </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>0</y>
+      <width>138</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>不使用ModBus</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -663,7 +676,7 @@
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
