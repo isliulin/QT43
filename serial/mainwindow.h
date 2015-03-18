@@ -100,6 +100,7 @@ private:
     void initTable();
     void modbus(QByteArray &adu, calib_t *data);
     unsigned short crc16(unsigned char *pucFrame, unsigned short usLen);
+    unsigned short chksum(unsigned short *buf, int size);
     void calib_do_rsp_received(calib_t *rsp);
     void calib_sam_rsp_received(calib_sam_t *rsp);
 

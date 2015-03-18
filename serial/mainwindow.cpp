@@ -162,6 +162,24 @@ unsigned short MainWindow::crc16(unsigned char *pucFrame, unsigned short usLen)
     return (unsigned short)(ucCRCHi << 8 | ucCRCLo);
 }
 
+unsigned short MainWindow::chksum(unsigned short *buf, int size)
+{
+    long sum = 0;
+
+    while (size)
+    {
+        sum += *buf ++;
+        size -= 2;
+    }
+
+    while (sum >> 16)
+    {
+        sum = (sum & 0xFFFF) + (sum >> 16);
+    }
+
+    return ~sum;
+}
+
 void MainWindow::modbus(QByteArray &adu, calib_t *data)
 {
     mbadu_t *mb;
@@ -240,62 +258,73 @@ void MainWindow::frameEnd()
     pkthead_t *pkt;
     calib_t *cal;
 
-    pkt = (pkthead_t*)(&rxbuf.data()[2]);
-
-    if (crc16((unsigned char*)rxbuf.data(), rxbuf.size()) != 0)
+    if (ui->chkB_nomb->checkState() == Qt::Checked)
     {
-        ui->statusBar->showMessage(tr("数据校验错误"));
+        pkt = (pkthead_t*)(&rxbuf.data()[0]);
+        if (chksum((unsigned short*)rxbuf.data(), rxbuf.size()) != 0)
+        {
+            ui->statusBar->showMessage(tr("SUM校验错误"));
+            goto _EXIT;
+        }
     }
     else
     {
+        pkt = (pkthead_t*)(&rxbuf.data()[2]);
+        if (crc16((unsigned char*)rxbuf.data(), rxbuf.size()) != 0)
+        {
+            ui->statusBar->showMessage(tr("CRC校验错误"));
+            goto _EXIT;
+        }
         if (rxbuf.data()[1] != 100)
         {
             ui->statusBar->showMessage(tr("操作失败"));
+            goto _EXIT;
         }
-        else
+    }
+
+    ui->statusBar->showMessage(tr("收到应答"));
+    cal = (calib_t*)pkt;
+
+    switch (pkt->dtype)
+    {
+    case DT_CALIB_RSP:
+    {
+        if (cal->cmd == CALCMD_DO)
         {
-            ui->statusBar->showMessage(tr("收到应答"));
-            cal = (calib_t*)pkt;
+            calib_do_rsp_received(cal);
+        }
+        else if (cal->cmd == CALCMD_SAM_DAT)
+        {
+            calib_sam_rsp_received((calib_sam_t*)cal);
+        }
 
-            switch (pkt->dtype)
-            {
-            case DT_CALIB_RSP:
-            {
-                if (cal->cmd == CALCMD_DO)
-                {
-                    calib_do_rsp_received(cal);
-                }
-                else if (cal->cmd == CALCMD_SAM_DAT)
-                {
-                    calib_sam_rsp_received((calib_sam_t*)cal);
-                }
+    }
+    break;
+    case DT_STATUS_RSP:
+    {
+        status_rsp_t *rsp;
 
-            }
-            break;
-            case DT_STATUS_RSP:
+        rsp = (status_rsp_t*)pkt;
+        if (rsp->dtype == DT_CALIB_REQ)
+        {
+            if (rsp->status == 0)
             {
-                status_rsp_t *rsp;
-
-                rsp = (status_rsp_t*)pkt;
-                if (rsp->dtype == DT_CALIB_REQ)
+                if (rsp->value == CALCMD_ENTER)
                 {
-                    if (rsp->status == 0)
-                    {
-                        if (rsp->value == CALCMD_ENTER)
-                        {
-                            ui->statusBar->showMessage(tr("成功进入校准模式"));
-                        }
-                        else if (rsp->value == CALCMD_EXIT)
-                        {
-                            ui->statusBar->showMessage(tr("退出校准模式"));
-                        }
-                    }
+                    ui->statusBar->showMessage(tr("进入校准模式"));
                 }
-            }
-            break;
+                else if (rsp->value == CALCMD_EXIT)
+                {
+                    ui->statusBar->showMessage(tr("退出校准模式"));
+                }
             }
         }
     }
+    break;
+    }
+
+
+_EXIT:
 
     rxbuf.resize(0);
 }
@@ -447,8 +476,19 @@ void MainWindow::on_pBt_exit_clicked()
     req.seg        = 0;
     req.nvalue     = 0;
     req.xvalue     = ui->lEdit_pawd->text().toFloat();
+    req.hdr.chksum = chksum((unsigned short*)&req, sizeof(req));
 
-    modbus(txbuf, &req);
+    /* 不使用Modbus数据帧 */
+    if (ui->chkB_nomb->checkState() == Qt::Checked)
+    {
+        txbuf.resize(sizeof(calib_t));
+        *((calib_t*)txbuf.data()) = req;
+    }
+    else
+    {
+        modbus(txbuf, &req);
+    }
+
     writeData(txbuf);
 }
 
@@ -476,8 +516,19 @@ void MainWindow::on_pBt_calib_clicked()
             req.nvalue /= sqrt(2);
         }
     }
+    req.hdr.chksum = chksum((unsigned short*)&req, sizeof(req));
 
-    modbus(txbuf, &req);
+    /* 不使用Modbus数据帧 */
+    if (ui->chkB_nomb->checkState() == Qt::Checked)
+    {
+        txbuf.resize(sizeof(calib_t));
+        *((calib_t*)txbuf.data()) = req;
+    }
+    else
+    {
+        modbus(txbuf, &req);
+    }
+
     writeData(txbuf);
 }
 
