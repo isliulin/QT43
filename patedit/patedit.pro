@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = 花样编辑1
+TARGET = atedit
 TEMPLATE = app
 
 
