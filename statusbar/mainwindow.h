@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPixmap>
+#include <QCloseEvent>
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -16,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    void closeEvent(QCloseEvent *event);
 
 private:
     void statusBarInit();

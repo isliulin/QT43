@@ -15,6 +15,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox::StandardButton button;
+
+    button = QMessageBox::question(this, tr("退出程序"),
+        QString(tr("警告：程序有一个任务正在运行中，是否结束操作退出?")),
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (button == QMessageBox::No)
+    {
+        event->ignore();  //忽略退出信号，程序继续运行
+    }
+    else if (button == QMessageBox::Yes)
+    {
+        event->accept();  //接受退出信号，程序退出
+    }
+}
+
 void MainWindow::statusBarInit()
 {
     icon.load(":/1.bmp");
