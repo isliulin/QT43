@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    worker = new mwWorker(this);
+    worker->start();
 }
 
 MainWindow::~MainWindow()
@@ -13,12 +16,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::ShowValue(float nw, float tw)
 {
-    scale.Open();
+    QString val;
+
+    val.sprintf("%.2f", nw);
+    ui->le_nw->setText(val);
+
+    val.sprintf("%.2f", tw);
+    ui->le_tw->setText(val);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::ShowEStatus(char *s)
 {
-    scale.Close();
+    ui->lb_es->setText(s);
 }

@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QtSerialPort/QSerialPort>
+#include <time.h>
 
 class EScale : public QThread
 {
@@ -15,6 +16,10 @@ public:
 public:
     void Open();
     void Close();
+    bool isConnected();
+    bool isZeroDone();
+    void getWeight(float &nw, float &tw);
+    void startZero(int sec);
 
 private:
     void run();
@@ -32,6 +37,10 @@ private:
     float nWeight;
     float tWeight;
     bool Connected;
+    bool ZeroDone;
+    bool ZeroStart;
+    int  ZeroTime;
+    time_t ZStartTime;
 };
 
 #endif // ESCALE_H

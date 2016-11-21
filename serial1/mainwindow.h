@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "escale.h"
+#include "mwworker.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,14 +16,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+    void ShowValue(float nw, float tw);
+    void ShowEStatus(char *s);
 
 private:
     Ui::MainWindow *ui;
-    EScale scale;
+    mwWorker *worker;
 };
 
 #endif // MAINWINDOW_H

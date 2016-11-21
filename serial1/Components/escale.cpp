@@ -7,6 +7,7 @@ EScale::EScale()
 {
     Dev = NULL;
     isRun = false;
+    Connected = false;
 }
 
 EScale::~EScale()
@@ -41,6 +42,11 @@ void EScale::Close()
     wait();
 }
 
+bool EScale::isConnected()
+{
+    return Connected;
+}
+
 bool EScale::ReadWeight(void)
 {
     unsigned char wcmd[] = {0x02, 0x52, 0x44, 0x53, 0x01, 0xEA, 0x0D};
@@ -51,6 +57,24 @@ bool EScale::ReadWeight(void)
     size = read(wrsp, WEIGHTLENGTH);
 
     return parseWeight(wrsp, size, nWeight, tWeight);
+}
+
+void EScale::getWeight(float &nw, float &tw)
+{
+    nw = nWeight;
+    tw = tWeight;
+}
+
+bool EScale::isZeroDone()
+{
+    return ZeroDone;
+}
+
+void EScale::startZero(int sec)
+{
+    ZStartTime = time(NULL);
+    ZeroDone = false;
+    ZeroStart = true;
 }
 
 bool EScale::parseWeight(unsigned char *buf, int size, float &nw, float &tw)
@@ -134,6 +158,7 @@ bool EScale::devInit(char *name)
 void EScale::run()
 {
     bool ret;
+    time_t tm;
 
     isRun = true;
     Dev = new QSerialPort;
@@ -142,7 +167,7 @@ INIT:
     if (!isRun)
         goto EXIT;
 
-    if (!devInit("COM9"))
+    if (!devInit("COM4"))
     {
         msleep(200);
         goto INIT;
@@ -152,6 +177,24 @@ INIT:
     {
         ReadWeight();
 
+        if (ZeroStart)
+        {
+            if (Connected)
+            {
+                tm = time(NULL);
+
+                if (nWeight != 0)
+                {
+                    ZStartTime = tm;
+                }
+
+                if (tm - ZStartTime >= ZeroTime)
+                {
+                    ZeroDone = true;
+                    ZeroStart = 0;
+                }
+            }
+        }
         msleep(500);
     }
 

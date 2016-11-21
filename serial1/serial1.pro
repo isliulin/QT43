@@ -15,9 +15,11 @@ INCLUDEPATH += Components
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Components/escale.cpp
+    Components/escale.cpp \
+    mwworker.cpp
 
 HEADERS  += mainwindow.h \
-    Components/escale.h
+    Components/escale.h \
+    mwworker.h
 
 FORMS    += mainwindow.ui
