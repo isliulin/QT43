@@ -1,9 +1,10 @@
 #include "RFID.h"
-
+#include <QThread>
 #define SWAP16(x)    (((x) >> 8) | ((x) << 8))
 
 RFID::RFID(void)
 {
+    Retry = 15;
 }
 
 RFID::~RFID(void)
@@ -36,27 +37,29 @@ int RFID::Read(unsigned char *buf, short size)
 {
     int len = 0;
     char *pbuf = (char*)buf;
-    int retry = 0;
+    int cnt = 0;
 
     while (len < size)
     {
         int n;
 
-        if (!Dev.waitForReadyRead(20))
+        n = Dev.read(pbuf, size - len);
+
+        if (n == -1)
+            break;
+
+        if (n == 0)
         {
-            if (retry ++ > 15)
+            Dev.waitForReadyRead(20);
+            if (cnt ++ > Retry)
                 break;
 
             continue;
         }
 
-        n = Dev.read(pbuf, size - len);
-        if (n == -1)
-            break;
-
         buf += n;
         len += n;
-        retry = 0;
+        cnt = 0;
     }
 
     return len;
@@ -66,6 +69,7 @@ int RFID::Write(unsigned char *buf, short size)
 {
 	int len;
 
+    Dev.clear();
     len = Dev.write((char*)buf, size);
 
     return len; 
@@ -119,6 +123,11 @@ bool RFID::Alive(void)
 	return ret;
 }
 
+void RFID::SetRetry(int retry)
+{
+    Retry = retry;
+}
+
 bool RFID::CardScan()
 {
     uint8_t mode[1];
@@ -128,24 +137,18 @@ bool RFID::CardScan()
 
 	mode[0] = 0x26;
 	ReqSend(ZM_CMD_SCAN_CARD_AUTO, mode, 1);
-
+    Retry = 5;
 	size = Read(buf, 15);
 
 	if (size == 0)
 	{
         return ret;
 	}
-
-    size = Read(buf, 14);
-	if ((size != 14) || (buf[5] != 0xFF))
-	{
+    Retry = 20;
+    QThread::msleep(200);
+    if (AckRecv(buf, 7) == 0)
         return ret;
-	}
-
-	if (buf[13] != Crc8(buf, 13))
-	{
-        return ret;
-	}
+    Retry = 15;
 
     return true;
 }

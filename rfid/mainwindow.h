@@ -21,6 +21,7 @@ public:
 
     void AddCardMsg(string &s);
     void GetSerial(string &s);
+    void ShowErrCnt(int cnt);
 
 private slots:
     void ShowStatus(string s);

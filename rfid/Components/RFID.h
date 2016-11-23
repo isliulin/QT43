@@ -68,9 +68,11 @@ protected:
     bool ReqSend(short cmd, unsigned char *data, short size);
 	int AckRecv(unsigned char *buf, short size);
 
+    void SetRetry(int retry);
+
 private:
     QSerialPort Dev;
-
+    int Retry;
 	int Read(unsigned char *buf, short size);
 	int Write(unsigned char *buf, short size);
 	unsigned char Crc8(unsigned char *buf, short size);

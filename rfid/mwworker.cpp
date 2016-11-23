@@ -18,6 +18,7 @@ void mwWorker::run()
     bool ret;
     WorkerInfo wi;
     string tmp;
+    int errcnt = 0;
 
     while (isrun)
     {
@@ -50,7 +51,9 @@ NEXT:
         else
         {
             tmp = "读卡失败";
+            errcnt ++;
 
+            ui->ShowErrCnt(errcnt);
             emit ShowStatus(tmp);
         }
     }

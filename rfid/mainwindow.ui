@@ -10,6 +10,12 @@
     <height>378</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Agency FB</family>
+    <pointsize>14</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -19,8 +25,8 @@
      <rect>
       <x>230</x>
       <y>30</y>
-      <width>72</width>
-      <height>12</height>
+      <width>138</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -42,8 +48,8 @@
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>61</width>
-      <height>22</height>
+      <width>81</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="editable">
@@ -54,6 +60,37 @@
       <string>ttyS3</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>com5</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>92</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>错误次数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_errcnt">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>260</y>
+      <width>62</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -62,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>619</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

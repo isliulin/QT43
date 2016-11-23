@@ -26,6 +26,7 @@ int RfCardReader::WorkerCardRead(WorkerInfo &wi)
     Lock();
 
     ret = CardScan();
+
     if (ret != 1)
 	{
 		goto EXIT;

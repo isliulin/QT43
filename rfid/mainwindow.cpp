@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QTextCodec>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,9 +21,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::AddCardMsg(string &s)
 {
-    QString qs;
+    QTextCodec *codec = QTextCodec::codecForName("GB2312");
 
-    qs = qs.fromStdString(s);
+    QString qs = codec->toUnicode(s.c_str(), s.size());
+
     ui->te_card->append(qs);
 }
 
@@ -41,4 +43,12 @@ void MainWindow::GetSerial(string &s)
     qs = ui->cb_tty->currentText();
 
     s = qs.toStdString();
+}
+
+void MainWindow::ShowErrCnt(int cnt)
+{
+    QString qs;
+
+    qs.sprintf("%d", cnt);
+    ui->lb_errcnt->setText(qs);
 }
