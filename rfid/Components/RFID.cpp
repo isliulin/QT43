@@ -1,5 +1,7 @@
 #include "RFID.h"
 #include <QThread>
+#include <stdint.h>
+
 #define SWAP16(x)    (((x) >> 8) | ((x) << 8))
 
 RFID::RFID(void)
