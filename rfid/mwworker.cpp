@@ -6,6 +6,14 @@ mwWorker::mwWorker(void *p)
 {
     param = p;
     isrun = false;
+    errcnt = 0;
+    suscnt = 0;
+}
+
+void mwWorker::clear()
+{
+    errcnt = 0;
+    suscnt = 0;
 }
 
 void mwWorker::run()
@@ -18,8 +26,6 @@ void mwWorker::run()
     bool ret;
     WorkerInfo wi;
     string tmp;
-    int errcnt = 0;
-    int suscnt = 0;
     int mode;
 
     ui->UpdateSerial();

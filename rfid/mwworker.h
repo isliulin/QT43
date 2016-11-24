@@ -13,6 +13,8 @@ class mwWorker : public QThread
 public:
     mwWorker(void *p);
 
+    void clear();
+
 signals:
     void ShowStatus(string s);
 
@@ -21,7 +23,11 @@ private:
 
 public:
     bool isrun;
+
+private:
     void *param;
+    int errcnt;
+    int suscnt;
 };
 
 #endif // MWWORKER_H

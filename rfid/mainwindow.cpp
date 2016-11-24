@@ -78,4 +78,5 @@ void MainWindow::on_pushButton_clicked()
     ui->te_card->clear();
     ui->lb_errcnt->clear();
     ui->lb_suscnt->clear();
+    worker->clear();
 }
