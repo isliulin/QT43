@@ -35,6 +35,7 @@ typedef struct
 typedef enum
 {
     ZM_CMD_SCAN_CARD_AUTO = 0x0221,
+    ZM_CMD_GET_INFO       = 0x0201,
 	ZM_CMD_AUTHEN         = 0x0301,
 	ZM_CMD_READ_BLOCK     = 0x0302,
 	ZM_CMD_ENTER_CPUCARD  = 0x0401,

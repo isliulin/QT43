@@ -134,23 +134,26 @@ void RFID::SetRetry(int retry)
 
 bool RFID::CardScan()
 {
-    uint8_t mode[1];
 	int size;
     uint8_t buf[15];
+    uint8_t mode[1];
     bool ret = false;
 
-	mode[0] = 0x26;
-	ReqSend(ZM_CMD_SCAN_CARD_AUTO, mode, 1);
-    Retry = 5;
-	size = Read(buf, 15);
-
-	if (size == 0)
-	{
+    //开启自动寻卡
+    Retry = 15;
+    ReqSend(ZM_CMD_SCAN_CARD_AUTO, NULL, 0);
+    if (AckRecv(buf, 1) == 0)
         return ret;
-	}
+    if (buf[0] != 0xFF)
+        return ret;
 
+    //读取卡片特征信息
     Retry = 20;
-    if (AckRecv(buf, 7) == 0)
+    mode[0] = 0x26;
+    ReqSend(ZM_CMD_GET_INFO, mode, 1);
+    if (AckRecv(buf, 4) == 0)
+        return ret;
+    if (buf[0] != 0xFF)
         return ret;
     Retry = 15;
 
@@ -268,15 +271,15 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
 		goto FAIL;
 	}
 
-    len = SIZE(pkt->len);
+    len = SIZE(pkt->len) - 1;
     if (len > sizeof(tmp))
 	{
 		len = 0;
 		goto FAIL;
 	}
 
-    size = Read(pkt->data, len);
-    size += (sizeof(zm704_rsp_t) - 2);
+    size = Read(&tmp[sizeof(zm704_rsp_t)], len);
+    size += (sizeof(zm704_rsp_t) - 1);
 
 	if (tmp[size] != Crc8(tmp, size))
 	{
@@ -284,13 +287,12 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
 		goto FAIL;
 	}
 
-	len -= 2;
 	if (len > bsize)
 		len = bsize;
 
     if (buf != NULL && len > 0)
 	{
-        memcpy(buf, &tmp[6], len);
+        memcpy(buf, pkt->data, len);
 	}
 
 FAIL:
