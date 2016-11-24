@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTextCodec>
+#include <QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +18,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::UpdateSerial()
+{
+    foreach (const QSerialPortInfo &qspinfo, QSerialPortInfo::availablePorts())
+    {
+        ui->cb_tty->addItem(qspinfo.portName());
+    }
 }
 
 void MainWindow::AddCardMsg(string &s)
@@ -45,10 +54,28 @@ void MainWindow::GetSerial(string &s)
     s = qs.toStdString();
 }
 
-void MainWindow::ShowErrCnt(int cnt)
+void MainWindow::ShowErrCnt(int err, int sus)
 {
     QString qs;
 
-    qs.sprintf("%d", cnt);
+    qs.sprintf("%d", err);
     ui->lb_errcnt->setText(qs);
+    qs.sprintf("%d", sus);
+    ui->lb_suscnt->setText(qs);
+}
+
+void MainWindow::GetMode(int &mode)
+{
+    QString qs;
+
+    qs = ui->cb_mode->currentText();
+    qs = qs.at(0);
+    mode = qs.toInt();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->te_card->clear();
+    ui->lb_errcnt->clear();
+    ui->lb_suscnt->clear();
 }

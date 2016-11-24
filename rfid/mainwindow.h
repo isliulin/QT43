@@ -21,10 +21,14 @@ public:
 
     void AddCardMsg(string &s);
     void GetSerial(string &s);
-    void ShowErrCnt(int cnt);
+    void ShowErrCnt(int err, int sus);
+    void GetMode(int &mode);
+    void UpdateSerial();
 
 private slots:
     void ShowStatus(string s);
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -19,6 +19,10 @@ void mwWorker::run()
     WorkerInfo wi;
     string tmp;
     int errcnt = 0;
+    int suscnt = 0;
+    int mode;
+
+    ui->UpdateSerial();
 
     while (isrun)
     {
@@ -43,9 +47,32 @@ NEXT:
     {
         msleep(1000);
 
-        if (theNfc.WorkerCardRead(wi))
+        ui->GetMode(mode);
+
+        switch (mode)
         {
+        case 1:
+            ret = theNfc.WorkerCardRead(wi);
             tmp = wi.Name + " " + wi.Number;
+            break;
+        case 2:
+            ret = theNfc.CreditCardRead(tmp);
+            if (!ret)
+            {
+                ret = theNfc.M1BankCardRead(tmp);
+            }
+            break;
+        case 3:
+            ret = theNfc.M1BankCardRead(tmp);
+            break;
+        case 4:
+            ret = theNfc.CreditCardRead(tmp);
+            break;
+        }
+
+        if (ret)
+        {
+            suscnt ++;
             ui->AddCardMsg(tmp);
         }
         else
@@ -53,8 +80,9 @@ NEXT:
             tmp = "读卡失败";
             errcnt ++;
 
-            ui->ShowErrCnt(errcnt);
             emit ShowStatus(tmp);
         }
+
+        ui->ShowErrCnt(errcnt, suscnt);
     }
 }
