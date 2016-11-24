@@ -18,10 +18,18 @@ typedef struct
 {
 	unsigned short flag;
     unsigned char addr;
-	unsigned short len;
+    unsigned char len;
 	unsigned short cmd;
 	unsigned char data[1];
 }zm704_hdr_t;
+
+typedef struct
+{
+    unsigned short flag;
+    unsigned char addr;
+    unsigned char len;
+    unsigned char data[1];
+}zm704_rsp_t;
 #pragma pack()
 
 typedef enum

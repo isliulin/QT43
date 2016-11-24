@@ -2,7 +2,8 @@
 #include <QThread>
 #include <stdint.h>
 
-#define SWAP16(x)    (((x) >> 8) | ((x) << 8))
+#define SWAP16(x)    (((x)<<8) | ((x)>>8))
+#define SIZE(x)    (x)
 
 RFID::RFID(void)
 {
@@ -86,9 +87,10 @@ bool RFID::ReqSend(short cmd, unsigned char *data, short size)
 	pkt = (zm704_hdr_t*)buf;
 
 	pkt->flag = (unsigned short)ZM704_FLAG;
-	pkt->addr = 0xFF;
+    pkt->addr = 0xAA;
 	pkt->cmd  = SWAP16(cmd);
-    pkt->len  = SWAP16(size + 3);
+    pkt->len  = SIZE(size + 3);
+
 	if ((data != NULL) && (size != 0))
 	{
         memcpy(pkt->data, data, size);
@@ -146,8 +148,8 @@ bool RFID::CardScan()
 	{
         return ret;
 	}
+
     Retry = 20;
-    QThread::msleep(200);
     if (AckRecv(buf, 7) == 0)
         return ret;
     Retry = 15;
@@ -255,32 +257,33 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
     unsigned char tmp[256];
     short len;
 	short size;
-	zm704_hdr_t *pkt;
+    zm704_rsp_t *pkt;
 
-	len = Read(tmp, 6);
-	if (len < 6 || (tmp[5] != 0xFF))
+    pkt = (zm704_rsp_t*)tmp;
+
+    len = Read(tmp, sizeof(zm704_rsp_t));
+    if (len < sizeof(zm704_rsp_t) || (pkt->flag != 0xAA55))
 	{
 		len = 0;
 		goto FAIL;
 	}
 
-	pkt = (zm704_hdr_t*)tmp;
-	len = SWAP16(pkt->len);
+    len = SIZE(pkt->len);
     if (len > sizeof(tmp))
 	{
 		len = 0;
 		goto FAIL;
 	}
 
-	size = Read(&tmp[6], len - 1);
-	size += 5;
-#if 1//TODO
+    size = Read(pkt->data, len);
+    size += (sizeof(zm704_rsp_t) - 2);
+
 	if (tmp[size] != Crc8(tmp, size))
 	{
 		len = 0;
 		goto FAIL;
 	}
-#endif
+
 	len -= 2;
 	if (len > bsize)
 		len = bsize;
