@@ -26,7 +26,7 @@ int RfCardReader::WorkerCardRead(WorkerInfo &wi)
     Lock();
 
     ret = CardScan();
-goto EXIT;
+
     if (ret != 1)
 	{
 		goto EXIT;
@@ -85,7 +85,7 @@ int RfCardReader::M1BankCardRead(string &cardid)
     
 	ret = 0;
 
-	if (!Authen(5, TYPE_A, pwd, 6))
+    if (!Authen(4, TYPE_A, pwd, 6))
 	{
 		goto EXIT;
 	}

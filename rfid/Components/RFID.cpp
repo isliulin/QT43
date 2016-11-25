@@ -1,7 +1,7 @@
 #include "RFID.h"
 #include <QThread>
 #include <stdint.h>
-
+#include <string>
 #define SWAP16(x)    (((x)<<8) | ((x)>>8))
 #define SIZE(x)    (x)
 
@@ -74,7 +74,19 @@ int RFID::Write(unsigned char *buf, short size)
 
     Dev.clear();
     len = Dev.write((char*)buf, size);
+    buf[len] = 0;
 
+    std::string str;
+    for (int i = 0; i < len; i++)
+    {
+        char tmp[4];
+
+        sprintf(tmp, "%02X", buf[i]);
+        str += tmp;
+        str += " ";
+    }
+
+    qDebug("%s", str.c_str());
     return len; 
 }
 
@@ -134,51 +146,38 @@ void RFID::SetRetry(int retry)
 
 bool RFID::CardScan()
 {
-	int size;
     uint8_t buf[15];
-    uint8_t mode[1];
     bool ret = false;
+    uint8_t mode[1] = {0x26};
 
-    //开启自动寻卡
-    Retry = 15;
+    //寻卡
     ReqSend(ZM_CMD_SCAN_CARD_AUTO, NULL, 0);
     if (AckRecv(buf, 1) == 0)
         return ret;
     if (buf[0] != 0xFF)
         return ret;
-
-    //读取卡片特征信息
-    Retry = 20;
-    mode[0] = 0x26;
+#if 0
     ReqSend(ZM_CMD_GET_INFO, mode, 1);
-    if (AckRecv(buf, 4) == 0)
+    if (AckRecv(buf, 1) == 0)
         return ret;
     if (buf[0] != 0xFF)
         return ret;
-    Retry = 15;
-
+#endif
     return true;
 }
 
 bool RFID::BlockRead(unsigned char blkn, unsigned char *buf, short size)
 {
-    unsigned char tmp[32];
-	int len;
+    uint8_t tmp[32] = {0};
 
     ReqSend(ZM_CMD_READ_BLOCK, &blkn, 1);
 
-    len = Read(tmp, size + 7);
-	if (len < 8)
-	{
-		return false;
-	}
-   
-	if (tmp[len - 1] != Crc8(tmp, len - 1))
-	{
-		return false;
-	}
+    if (AckRecv(tmp, sizeof(tmp)) == 0)
+        return false;
+    if (tmp[0] != 0xFF)
+        return false;
 
-	memcpy(buf, &tmp[6], size);
+    memcpy(buf, &tmp[1], size);
 
 	return true;
 }
@@ -186,21 +185,9 @@ bool RFID::BlockRead(unsigned char blkn, unsigned char *buf, short size)
 bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, short size)
 {
     unsigned char buf[32];
-    int len;
 	unsigned char section;
 
-	for(int i = 1; (4*i-1) < M1_S50_EEPROM_MAX_BLOCK; i ++)
-	{
-		if(blkn == (4*i-1))
-		{
-			return false;
-		}
-
-		if((blkn >= (4*i-4)) && (blkn < (4*i-1)))
-		{
-			section = i-1;
-		}
-	}
+    section = blkn/4;
 
 	buf[0] = type;
 	buf[1] = section;
@@ -208,17 +195,10 @@ bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, sh
 
     ReqSend(ZM_CMD_AUTHEN, buf, size + 2);
 
-    len = Read(buf, 7);
-
-	if ((len < 7) || (buf[5] != 0xFF))
-	{
-		return false;
-	}
-
-	if (buf[6] != Crc8(buf, 6))
-	{
-		return false;
-	}
+    if (AckRecv(buf, 1) == 0)
+        return false;
+    if (buf[0] != 0xFF)
+        return false;
 
 	return true;
 }
@@ -226,26 +206,10 @@ bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, sh
 bool RFID::CpuCardMode()
 {
     unsigned char buf[32];
-	short len;
-    zm704_hdr_t *pkt;
-	short size;
 
 	ReqSend(ZM_CMD_ENTER_CPUCARD, NULL, 0);
-	len = Read(buf, 6);
-    if (len < 6 || (buf[5] != 0xFF))
-	{
-		return false;
-	}
-
-    pkt = (zm704_hdr_t*)buf;
-	len = SWAP16(pkt->len);
-    size = Read(&buf[6], len - 1);
-    size += 6;
-
-	if (buf[size - 1] != Crc8(buf, size - 1))
-	{
-		return false;
-	}
+    if (AckRecv(buf, 8) != 8)
+        return false;
 
 	return true;
 }
@@ -257,8 +221,8 @@ bool RFID::CosSend(unsigned char *c, short size)
 
 int RFID::AckRecv(unsigned char *buf, short bsize)
 {
-    unsigned char tmp[256];
-    short len;
+    unsigned char tmp[256] = {0};
+    uint16_t len;
 	short size;
     zm704_rsp_t *pkt;
 

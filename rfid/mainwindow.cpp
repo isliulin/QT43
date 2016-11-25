@@ -80,3 +80,18 @@ void MainWindow::on_pushButton_clicked()
     ui->lb_suscnt->clear();
     worker->clear();
 }
+
+void MainWindow::GetCntLimit(int &cnt)
+{
+    cnt = ui->sb_cnt->value();
+}
+
+void MainWindow::GetInterval(int &sec)
+{
+    sec = ui->sb_ival->value();
+}
+
+bool MainWindow::GetFileOut(void)
+{
+    return ui->cb_file->isChecked();
+}

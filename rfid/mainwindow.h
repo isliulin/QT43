@@ -24,6 +24,9 @@ public:
     void ShowErrCnt(int err, int sus);
     void GetMode(int &mode);
     void UpdateSerial();
+    void GetCntLimit(int &cnt);
+    void GetInterval(int &sec);
+    bool GetFileOut(void);
 
 private slots:
     void ShowStatus(string s);

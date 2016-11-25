@@ -2,18 +2,24 @@
 #include "mainwindow.h"
 #include "RfCardReader.h"
 
+#include <QTextStream>
+#include <QFile>
+#include <QTextCodec>
+
 mwWorker::mwWorker(void *p)
 {
     param = p;
     isrun = false;
     errcnt = 0;
     suscnt = 0;
+    tolcnt = 0;
 }
 
 void mwWorker::clear()
 {
     errcnt = 0;
     suscnt = 0;
+    tolcnt = 0;
 }
 
 void mwWorker::run()
@@ -27,6 +33,9 @@ void mwWorker::run()
     WorkerInfo wi;
     string tmp;
     int mode;
+    QFile data("rflog.txt");
+
+    data.open(QFile::WriteOnly | QIODevice::Truncate);
 
     ui->UpdateSerial();
 
@@ -51,8 +60,20 @@ NEXT:
 
     while (isrun)
     {
-        msleep(1000);
+        int cnt;
+        int ival;
 
+        ui->GetCntLimit(cnt);
+        if (cnt != 0 && (tolcnt >= cnt))
+        {
+            tmp = "已达指定次数,重试请清除";
+            emit ShowStatus(tmp);
+
+            msleep(1000);
+            continue;
+        }
+
+        ui->GetInterval(ival);
         ui->GetMode(mode);
 
         switch (mode)
@@ -76,10 +97,19 @@ NEXT:
             break;
         }
 
+        tolcnt ++;
+
         if (ret)
         {
             suscnt ++;
             ui->AddCardMsg(tmp);
+
+            if (ui->GetFileOut())
+            {
+                tmp += "\r\n";
+                data.write(tmp.c_str());
+                data.flush();
+            }
         }
         else
         {
@@ -90,5 +120,11 @@ NEXT:
         }
 
         ui->ShowErrCnt(errcnt, suscnt);
+
+        while (isrun && ival)
+        {
+            sleep(1);
+            ival --;
+        }
     }
 }

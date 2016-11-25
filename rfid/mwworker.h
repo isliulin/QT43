@@ -28,6 +28,7 @@ private:
     void *param;
     int errcnt;
     int suscnt;
+    int tolcnt;
 };
 
 #endif // MWWORKER_H
