@@ -74,19 +74,7 @@ int RFID::Write(unsigned char *buf, short size)
 
     Dev.clear();
     len = Dev.write((char*)buf, size);
-    buf[len] = 0;
 
-    std::string str;
-    for (int i = 0; i < len; i++)
-    {
-        char tmp[4];
-
-        sprintf(tmp, "%02X", buf[i]);
-        str += tmp;
-        str += " ";
-    }
-
-    qDebug("%s", str.c_str());
     return len; 
 }
 
