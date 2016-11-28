@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    msgcnt = 0;
     worker = new mwWorker(this);
     connect(worker, SIGNAL(ShowStatus(string)), this, SLOT(ShowStatus(string)));
 
@@ -33,8 +33,13 @@ void MainWindow::AddCardMsg(string &s)
     QTextCodec *codec = QTextCodec::codecForName("GB2312");
 
     QString qs = codec->toUnicode(s.c_str(), s.size());
+    if (msgcnt > 100)
+    {
 
+        msgcnt = 0;
+    }
     ui->te_card->append(qs);
+    msgcnt ++;
 }
 
 void MainWindow::ShowStatus(string s)

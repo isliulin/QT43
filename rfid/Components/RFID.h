@@ -2,6 +2,9 @@
 #define _RFID_H_
 
 #include <QtSerialPort/QSerialPort>
+#include <string>
+
+using namespace std;
 
 #define ZM704_FLAG    0xAA55
 
@@ -66,6 +69,7 @@ public:
     void Close();
 
     bool Alive(void);
+    string ErrMsg();
 
 protected:
     bool CardScan();
@@ -78,6 +82,9 @@ protected:
 	int AckRecv(unsigned char *buf, short size);
 
     void SetRetry(int retry);
+
+protected:
+    string errmsg;
 
 private:
     QSerialPort Dev;

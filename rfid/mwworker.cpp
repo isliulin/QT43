@@ -113,7 +113,7 @@ NEXT:
         }
         else
         {
-            tmp = "读卡失败";
+            tmp = theNfc.ErrMsg();
             errcnt ++;
 
             emit ShowStatus(tmp);

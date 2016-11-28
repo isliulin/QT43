@@ -31,6 +31,11 @@ bool RFID::Open(const char *name, int br)
     return ret;
 }
 
+string RFID::ErrMsg()
+{
+    return errmsg;
+}
+
 void RFID::Close()
 {
     Dev.close();
@@ -141,31 +146,45 @@ bool RFID::CardScan()
     //寻卡
     ReqSend(ZM_CMD_SCAN_CARD_AUTO, NULL, 0);
     if (AckRecv(buf, 1) == 0)
-        return ret;
+    {
+        errmsg = "扫卡:接收失败";
+        goto exit;
+    }
+
     if (buf[0] != 0xFF)
-        return ret;
-#if 0
-    ReqSend(ZM_CMD_GET_INFO, mode, 1);
-    if (AckRecv(buf, 1) == 0)
-        return ret;
-    if (buf[0] != 0xFF)
-        return ret;
-#endif
-    return true;
+    {
+        errmsg = "扫卡:返回失败";
+        goto exit;
+    }
+
+    ret = true;
+
+exit:
+
+    return ret;
 }
 
 bool RFID::BlockRead(unsigned char blkn, unsigned char *buf, short size)
 {
     uint8_t tmp[32] = {0};
+    bool ret = false;
 
     ReqSend(ZM_CMD_READ_BLOCK, &blkn, 1);
 
     if (AckRecv(tmp, sizeof(tmp)) == 0)
-        return false;
+    {
+        errmsg = "读块:接收失败";
+        goto exit;
+    }
     if (tmp[0] != 0xFF)
-        return false;
-
+    {
+        errmsg = "读块:返回失败";
+        goto exit;
+    }
+    ret = true;
     memcpy(buf, &tmp[1], size);
+
+exit:
 
 	return true;
 }
@@ -174,6 +193,7 @@ bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, sh
 {
     unsigned char buf[32];
 	unsigned char section;
+    bool ret = false;
 
     section = blkn/4;
 
@@ -184,11 +204,22 @@ bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, sh
     ReqSend(ZM_CMD_AUTHEN, buf, size + 2);
 
     if (AckRecv(buf, 1) == 0)
-        return false;
-    if (buf[0] != 0xFF)
-        return false;
+    {
+        errmsg = "认证:接收失败";
+        goto exit;
+    }
 
-	return true;
+    if (buf[0] != 0xFF)
+    {
+        errmsg = "认证:返回失败";
+        goto exit;
+    }
+
+    ret = true;
+
+exit:
+
+    return ret;
 }
 
 bool RFID::CpuCardMode()
@@ -197,7 +228,10 @@ bool RFID::CpuCardMode()
 
 	ReqSend(ZM_CMD_ENTER_CPUCARD, NULL, 0);
     if (AckRecv(buf, 8) != 8)
+    {
+        errmsg = "进入CPU:接收失败";
         return false;
+    }
 
 	return true;
 }

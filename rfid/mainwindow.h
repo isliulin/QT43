@@ -36,6 +36,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     mwWorker *worker;
+    int msgcnt;
 };
 
 #endif // MAINWINDOW_H
