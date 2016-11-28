@@ -47,10 +47,8 @@ int RfCardReader::WorkerCardRead(WorkerInfo &wi)
     if (wi.Number.empty())
         goto EXIT;
 
-    if (!Authen(2, TYPE_A, pwd, 6))
-	{
-		goto EXIT;
-	}
+    ret = 0;
+
     if (!BlockRead(2, buf, 16))
 	{
 		goto EXIT;

@@ -5,9 +5,11 @@
 #define SWAP16(x)    (((x)<<8) | ((x)>>8))
 #define SIZE(x)    (x)
 
+#define WAITMS    15
+
 RFID::RFID(void)
 {
-    Retry = 15;
+    Retry = 350/WAITMS;
 }
 
 RFID::~RFID(void)
@@ -47,7 +49,7 @@ int RFID::Read(unsigned char *buf, short size)
     char *pbuf = (char*)buf;
     int cnt = 0;
 
-    while (len < size)
+    do
     {
         int n;
 
@@ -58,17 +60,17 @@ int RFID::Read(unsigned char *buf, short size)
 
         if (n == 0)
         {
-            Dev.waitForReadyRead(20);
+            Dev.waitForReadyRead(WAITMS);
             if (cnt ++ > Retry)
                 break;
 
             continue;
         }
 
-        buf += n;
+        pbuf += n;
         len += n;
         cnt = 0;
-    }
+    }while (len < size);
 
     return len;
 }
@@ -269,7 +271,19 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
 
 	if (tmp[size] != Crc8(tmp, size))
 	{
-		len = 0;
+        string str;
+
+        for (int i = 0; i < size; i ++)
+        {
+            char ch[4];
+            sprintf(ch, "%0X", tmp[i]);
+            str += ch;
+            str += " ";
+        }
+
+        qDebug(str.c_str());
+
+        len = 0;
 		goto FAIL;
 	}
 
