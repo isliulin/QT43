@@ -271,18 +271,6 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
 
 	if (tmp[size] != Crc8(tmp, size))
 	{
-        string str;
-
-        for (int i = 0; i < size; i ++)
-        {
-            char ch[4];
-            sprintf(ch, "%0X", tmp[i]);
-            str += ch;
-            str += " ";
-        }
-
-        qDebug(str.c_str());
-
         len = 0;
 		goto FAIL;
 	}
