@@ -1,7 +1,5 @@
 #include "kcreader.h"
-#include <string>
 
-using namespace std;
 #define WAITMS    10
 
 KCReader::KCReader()
@@ -80,6 +78,27 @@ void KCReader::SetDevId(uint8_t devid)
 bool KCReader::DingJiRecover()
 {
     ToDingJi(0x03, ++MsgIdToDJ, NULL, 0);
+
+    return true;
+}
+
+bool KCReader::ShuaKaShowCont(float ctremain, string &name)
+{
+    kcshowct_t *ct;
+    uint8_t buf[64];
+    int len;
+
+    ct = (kcshowct_t*)buf;
+
+    ct->status = 0;
+    ct->ctremain = (uint32_t)(ctremain * 100);
+    ct->namelen = name.size();
+
+    sprintf(ct->name, "%s", name.c_str());
+
+    len = sizeof(*ct) + ct->namelen;
+
+    ToShuaKa(0x15, ++MsgIdSK, buf, len);
 
     return true;
 }
