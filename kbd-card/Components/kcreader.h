@@ -89,9 +89,9 @@ typedef struct
 }kcshowct_t;
 #pragma pack()
 
-class KCReader : public QThread
+class KCReader //: public QThread
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     KCReader();

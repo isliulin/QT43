@@ -123,8 +123,8 @@ int KCReader::Write(char *buf, int size)
 {
     int len;
 
-    Dev.clear();
-    len = Dev.write((char*)buf, size);
+    len = Dev.write(buf, size);
+    Dev.waitForBytesWritten(50);
 
     return len;
 }
@@ -174,7 +174,7 @@ void KCReader::ToShuaKa(uint8_t cmd, uint8_t msgid, uint8_t *buf, int size)
 void KCReader::ReqSend(uint8_t to, uint8_t from, uint8_t cmd,
                        uint8_t rsf, uint8_t *buf, int len)
 {
-    uint8_t tmp[256];
+    uint8_t tmp[128];
     kcmsg_hdr_t *msg;
     int size = 0;
 
