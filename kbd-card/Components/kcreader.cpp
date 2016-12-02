@@ -82,6 +82,15 @@ bool KCReader::DingJiRecover()
     return true;
 }
 
+bool KCReader::ShuaKaGet()
+{
+    uint8_t buf[2] = {0, 1};
+
+    ToShuaKa(0x11, ++MsgIdSK, buf, 2);
+
+    return true;
+}
+
 bool KCReader::ShuaKaShowCont(float ctremain, string &name)
 {
     kcshowct_t *ct;
@@ -99,6 +108,19 @@ bool KCReader::ShuaKaShowCont(float ctremain, string &name)
     len = sizeof(*ct) + ct->namelen;
 
     ToShuaKa(0x15, ++MsgIdSK, buf, len);
+
+    return true;
+}
+
+bool KCReader::DingJiSetCont()
+{
+    kccont_t ct;
+
+    memset(&ct, 0, sizeof(ct));
+    ct.cstatus = 2;
+    memcpy(ct.usContract, "11111111111111111111", 19);
+
+    ToDingJi(0x09, ++MsgIdToDJ, (uint8_t*)&ct, sizeof(ct));
 
     return true;
 }

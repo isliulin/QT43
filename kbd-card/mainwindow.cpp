@@ -120,3 +120,13 @@ void MainWindow::on_pushButton_5_clicked()
 {
     worker->msgq_push(4);
 }
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    worker->msgq_push(5);
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+
+}

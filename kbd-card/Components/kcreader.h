@@ -63,11 +63,12 @@ typedef struct levInfor
     unsigned short usTare;            /* 皮重不会超过655公斤(单位:10g) 注2*/
 }levInfor;
 
-typedef struct communicationData  /* 此结构与定级键盘共用，不能修改 */
+/* 此结构与定级键盘共用，不能修改 */
+typedef struct
 {
     uint8_t cstatus;                        /* status 1个字节的状态数据 */
-    uint8_t usContract[19];           /* 19个ascii字符的合同号 */
-    uint8_t usAssChecker[16];         /* 16个初检员ID */
+    char usContract[19];           /* 19个ascii字符的合同号 */
+    char usAssChecker[16];         /* 16个初检员ID */
     uint32_t uiSerial;                  /* 流水号 */
     uint32_t uiTotalAccnt;              /* 总金额 注2 */
     uint32_t uiTotalWeight;             /* 总重量 注2 */
@@ -78,7 +79,7 @@ typedef struct communicationData  /* 此结构与定级键盘共用，不能修�
     uint32_t uiLevInforNum;             /* 定级级别信息个数 */
     levInfor sLevelInfor[LEVEL_INFOR_MAX];  /* 级别信息详细情况 注3 */
 #define DATAHEADLEN          ((size_t)&((communicationData *)0)->sLevelInfor)
-}communicationData;
+}kccont_t;
 
 typedef struct
 {
@@ -105,6 +106,8 @@ public:
     bool DingJiRestart();
     bool DingJiStandby();
     bool ShuaKaShowCont(float ctremain, string &name);
+    bool ShuaKaGet();
+    bool DingJiSetCont();
 
 private:
     void run();

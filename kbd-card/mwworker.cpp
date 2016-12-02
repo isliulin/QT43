@@ -118,8 +118,16 @@ NEXT:
             theKc.DingJiRecover();
             break;
         case 4:
+        {
             string name = "NameTest";
             theKc.ShuaKaShowCont(100.92, name);
+        }
+            break;
+        case 5:
+            theKc.ShuaKaGet();
+            break;
+        case 6:
+            theKc.DingJiSetCont();
             break;
         }
         tolcnt ++;

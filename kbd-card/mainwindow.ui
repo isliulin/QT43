@@ -313,12 +313,38 @@
      <rect>
       <x>630</x>
       <y>430</y>
-      <width>147</width>
+      <width>281</width>
       <height>37</height>
      </rect>
     </property>
     <property name="text">
-     <string>发送合同信息</string>
+     <string>发送合同信息到交烟刷卡</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_6">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>180</y>
+      <width>124</width>
+      <height>37</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>读交烟刷卡</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_7">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>480</y>
+      <width>281</width>
+      <height>37</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>发送合同信息到定级键盘</string>
     </property>
    </widget>
   </widget>
