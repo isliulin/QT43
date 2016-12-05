@@ -129,6 +129,9 @@ NEXT:
         case 6:
             theKc.DingJiSetCont();
             break;
+        case 7:
+            theKc.ShuaKaEnd();
+            break;
         }
         tolcnt ++;
 #if 0

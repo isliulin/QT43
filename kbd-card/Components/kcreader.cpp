@@ -91,6 +91,15 @@ bool KCReader::ShuaKaGet()
     return true;
 }
 
+bool KCReader::ShuaKaEnd()
+{
+    uint8_t buf[2] = {0, 0xFF};
+
+    ToShuaKa(0x11, ++MsgIdSK, buf, 2);
+
+    return true;
+}
+
 bool KCReader::ShuaKaShowCont(float ctremain, string &name)
 {
     kcshowct_t *ct;

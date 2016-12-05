@@ -107,6 +107,7 @@ public:
     bool DingJiStandby();
     bool ShuaKaShowCont(float ctremain, string &name);
     bool ShuaKaGet();
+    bool ShuaKaEnd();
     bool DingJiSetCont();
 
 private:

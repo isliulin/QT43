@@ -128,5 +128,10 @@ void MainWindow::on_pushButton_6_clicked()
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    worker->msgq_push(6);
+}
 
+void MainWindow::on_pushButton_8_clicked()
+{
+    worker->msgq_push(7);
 }
