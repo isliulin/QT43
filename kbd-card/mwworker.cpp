@@ -85,6 +85,12 @@ NEXT:
         int cnt;
         int ival;
         int msg;
+        int kcmsg;
+
+        if (theKc.RecvProcess(kcmsg))
+        {
+            qDebug("xxz");
+        }
 
         ui->GetCntLimit(cnt);
         if (cnt != 0 && (tolcnt >= cnt))

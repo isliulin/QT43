@@ -90,9 +90,9 @@ typedef struct
 }kcshowct_t;
 #pragma pack()
 
-class KCReader //: public QThread
+class KCReader : public QThread
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
     KCReader();
@@ -100,6 +100,8 @@ public:
 
     bool Open(const char *name, int br = 115200);
     void Close();
+
+    bool RecvProcess(int &msg);
 
     void SetDevId(uint8_t devid);
     bool DingJiRecover();
@@ -111,7 +113,7 @@ public:
     bool DingJiSetCont();
 
 private:
-    void run();
+    bool DevInit(const char *name, int br = 115200);
 
     int Write(char *buf, int size);
     int Read(char *buf, int size);

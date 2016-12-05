@@ -14,10 +14,24 @@ KCReader::KCReader()
 
 KCReader::~KCReader()
 {
-    Dev.close();
+    isrun = false;
 }
 
 bool KCReader::Open(const char *name, int br)
+{
+    bool ret = true;
+
+    ret = DevInit(name);
+
+    return ret;
+}
+
+void KCReader::Close()
+{
+
+}
+
+bool KCReader::DevInit(const char *name, int br)
 {
     bool ret = true;
 
@@ -29,45 +43,8 @@ bool KCReader::Open(const char *name, int br)
     Dev.setFlowControl(QSerialPort::NoFlowControl);
 
     ret = Dev.open(QIODevice::ReadWrite);
-    if (ret)
-    {
-       // start();
-    }
 
     return ret;
-}
-
-void KCReader::Close()
-{
-    Dev.close();
-}
-
-void KCReader::run()
-{
-    char rxbuf[256];
-    int size;
-
-    isrun = true;
-
-    while (isrun)
-    {
-        if (!Dev.waitForReadyRead(100))
-            continue;
-
-        size = Dev.read(rxbuf, sizeof(rxbuf));
-
-        QString lstr;
-
-        for (int i = 0; i < size; i ++)
-        {
-            QString tmp;
-
-            tmp.sprintf("%0X ", rxbuf[i]);
-            lstr += tmp;
-        }
-        string str = lstr.toStdString();
-        qDebug(str.c_str());
-    }
 }
 
 void KCReader::SetDevId(uint8_t devid)
@@ -150,6 +127,19 @@ bool KCReader::DingJiStandby()
     return true;
 }
 
+bool KCReader::RecvProcess(int &msg)
+{
+    int size;
+    char buf[256];
+    bool ret = false;
+
+    size = Read(buf, sizeof(buf));
+    if (size == 0)
+        return ret;
+
+    return true;
+}
+
 int KCReader::Write(char *buf, int size)
 {
     int len;
@@ -165,12 +155,40 @@ int KCReader::Read(char *buf, int size)
     int len = 0;
     char *pbuf = (char*)buf;
     int cnt = 0;
+    kcmsg_hdr_t *msg;
+    int dlen;
+    uint8_t chk;
 
-    do
+    //等待数据
+    Dev.waitForReadyRead(WAITMS);
+    if (Dev.bytesAvailable() == 0)
+    {
+       return 0;
+    }
+    Dev.waitForReadyRead(WAITMS);
+
+    //读取数据头
+    len = Dev.read(buf, sizeof(kcmsg_hdr_t));
+    if (len != sizeof(kcmsg_hdr_t))
+        return 0;
+
+    //检查帧头
+    msg = (kcmsg_hdr_t*)buf;
+    dlen = msg->len;
+    if (msg->stx != 0xAA || (dlen + len) > size)
+    {
+        Dev.clear(QSerialPort::Input);
+        return 0;
+    }
+
+    pbuf = buf + len;
+    len = 0;
+
+    while (len < dlen)
     {
         int n;
 
-        n = Dev.read(pbuf, size - len);
+        n = Dev.read(pbuf, dlen - len);
 
         if (n == -1)
             break;
@@ -187,7 +205,13 @@ int KCReader::Read(char *buf, int size)
         pbuf += n;
         len += n;
         cnt = 0;
-    }while (len < size);
+    }
+
+    len += sizeof(kcmsg_hdr_t);
+    chk = buf[len - 1];
+
+    if (chk != BCC((uint8_t*)&buf[1], len - 2))
+        len = 0;
 
     return len;
 }
