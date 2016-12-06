@@ -127,17 +127,56 @@ bool KCReader::DingJiStandby()
     return true;
 }
 
+bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
+{
+    switch (cmd)
+    {
+    case 0x12: /* 收购设备命令刷卡设备可以开始烟农刷卡的响应 */
+        qDebug("Shuaka");
+        break;
+    case 0x16: /* 刷卡设备向收购设备传递卡号 */
+        /* 1状态+19合同号+1逗号+16初检员卡号 */
+        if (len == (1+19+16+1))
+        {
+            char card[24] = {0};
+           sprintf(card, "%d", card[0]);
+            memcpy(&card[1], &buf[1], 19);
+            qDebug(card);
+        }
+        break;
+    }
+
+    return true;
+}
+
+bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len)
+{
+    return true;
+}
+
 bool KCReader::RecvProcess(int &msg)
 {
     int size;
     char buf[256];
     bool ret = false;
+    kcmsg_hdr_t *hdr;
 
     size = Read(buf, sizeof(buf));
     if (size == 0)
         return ret;
 
-    return true;
+    hdr = (kcmsg_hdr_t*)buf;
+
+    if (hdr->from == KCDEV_DINGJI)
+    {
+        ret = DingJiProcess(hdr->cmd, hdr->data, hdr->len);
+    }
+    else if (hdr->from == KCDEV_SHUAKA)
+    {
+        ret = ShuaKaProcess(hdr->cmd, hdr->data, hdr->len);
+    }
+
+    return ret;
 }
 
 int KCReader::Write(char *buf, int size)

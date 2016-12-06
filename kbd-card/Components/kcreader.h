@@ -114,6 +114,8 @@ public:
 
 private:
     bool DevInit(const char *name, int br = 115200);
+    bool DingJiProcess(uint8_t cmd, uint8_t *buf, int len);
+    bool ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len);
 
     int Write(char *buf, int size);
     int Read(char *buf, int size);

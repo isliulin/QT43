@@ -135,3 +135,8 @@ void MainWindow::on_pushButton_8_clicked()
 {
     worker->msgq_push(7);
 }
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    worker->msgq_push(8);
+}

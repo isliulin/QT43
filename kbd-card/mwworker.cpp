@@ -87,10 +87,7 @@ NEXT:
         int msg;
         int kcmsg;
 
-        if (theKc.RecvProcess(kcmsg))
-        {
-            qDebug("xxz");
-        }
+        theKc.RecvProcess(kcmsg);
 
         ui->GetCntLimit(cnt);
         if (cnt != 0 && (tolcnt >= cnt))
@@ -136,6 +133,9 @@ NEXT:
             theKc.DingJiSetCont();
             break;
         case 7:
+            theKc.ShuaKaEnd();
+            break;
+        case 8:
             theKc.ShuaKaEnd();
             break;
         }
