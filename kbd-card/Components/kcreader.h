@@ -112,10 +112,14 @@ public:
     bool ShuaKaEnd();
     bool DingJiSetCont();
 
+    bool CardNumGet(string &card);
+    bool LevelCodeGet(string &lv);
+
 private:
     bool DevInit(const char *name, int br = 115200);
-    bool DingJiProcess(uint8_t cmd, uint8_t *buf, int len);
+    bool DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid);
     bool ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len);
+    void RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num);
 
     int Write(char *buf, int size);
     int Read(char *buf, int size);
@@ -135,6 +139,9 @@ private:
     uint8_t MsgIdFmDj;
     uint8_t MsgIdSK;
     bool isrun;
+    string CardNum;
+    string LevelCode;
+    uint8_t LevelId[104];
 };
 
 #endif // KCREADER_H

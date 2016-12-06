@@ -102,48 +102,45 @@ NEXT:
         ui->GetInterval(ival);
         ui->GetMode(mode);
 
-        if (!msgq_get(msg))
+        if (msgq_get(msg))
         {
-            sleep(1);
-            continue;
+            switch (msg)
+            {
+            case 1:
+                ret = theKc.DingJiRestart();
+                break;
+            case 2:
+                theKc.DingJiStandby();
+                break;
+            case 3:
+                theKc.DingJiRecover();
+                break;
+            case 4:
+            {
+                string name = "NameTest";
+                theKc.ShuaKaShowCont(100.92, name);
+            }
+                break;
+            case 5:
+                theKc.ShuaKaGet();
+                break;
+            case 6:
+                theKc.DingJiSetCont();
+                break;
+            case 7:
+                theKc.ShuaKaEnd();
+                break;
+            case 8:
+                theKc.ShuaKaEnd();
+                break;
+            }
         }
 
-
-        switch (msg)
-        {
-        case 1:
-            ret = theKc.DingJiRestart();
-            break;
-        case 2:
-            theKc.DingJiStandby();
-            break;
-        case 3:
-            theKc.DingJiRecover();
-            break;
-        case 4:
-        {
-            string name = "NameTest";
-            theKc.ShuaKaShowCont(100.92, name);
-        }
-            break;
-        case 5:
-            theKc.ShuaKaGet();
-            break;
-        case 6:
-            theKc.DingJiSetCont();
-            break;
-        case 7:
-            theKc.ShuaKaEnd();
-            break;
-        case 8:
-            theKc.ShuaKaEnd();
-            break;
-        }
         tolcnt ++;
-#if 0
+
+        ret = theKc.CardNumGet(tmp);
         if (ret)
         {
-            suscnt ++;
             ui->AddCardMsg(tmp);
 
             if (ui->GetFileOut())
@@ -153,14 +150,12 @@ NEXT:
                 data.flush();
             }
         }
-        else
+
+        if (theKc.LevelCodeGet(tmp))
         {
-
-            errcnt ++;
-
-            emit ShowStatus(tmp);
+            ui->AddCardMsg(tmp);
         }
-#endif
+
         ui->ShowErrCnt(errcnt, suscnt);
 
         while (isrun && ival)

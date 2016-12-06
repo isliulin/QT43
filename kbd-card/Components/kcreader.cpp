@@ -63,6 +63,8 @@ bool KCReader::ShuaKaGet()
 {
     uint8_t buf[2] = {0, 1};
 
+    CardNum.clear();
+
     ToShuaKa(0x11, ++MsgIdSK, buf, 2);
 
     return true;
@@ -104,7 +106,8 @@ bool KCReader::DingJiSetCont()
 
     memset(&ct, 0, sizeof(ct));
     ct.cstatus = 2;
-    memcpy(ct.usContract, "11111111111111111111", 19);
+    memcpy(ct.usContract, "6214570281000498870", 19);
+    memset(ct.usAssChecker, '0', 16);
 
     ToDingJi(0x09, ++MsgIdToDJ, (uint8_t*)&ct, sizeof(ct));
 
@@ -139,9 +142,9 @@ bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
         if (len == (1+19+16+1))
         {
             char card[24] = {0};
-           sprintf(card, "%d", card[0]);
-            memcpy(&card[1], &buf[1], 19);
-            qDebug(card);
+
+            memcpy(&card[0], &buf[1], 19);
+            CardNum = card;
         }
         break;
     }
@@ -149,8 +152,46 @@ bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
     return true;
 }
 
-bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len)
+void KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
 {
+    ToDingJi(0x07, msgid, NULL, 0);
+
+    if (msgid == MsgIdFmDj)
+        return;
+
+    MsgIdFmDj = msgid;
+
+    if (status == LEVING)
+    {
+        LevelCode = "B1L";
+    }
+    else if (status == ENDLEVING)
+    {
+
+    }
+}
+
+bool KCReader::LevelCodeGet(string &lv)
+{
+    if (LevelCode.empty())
+        return false;
+
+    lv = LevelCode;
+    LevelCode.clear();
+
+    return true;
+}
+
+bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid)
+{
+
+    switch (cmd)
+    {
+    case 0x08:
+        RecvLevel(msgid, buf[0], &buf[1], len - 1);
+        break;
+    }
+
     return true;
 }
 
@@ -169,7 +210,7 @@ bool KCReader::RecvProcess(int &msg)
 
     if (hdr->from == KCDEV_DINGJI)
     {
-        ret = DingJiProcess(hdr->cmd, hdr->data, hdr->len);
+        ret = DingJiProcess(hdr->cmd, hdr->data, hdr->len, hdr->rsf);
     }
     else if (hdr->from == KCDEV_SHUAKA)
     {
@@ -179,12 +220,23 @@ bool KCReader::RecvProcess(int &msg)
     return ret;
 }
 
+bool KCReader::CardNumGet(string &card)
+{
+    if (CardNum.empty())
+        return false;
+
+    card = CardNum;
+    CardNum.clear();
+
+    return true;
+}
+
 int KCReader::Write(char *buf, int size)
 {
     int len;
 
     len = Dev.write(buf, size);
-    Dev.waitForBytesWritten(50);
+    Dev.waitForBytesWritten(300);
 
     return len;
 }
@@ -268,10 +320,11 @@ void KCReader::ToShuaKa(uint8_t cmd, uint8_t msgid, uint8_t *buf, int size)
 void KCReader::ReqSend(uint8_t to, uint8_t from, uint8_t cmd,
                        uint8_t rsf, uint8_t *buf, int len)
 {
-    uint8_t tmp[128];
+    uint8_t *tmp;
     kcmsg_hdr_t *msg;
     int size = 0;
 
+    tmp = new uint8_t[2048];
     msg = (kcmsg_hdr_t*)tmp;
 
     msg->stx = 0xAA;
@@ -296,6 +349,8 @@ void KCReader::ReqSend(uint8_t to, uint8_t from, uint8_t cmd,
     msg->data[len] = BCC(&tmp[1], size - 1);
 
     Write((char*)tmp, size + 1);
+
+    delete tmp;
 }
 
 uint8_t KCReader::BCC(uint8_t *buf, int size)
