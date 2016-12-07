@@ -349,7 +349,7 @@
      <rect>
       <x>620</x>
       <y>90</y>
-      <width>241</width>
+      <width>251</width>
       <height>311</height>
      </rect>
     </property>
@@ -387,12 +387,12 @@
       <rect>
        <x>30</x>
        <y>170</y>
-       <width>147</width>
+       <width>216</width>
        <height>37</height>
       </rect>
      </property>
      <property name="text">
-      <string>发送合同信息</string>
+      <string>恢复定级状态到键盘</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_2">
@@ -405,7 +405,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>允许定级</string>
+      <string>开始定级</string>
      </property>
     </widget>
    </widget>

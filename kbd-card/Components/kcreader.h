@@ -78,7 +78,6 @@ typedef struct
     uint8_t ucBreedGrades[104];     /* 品种，分等级信息 */
     uint32_t uiLevInforNum;             /* 定级级别信息个数 */
     levInfor sLevelInfor[LEVEL_INFOR_MAX];  /* 级别信息详细情况 注3 */
-#define DATAHEADLEN          ((size_t)&((communicationData *)0)->sLevelInfor)
 }kccont_t;
 
 typedef struct
@@ -110,8 +109,8 @@ public:
     bool ShuaKaShowCont(float ctremain, string &name);
     bool ShuaKaGet();
     bool ShuaKaEnd();
+    bool InitCont(uint8_t status, uint8_t *lv, int num);
     bool DingJiSetCont();
-
     bool CardNumGet(string &card);
     bool LevelCodeGet(string &lv);
 
@@ -141,7 +140,7 @@ private:
     bool isrun;
     string CardNum;
     string LevelCode;
-    uint8_t LevelId[104];
+    kccont_t Cont;
 };
 
 #endif // KCREADER_H

@@ -10,6 +10,8 @@ KCReader::KCReader()
     MsgIdSK = 0;
 
     Retry = 400/WAITMS;
+
+    memset(&Cont, 0, sizeof(Cont));
 }
 
 KCReader::~KCReader()
@@ -100,16 +102,30 @@ bool KCReader::ShuaKaShowCont(float ctremain, string &name)
     return true;
 }
 
+bool KCReader::InitCont(uint8_t status, uint8_t *lv, int num)
+{
+    Cont.cstatus = status;
+
+    memcpy(Cont.usContract, "62121111111111111111", 19);
+    memcpy(Cont.usAssChecker, "0000000000000000", 16);
+    Cont.uiSerial = 1;
+
+    for (int i = 0; i < num; i ++)
+    {
+        Cont.sLevelInfor[i].ucLevel = lv[i];
+    }
+    Cont.uiLevInforNum = num;
+
+    return true;
+}
+
 bool KCReader::DingJiSetCont()
 {
-    kccont_t ct;
+    int size;
 
-    memset(&ct, 0, sizeof(ct));
-    ct.cstatus = 2;
-    memcpy(ct.usContract, "6214570281000498870", 19);
-    memset(ct.usAssChecker, '0', 16);
+    size = sizeof(Cont) - (sizeof(levInfor) * (LEVEL_INFOR_MAX - Cont.uiLevInforNum));
 
-    ToDingJi(0x09, ++MsgIdToDJ, (uint8_t*)&ct, sizeof(ct));
+    ToDingJi(0x05, ++MsgIdToDJ, (uint8_t*)&Cont, size);
 
     return true;
 }
@@ -164,10 +180,19 @@ void KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
     if (status == LEVING)
     {
         LevelCode = "B1L";
+        Cont.uiLevInforNum = num;
+        for (int i = 0; i < num; i ++)
+        {
+            Cont.sLevelInfor[i].ucLevel = lv[i];
+        }
     }
     else if (status == ENDLEVING)
     {
-
+        Cont.uiLevInforNum = num;
+        for (int i = 0; i < num; i ++)
+        {
+            Cont.sLevelInfor[i].ucLevel = lv[i];
+        }
     }
 }
 
@@ -189,6 +214,9 @@ bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid)
     {
     case 0x08:
         RecvLevel(msgid, buf[0], &buf[1], len - 1);
+        break;
+    case 0x06:
+        DingJiSetCont();
         break;
     }
 

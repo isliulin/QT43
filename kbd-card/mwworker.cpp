@@ -52,6 +52,7 @@ void mwWorker::run()
     QFile data("kclog.txt");
     KCReader theKc;
     RfCardReader theNfc;
+    uint8_t lvid[3] = {0x26, 0x25, 0x24};
 
     data.open(QFile::WriteOnly | QIODevice::Truncate);
 
@@ -79,6 +80,8 @@ void mwWorker::run()
 NEXT:
     queue <int> cc;
     msgq.swap(cc);
+
+    theKc.InitCont(2, lvid, 1);
 
     while (isrun)
     {
