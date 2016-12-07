@@ -350,7 +350,7 @@
       <x>620</x>
       <y>90</y>
       <width>251</width>
-      <height>311</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="title">
@@ -379,7 +379,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>开始新流程</string>
+      <string>等待工作员</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_7">
@@ -406,6 +406,19 @@
      </property>
      <property name="text">
       <string>开始定级</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_10">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>290</y>
+       <width>101</width>
+       <height>37</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>等待烟农</string>
      </property>
     </widget>
    </widget>

@@ -146,6 +146,15 @@ bool KCReader::DingJiStandby()
     return true;
 }
 
+bool KCReader::DingJiWaitFarmer()
+{
+    uint8_t stat = STANDBY;
+
+    ToDingJi(0x09, ++MsgIdToDJ, &stat, 1);
+
+    return true;
+}
+
 bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
 {
     switch (cmd)

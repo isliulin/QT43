@@ -136,6 +136,9 @@ NEXT:
             case 8:
                 theKc.ShuaKaEnd();
                 break;
+            case 9:
+                theKc.DingJiWaitFarmer();
+                break;
             }
         }
 

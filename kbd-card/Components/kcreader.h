@@ -106,6 +106,7 @@ public:
     bool DingJiRecover();
     bool DingJiRestart();
     bool DingJiStandby();
+    bool DingJiWaitFarmer();
     bool ShuaKaShowCont(float ctremain, string &name);
     bool ShuaKaGet();
     bool ShuaKaEnd();
