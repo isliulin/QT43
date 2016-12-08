@@ -141,7 +141,16 @@ NEXT:
                 theKc.ShuaKaEnd();
                 break;
             case 9:
-                theKc.DingJiWaitFarmer();
+                ret = theKc.DingJiWaitFarmer();
+                if (ret)
+                {
+                    tmp = "收到定级键盘应答";
+                }
+                else
+                {
+                    tmp = "定级键盘无应答";
+                }
+                emit ShowStatus(tmp);
                 break;
             }
         }

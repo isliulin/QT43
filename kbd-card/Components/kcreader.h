@@ -130,6 +130,7 @@ private:
 
     void ToDingJi(uint8_t cmd, uint8_t msgid, uint8_t *buf, int size);
     void ToShuaKa(uint8_t cmd, uint8_t msgid, uint8_t *buf, int size);
+    char* LvIdToCode(uint8_t id);
 
 private:
     int Retry;

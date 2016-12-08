@@ -2,6 +2,97 @@
 
 #define WAITMS    10
 
+static const char *LevelName[] =
+{
+    "",
+    // 1
+    "C1F",
+    // 2
+    "C2F",
+    // 3
+    "C3F",
+    // 4
+    "C1L",
+    // 5
+    "C2L",
+    // 6
+    "B1F",
+    // 7
+    "B2F",
+    // 8
+    "B1L",
+    // 9
+    "B1R",
+    // 10
+    "H1F",
+    // 11
+    "X1F",
+    // 12
+    "C3L",
+    // 13
+    "C4F",
+    // 14
+    "C4L",
+    // 15
+    "X2F",
+    // 16
+    "X3F",
+    // 17
+    "X1L",
+    // 18
+    "X2L",
+    // 19
+    "B3F",
+    // 20
+    "B4F",
+    // 21
+    "B2L",
+    // 22
+    "B3L",
+    // 23
+    "B2R",
+    // 24
+    "B3R",
+    // 25
+    "H2F",
+    // 26
+    "X2V",
+    // 27
+    "C3V",
+    // 28
+    "B2V",
+    // 29
+    "B3V",
+    // 30
+    "S1",
+    // 31
+    "B4L",
+    // 32
+    "X3L",
+    // 33
+    "X4L",
+    // 34
+    "X4F",
+    // 35
+    "S2",
+    // 36
+    "CX1K",
+    // 37
+    "CX2K",
+    // 38
+    "B1K",
+    // 39
+    "B2K",
+    // 40
+    "B3K",
+    // 41
+    "GY1",
+    // 42
+    "GY2",
+    // 43
+    "JW",
+};
+
 KCReader::KCReader()
 {
     DevId = 0;
@@ -101,10 +192,6 @@ bool KCReader::InitCont(uint8_t status, uint8_t *lv, int num)
 {
     Cont.cstatus = status;
 
-    memcpy(Cont.usContract, "62121111111111111111", 19);
-    memcpy(Cont.usAssChecker, "0000000000000000", 16);
-    Cont.uiSerial = 1;
-
     for (int i = 0; i < num; i ++)
     {
         Cont.sLevelInfor[i].ucLevel = lv[i];
@@ -184,7 +271,8 @@ bool KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
 
     if (status == LEVING)
     {
-        LevelCode = "B1L";
+        LevelCode = LvIdToCode(lv[num-1]);
+
         Cont.uiLevInforNum = num;
         for (int i = 0; i < num; i ++)
         {
@@ -426,4 +514,12 @@ uint8_t KCReader::BCC(uint8_t *buf, int size)
     }
 
     return (uint8_t)tmp;
+}
+
+char* KCReader::LvIdToCode(uint8_t id)
+{
+    if (id > 43)
+        id = 0;
+
+    return (char*)LevelName[id];
 }
