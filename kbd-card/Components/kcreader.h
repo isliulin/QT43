@@ -119,7 +119,7 @@ private:
     bool DevInit(const char *name, int br = 115200);
     bool DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid);
     bool ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len);
-    void RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num);
+    bool RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num);
 
     int Write(char *buf, int size);
     int Read(char *buf, int size);

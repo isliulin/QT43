@@ -177,12 +177,12 @@ bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
     return true;
 }
 
-void KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
+bool KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
 {
     ToDingJi(0x07, msgid, NULL, 0);
 
     if (msgid == MsgIdFmDj)
-        return;
+        return false;
 
     MsgIdFmDj = msgid;
 
@@ -203,6 +203,8 @@ void KCReader::RecvLevel(uint8_t msgid, uint8_t status, uint8_t *lv, int num)
             Cont.sLevelInfor[i].ucLevel = lv[i];
         }
     }
+
+    return true;
 }
 
 bool KCReader::LevelCodeGet(string &lv)
@@ -218,18 +220,19 @@ bool KCReader::LevelCodeGet(string &lv)
 
 bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid)
 {
+    bool ret = false;
 
     switch (cmd)
     {
     case 0x08:
-        RecvLevel(msgid, buf[0], &buf[1], len - 1);
+        ret = RecvLevel(msgid, buf[0], &buf[1], len - 1);
         break;
     case 0x06:
-        DingJiSetCont();
+        ret = DingJiSetCont();
         break;
     }
 
-    return true;
+    return ret;
 }
 
 bool KCReader::RecvProcess(int &msg)
