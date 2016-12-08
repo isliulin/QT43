@@ -90,8 +90,6 @@ NEXT:
         int msg;
         int kcmsg;
 
-        theKc.RecvProcess(kcmsg);
-
         ui->GetCntLimit(cnt);
         if (cnt != 0 && (tolcnt >= cnt))
         {
@@ -115,9 +113,6 @@ NEXT:
             case 2:
                 theKc.DingJiStandby();
                 break;
-            case 3:
-                theKc.DingJiRecover();
-                break;
             case 4:
             {
                 string name = "NameTest";
@@ -125,7 +120,16 @@ NEXT:
             }
                 break;
             case 5:
-                theKc.ShuaKaGet();
+                ret = theKc.ShuaKaWaitFarmer();
+                if (ret)
+                {
+                    tmp = "收到交烟刷卡应答";
+                }
+                else
+                {
+                    tmp = "交烟刷卡无应答";
+                }
+                emit ShowStatus(tmp);
                 break;
             case 6:
                 theKc.DingJiSetCont();
@@ -142,7 +146,7 @@ NEXT:
             }
         }
 
-        tolcnt ++;
+        theKc.RecvProcess();
 
         ret = theKc.CardNumGet(tmp);
         if (ret)

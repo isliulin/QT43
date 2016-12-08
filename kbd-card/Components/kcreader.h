@@ -100,15 +100,15 @@ public:
     bool Open(const char *name, int br = 115200);
     void Close();
 
-    bool RecvProcess(int &msg);
+    bool RecvProcess(int wcmd = 0, int wmsec = 0);
 
     void SetDevId(uint8_t devid);
-    bool DingJiRecover();
+
     bool DingJiRestart();
     bool DingJiStandby();
     bool DingJiWaitFarmer();
     bool ShuaKaShowCont(float ctremain, string &name);
-    bool ShuaKaGet();
+    bool ShuaKaWaitFarmer();
     bool ShuaKaEnd();
     bool InitCont(uint8_t status, uint8_t *lv, int num);
     bool DingJiSetCont();

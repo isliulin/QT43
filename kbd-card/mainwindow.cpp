@@ -61,44 +61,34 @@ void MainWindow::GetSerial(string &s)
 
 void MainWindow::ShowErrCnt(int err, int sus)
 {
-    QString qs;
-
-    qs.sprintf("%d", err);
-    ui->lb_errcnt->setText(qs);
-    qs.sprintf("%d", sus);
-    ui->lb_suscnt->setText(qs);
+    err = sus;
+    sus = err;
 }
 
 void MainWindow::GetMode(int &mode)
 {
-    QString qs;
-
-    qs = ui->cb_mode->currentText();
-    qs = qs.at(0);
-    mode = qs.toInt();
+    mode = 0;
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     ui->te_card->clear();
-    ui->lb_errcnt->clear();
-    ui->lb_suscnt->clear();
     worker->clear();
 }
 
 void MainWindow::GetCntLimit(int &cnt)
 {
-    cnt = ui->sb_cnt->value();
+    cnt = 0;
 }
 
 void MainWindow::GetInterval(int &sec)
 {
-    sec = ui->sb_ival->value();
+    sec = 0;
 }
 
 bool MainWindow::GetFileOut(void)
 {
-    return ui->cb_file->isChecked();
+    return false;
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -109,11 +99,6 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     worker->msgq_push(2);
-}
-
-void MainWindow::on_pushButton_4_clicked()
-{
-    worker->msgq_push(3);
 }
 
 void MainWindow::on_pushButton_5_clicked()

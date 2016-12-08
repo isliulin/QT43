@@ -54,22 +54,17 @@ void KCReader::SetDevId(uint8_t devid)
     DevId = devid;
 }
 
-bool KCReader::DingJiRecover()
-{
-    ToDingJi(0x03, ++MsgIdToDJ, NULL, 0);
-
-    return true;
-}
-
-bool KCReader::ShuaKaGet()
+bool KCReader::ShuaKaWaitFarmer()
 {
     uint8_t buf[2] = {0, 1};
+    bool ret;
 
     CardNum.clear();
 
     ToShuaKa(0x11, ++MsgIdSK, buf, 2);
+    ret = RecvProcess(0x12, 1000);
 
-    return true;
+    return ret;
 }
 
 bool KCReader::ShuaKaEnd()
@@ -149,10 +144,12 @@ bool KCReader::DingJiStandby()
 bool KCReader::DingJiWaitFarmer()
 {
     uint8_t stat = STANDBY;
+    bool ret;
 
     ToDingJi(0x09, ++MsgIdToDJ, &stat, 1);
+    ret = RecvProcess(0x0A, 1000);
 
-    return true;
+    return ret;
 }
 
 bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
@@ -160,7 +157,6 @@ bool KCReader::ShuaKaProcess(uint8_t cmd, uint8_t *buf, int len)
     switch (cmd)
     {
     case 0x12: /* 收购设备命令刷卡设备可以开始烟农刷卡的响应 */
-        qDebug("Shuaka");
         break;
     case 0x16: /* 刷卡设备向收购设备传递卡号 */
         /* 1状态+19合同号+1逗号+16初检员卡号 */
@@ -235,12 +231,14 @@ bool KCReader::DingJiProcess(uint8_t cmd, uint8_t *buf, int len, uint8_t msgid)
     return ret;
 }
 
-bool KCReader::RecvProcess(int &msg)
+bool KCReader::RecvProcess(int wcmd, int wmsec)
 {
     int size;
     char buf[256];
     bool ret = false;
     kcmsg_hdr_t *hdr;
+
+    Dev.waitForReadyRead(wmsec);
 
     size = Read(buf, sizeof(buf));
     if (size == 0)
@@ -255,6 +253,31 @@ bool KCReader::RecvProcess(int &msg)
     else if (hdr->from == KCDEV_SHUAKA)
     {
         ret = ShuaKaProcess(hdr->cmd, hdr->data, hdr->len);
+    }
+
+    if (!ret)
+    {
+        QString qs;
+        string  ss;
+        for (int i = 0; i < size; i ++)
+        {
+            QString t;
+
+            t.sprintf("%02X ", buf[i]);
+            qs += t;
+        }
+
+        ss = qs.toStdString();
+        qDebug(ss.c_str());
+    }
+
+    if (wcmd == hdr->cmd)
+    {
+        ret = true;
+    }
+    else
+    {
+        ret = false;
     }
 
     return ret;
