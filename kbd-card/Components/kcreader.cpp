@@ -147,7 +147,7 @@ void KCReader::SetDevId(uint8_t devid)
 
 bool KCReader::ShuaKaWaitFarmer()
 {
-    uint8_t buf[2] = {0, 1};
+    uint8_t buf[2] = {0x00, 0xFF};
     bool ret;
 
     CardNum.clear();
@@ -156,15 +156,6 @@ bool KCReader::ShuaKaWaitFarmer()
     ret = RecvProcess(0x12, 1000);
 
     return ret;
-}
-
-bool KCReader::ShuaKaEnd()
-{
-    uint8_t buf[2] = {0, 0xFF};
-
-    ToShuaKa(0x11, ++MsgIdSK, buf, 2);
-
-    return true;
 }
 
 bool KCReader::ShuaKaShowCont(float ctremain, string &name)

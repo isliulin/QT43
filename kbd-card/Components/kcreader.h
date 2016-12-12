@@ -109,7 +109,7 @@ public:
     bool DingJiWaitFarmer();
     bool ShuaKaShowCont(float ctremain, string &name);
     bool ShuaKaWaitFarmer();
-    bool ShuaKaEnd();
+
     bool InitCont(uint8_t status, uint8_t *lv, int num);
     bool DingJiSetCont();
     bool CardNumGet(string &card);

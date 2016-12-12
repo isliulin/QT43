@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1030</width>
-    <height>684</height>
+    <width>933</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="font">
@@ -90,9 +90,9 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>640</x>
       <y>80</y>
-      <width>301</width>
+      <width>261</width>
       <height>291</height>
      </rect>
     </property>
@@ -102,21 +102,21 @@
     <widget class="QPushButton" name="pushButton_6">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>50</y>
+       <x>40</x>
+       <y>60</y>
        <width>101</width>
        <height>37</height>
       </rect>
      </property>
      <property name="text">
-      <string>读烟农卡</string>
+      <string>等待烟农</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_5">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>100</y>
+       <x>40</x>
+       <y>110</y>
        <width>101</width>
        <height>37</height>
       </rect>
@@ -125,24 +125,11 @@
       <string>验证通过</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_8">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>220</y>
-       <width>101</width>
-       <height>37</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>交收完成</string>
-     </property>
-    </widget>
     <widget class="QComboBox" name="comboBox">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>160</y>
+       <x>40</x>
+       <y>170</y>
        <width>101</width>
        <height>34</height>
       </rect>
@@ -151,8 +138,8 @@
     <widget class="QPushButton" name="pushButton_9">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>160</y>
+       <x>150</x>
+       <y>170</y>
        <width>93</width>
        <height>37</height>
       </rect>
@@ -165,7 +152,7 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>380</x>
       <y>80</y>
       <width>251</width>
       <height>301</height>
@@ -191,7 +178,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>120</y>
+       <y>170</y>
        <width>216</width>
        <height>37</height>
       </rect>
@@ -203,8 +190,8 @@
     <widget class="QPushButton" name="pushButton_2">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>180</y>
+       <x>30</x>
+       <y>220</y>
        <width>101</width>
        <height>37</height>
       </rect>
@@ -216,8 +203,8 @@
     <widget class="QPushButton" name="pushButton_10">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>240</y>
+       <x>30</x>
+       <y>110</y>
        <width>101</width>
        <height>37</height>
       </rect>
@@ -233,7 +220,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1030</width>
+     <width>933</width>
      <height>26</height>
     </rect>
    </property>

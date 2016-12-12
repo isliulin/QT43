@@ -134,12 +134,6 @@ NEXT:
             case 6:
                 theKc.DingJiSetCont();
                 break;
-            case 7:
-                theKc.ShuaKaEnd();
-                break;
-            case 8:
-                theKc.ShuaKaEnd();
-                break;
             case 9:
                 ret = theKc.DingJiWaitFarmer();
                 if (ret)
