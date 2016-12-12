@@ -17,13 +17,13 @@ SOURCES += main.cpp\
     libqrencode/bitstream.c \
     libqrencode/mmask.c \
     libqrencode/mqrspec.c \
-    libqrencode/qrenc.c \
     libqrencode/qrencode.c \
     libqrencode/qrinput.c \
     libqrencode/qrspec.c \
     libqrencode/rsecc.c \
     libqrencode/split.c \
-    libqrencode/mask.c
+    libqrencode/mask.c \
+    mwworker.cpp
 
 HEADERS  += mainwindow.h \
     libqrencode/bitstream.h \
@@ -35,6 +35,7 @@ HEADERS  += mainwindow.h \
     libqrencode/qrinput.h \
     libqrencode/qrspec.h \
     libqrencode/rsecc.h \
-    libqrencode/split.h
+    libqrencode/split.h \
+    mwworker.h
 
 FORMS    += mainwindow.ui
