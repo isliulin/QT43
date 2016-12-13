@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     libqrencode/rsecc.c \
     libqrencode/split.c \
     libqrencode/mask.c \
-    mwworker.cpp
+    mwworker.cpp \
+    printer.cpp
 
 HEADERS  += mainwindow.h \
     libqrencode/bitstream.h \
@@ -36,6 +37,7 @@ HEADERS  += mainwindow.h \
     libqrencode/qrspec.h \
     libqrencode/rsecc.h \
     libqrencode/split.h \
-    mwworker.h
+    mwworker.h \
+    printer.h
 
 FORMS    += mainwindow.ui
