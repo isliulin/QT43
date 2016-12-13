@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QWidget>
 
+class MainWindow;
+
 class mwworker : public QThread
 {
     Q_OBJECT
@@ -15,7 +17,7 @@ private:
     void run();
 
 private:
-    QWidget *ui;
+    MainWindow *ui;
     bool isrun;
 };
 

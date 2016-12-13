@@ -16,6 +16,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void DrawQrCode();
+
 private:
     Ui::MainWindow *ui;
     mwworker *worker;
