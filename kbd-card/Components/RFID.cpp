@@ -290,20 +290,15 @@ FAIL:
 
 unsigned char RFID::Crc8(unsigned char *buf, short len)
 {
-	unsigned char x1=0;
-	unsigned char x2=0;
-	unsigned char crc=0;
+    unsigned char crc = 0;
 
 	if(buf == NULL)
 		return 0;
 
 	for(short i = 0; i < len; i ++)
 	{
-		x2 = buf[i];
-		x1 ^= x2;
+        crc ^= buf[i];
 	}
-
-	crc = x1;
 
 	return crc;
 }
