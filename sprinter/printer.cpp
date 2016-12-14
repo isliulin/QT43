@@ -90,7 +90,7 @@ bool printer::print(string &s, int width)
 
     qrx = 600;
     qry = Param->Font_V - 0x40;
-    sprintf(pw, "DMATRIX %d,%d,%d,%d,\"", qrx, qry, width*8, width*8);
+    sprintf(pw, "DMATRIX %d,%d,%d,%d,x6,\"", qrx, qry, width*8, width*8);
     buf += pw;
     buf += s;
     buf += "\"\n";
