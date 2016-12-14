@@ -65,6 +65,7 @@ NEXT:
         switch (msg)
         {
         case 1:
+            ui->GetText(text);
             if (text.empty())
             {
                 emit ShowStatus("请输入内容");
