@@ -27,6 +27,7 @@ typedef struct
     string Line2;
     string Line3;
     string Line4;
+    string Line5;
 }OCP_Text;
 
 class printer
@@ -44,6 +45,7 @@ private:
     int read(char *buf, int size);
     void utf8ToGb2312(string& strUtf8);
     void utogb(string &s);
+    void utoutf8(string &s);
 
 private:
     QSerialPort Dev;

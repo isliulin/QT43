@@ -29,6 +29,15 @@ void printer::utogb(string &s)
     s = ByteGb2312.data();
 }
 
+void printer::utoutf8(string &s)
+{
+    QTextCodec* gb2312Codec = QTextCodec::codecForName("utf-8");
+    QString strUnicode = QString::fromStdString(s);
+
+    QByteArray ByteGb2312= gb2312Codec->fromUnicode(strUnicode);
+    s = ByteGb2312.data();
+}
+
 bool printer::print(string &s, int width)
 {
     string buf;
@@ -42,16 +51,18 @@ bool printer::print(string &s, int width)
 
     Text->BarCode = "00001111222233334444555566667777";
     Text->Line1 = "产地:会理海潮烟点 品种:红花大金元";
-    Text->Line2 = "净重:39.98Kg 成件时间:2016-05-27 11:14";
+    Text->Line2 = "净重:39.98Kg 成件:16-05-27 11:14";
     Text->Line3 = "成件人:张三丰 库管:孙悟空 打印次数:2";
-    Text->Line4 = "等级:C1F 散烟";
+    Text->Line4 = "等级:C1F";
+    Text->Line5 = "扎把:散烟";
 
-    utogb(s);
+    utoutf8(s);
     utf8ToGb2312(Text->BarCode);
     utf8ToGb2312(Text->Line1);
     utf8ToGb2312(Text->Line2);
     utf8ToGb2312(Text->Line3);
     utf8ToGb2312(Text->Line4);
+    utf8ToGb2312(Text->Line5);
 
     sPrinterParam.BarCodeH = 55;
     sPrinterParam.BarCodeV = 250;
@@ -76,9 +87,11 @@ bool printer::print(string &s, int width)
 
     x = Param->BarCodeH;
 
-    sprintf(pw, BARCODE, x, Param->BarCodeV - 0x20, Param->BarCodeWidth, Text->BarCode.c_str());
+    sprintf(pw, TEXT, x, Param->Font_V - 0x40, Text->BarCode.c_str());
     buf += pw;
-    sprintf(pw, TEXTLV, x, Param->Font_V - 0x40, Text->Line4.c_str());
+    sprintf(pw, TEXTLV, x, Param->BarCodeV, Text->Line4.c_str());
+    buf += pw;
+    sprintf(pw, TEXTLV, x, Param->BarCodeV + 0x60, Text->Line5.c_str());
     buf += pw;
     sprintf(pw, TEXT, x, Param->Font_V + 32, Text->Line1.c_str());
     buf += pw;
@@ -88,9 +101,9 @@ bool printer::print(string &s, int width)
     buf += pw;
 
 
-    qrx = 600;
-    qry = Param->Font_V - 0x40;
-    sprintf(pw, "DMATRIX %d,%d,%d,%d,x6,\"", qrx, qry, width*8, width*8);
+    qrx = 520;
+    qry = Param->BarCodeV - 0x40;
+    sprintf(pw, "DMATRIX %d,%d,%d,%d,x4,\"", qrx, qry, width*8, width*8);
     buf += pw;
     buf += s;
     buf += "\"\n";
