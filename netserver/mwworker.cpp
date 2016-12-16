@@ -1,6 +1,5 @@
 #include "mwworker.h"
 #include "mainwindow.h"
-#include "libqrencode/qrencode.h"
 #include "printer.h"
 #include "msgproto.h"
 #include <QTcpSocket>
@@ -44,17 +43,27 @@ void mwworker::run()
         return;
     }
 
+WAIT:
     server->waitForNewConnection(-1);
     client = server->nextPendingConnection();
 
     rxbuf = new char[1024];
     txbuf = new char[1024];
 
+    ui->ShowTip("设备已连接");
+
     while (isrun)
     {
         int uimsg;
 
-        if (client->waitForReadyRead())
+        if (client->state() == QTcpSocket::UnconnectedState)
+        {
+            ui->ShowTip("设备已断开");
+            client->close();
+            goto WAIT;
+        }
+
+        if (client->waitForReadyRead(500))
         {
             int cmd = 0;
 
@@ -65,10 +74,12 @@ void mwworker::run()
 
                 switch (cmd)
                 {
-                case 1:
+                case 0x21:
+                    ui->ShowTip("收到心跳");
                     ret = pkt.makeheartbeat(txbuf, size);
                     break;
-                case 2:
+                case 0x2F:
+                    ui->ShowTip("收到登陆");
                     ret = pkt.makelogin(txbuf, size);
                     break;
                 }

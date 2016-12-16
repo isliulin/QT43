@@ -29,44 +29,12 @@ void MainWindow::ShowStatus(string s)
     statusBar()->showMessage(qs, 1000);
 }
 
-void MainWindow::DrawQrCode(uint8_t *data, int width)
+void MainWindow::ShowTip(const char* s)
 {
-    int scale = 2;
-    int imgsize = scale * width;
-    QImage img = QImage(imgsize, imgsize, QImage::Format_RGB16);
-    QPainter painter(&img);
+    QString qs;
 
-    QColor bg(Qt::white);
-    painter.setBrush(bg);
-    painter.setPen(Qt::NoPen);
-    painter.drawRect(0, 0, imgsize, imgsize);
-    QColor fg(Qt::black);
-    painter.setBrush(fg);
-
-    for(int y = 0; y < width; y ++)
-    {
-        for(int x = 0; x < width; x++)
-        {
-            uint8_t b = data[y * width + x];
-            if(b & 0x01)
-            {
-                QRectF r(x * scale, y * scale, scale, scale);
-                painter.drawRects(&r, 1);
-            }
-        }
-    }
-
-    QPixmap map = QPixmap::fromImage(img);
-
-    ui->qrcode->setPixmap(map);
-}
-
-void MainWindow::UpdateSerial()
-{
-    foreach (const QSerialPortInfo &qspinfo, QSerialPortInfo::availablePorts())
-    {
-        ui->cb_tty->addItem(qspinfo.portName());
-    }
+    qs = s;
+    ui->tip->setText(qs);
 }
 
 void MainWindow::GetText(string &s)
@@ -78,26 +46,7 @@ void MainWindow::GetText(string &s)
     s = qs.toStdString();
 }
 
-void MainWindow::GetWidth(int &w)
-{
-    w = ui->width->value();
-}
-
-void MainWindow::GetSerial(string &s)
-{
-    QString qs;
-
-    qs = ui->cb_tty->currentText();
-
-    s = qs.toStdString();
-}
-
 void MainWindow::on_print_clicked()
 {
     worker->msgq_push(1);
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    worker->msgq_push(2);
 }
