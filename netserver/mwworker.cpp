@@ -56,7 +56,29 @@ void mwworker::run()
 
         if (client->waitForReadyRead())
         {
+            int cmd = 0;
+
             size = client->read(rxbuf, 1024);
+            if (pkt.in(rxbuf, size, cmd))
+            {
+                bool ret = false;
+
+                switch (cmd)
+                {
+                case 1:
+                    ret = pkt.makeheartbeat(txbuf, size);
+                    break;
+                case 2:
+                    ret = pkt.makelogin(txbuf, size);
+                    break;
+                }
+
+                if (ret)
+                {
+                    client->write(txbuf, size);
+                    client->flush();
+                }
+            }
         }
 
         msgq_get(uimsg);
@@ -76,7 +98,7 @@ void mwworker::run()
             else
             {
                 text = pt.format(text);
-                pkt.make(8, txbuf, (char*)text.c_str(), size);
+                pkt.makeprint(text, txbuf, size);
                 client->write(txbuf, size);
                 client->flush();
             }

@@ -51,7 +51,7 @@ bool printer::print(string &s, int width)
 
     Text->BarCode = "00001111222233334444555566667777";
     Text->Line1 = "产地:会理海潮烟点 品种:红花大金元";
-    Text->Line2 = "净重:39.98Kg 成件:16-05-27 11:14";
+    Text->Line2 = "净重:39.98Kg 成件:2016-05-27 11:14";
     Text->Line3 = "成件人:张三丰 库管:孙悟空 打印次数:2";
     Text->Line4 = "等级:C1F";
     Text->Line5 = "扎把:散烟";
