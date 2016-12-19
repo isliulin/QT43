@@ -1,5 +1,6 @@
 #include "Ymodem.h"
 #include "console.h"
+#include "crc.h"
 
 Ymodem::Ymodem(Console *parent)
 {
@@ -26,7 +27,18 @@ void Ymodem::put(const QByteArray &data)
 
 int Ymodem::makeFirstRsp(const char *name, char *buf)
 {
-    int len = 0;
+    int len = 133;
+    ymhead_t *pkt;
+    uint16_t *sum;
+
+    pkt = (ymhead_t*)buf;
+    pkt->start = 0x02;
+    pkt->sn = 0;
+    pkt->nsn = 0xFF;
+    memset(pkt->data, 0, sizeof(pkt->data));
+    strcpy(pkt->data, name);
+    sum = (uint16_t*)(buf + 131);
+    *sum = crc16(buf, 131));
 
     return len;
 }
@@ -36,6 +48,15 @@ int Ymodem::makeNextRsp(char *data, int size, char *buf)
     int len = 0;
 
     return len;
+}
+
+uint16_t Ymodem::crc16(char *data, int size)
+{
+    uint16_t sum;
+
+    sum = crc16_ccitt(0, (uint8_t*)data, size);
+
+    return sum;
 }
 
 void Ymodem::msgq_push(int msg)

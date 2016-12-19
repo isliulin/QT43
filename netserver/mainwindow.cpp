@@ -26,7 +26,7 @@ void MainWindow::ShowStatus(string s)
     QString qs;
 
     qs = qs.fromStdString(s);
-    statusBar()->showMessage(qs, 1000);
+    statusBar()->showMessage(qs, 2000);
 }
 
 void MainWindow::ShowTip(const char* s)

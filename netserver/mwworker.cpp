@@ -26,6 +26,13 @@ bool mwworker::msgq_get(int &msg)
     return true;
 }
 
+void mwworker::ShowStatus(const char *s)
+{
+   string ss = s;
+
+   emit ShowStatus(ss);
+}
+
 void mwworker::run()
 {
     QTcpSocket *client;
@@ -37,13 +44,14 @@ void mwworker::run()
     isrun = true;
 
     server = new QTcpServer;
-    if (!server->listen(QHostAddress::Any, 5555))
+    if (!server->listen(QHostAddress::Any, 2012))
     {
         qDebug("err");
         return;
     }
 
 WAIT:
+    ui->ShowTip("等待设备连接");
     server->waitForNewConnection(-1);
     client = server->nextPendingConnection();
 
@@ -54,7 +62,7 @@ WAIT:
 
     while (isrun)
     {
-        int uimsg;
+        int uimsg = 0;
 
         if (client->state() == QTcpSocket::UnconnectedState)
         {
@@ -75,12 +83,15 @@ WAIT:
                 switch (cmd)
                 {
                 case 0x21:
-                    ui->ShowTip("收到心跳");
+                    emit ShowStatus("收到心跳");
                     ret = pkt.makeheartbeat(txbuf, size);
                     break;
                 case 0x2F:
-                    ui->ShowTip("收到登陆");
+                    emit ShowStatus("收到登陆");
                     ret = pkt.makelogin(txbuf, size);
+                    break;
+                case 0x88:
+                    emit ShowStatus("收到打印回复");
                     break;
                 }
 
@@ -96,7 +107,7 @@ WAIT:
 
         switch (uimsg)
         {
-        case 2:
+        case 1:
         {
             string text;
 

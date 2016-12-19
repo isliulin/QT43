@@ -36,7 +36,7 @@ private:
         uint8_t start;
         uint8_t sn;
         uint8_t nsn;
-        uint8_t data[128];
+        char data[128];
         //short crc;
     }ymhead_t;
 
@@ -44,6 +44,7 @@ private:
     void run();
     void msgq_push(int msg);
     bool msgq_get(int &msg);
+    uint16_t crc16(char *data, int size);
 
 private:
     bool isrun;

@@ -8,13 +8,15 @@ SOURCES += \
     mainwindow.cpp \
     settingsdialog.cpp \
     console.cpp \
-    Ymodem.cpp
+    Ymodem.cpp \
+    crc16.c
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
     console.h \
-    Ymodem.h
+    Ymodem.h \
+    crc.h
 
 FORMS += \
     mainwindow.ui \

@@ -123,7 +123,7 @@ string printer::format(string &s)
     SPrinterParam *Param = &sPrinterParam;
     OCP_Text text;
     OCP_Text *Text = &text;
-    int x;
+    int x, y;
     int qrx, qry;
 
     Text->BarCode = "00001111222233334444555566667777";
@@ -131,7 +131,7 @@ string printer::format(string &s)
     Text->Line2 = "净重:39.98Kg 成件:16-05-27 11:14";
     Text->Line3 = "成件人:张三丰 库管:孙悟空 打印次数:2";
     Text->Line4 = "等级:C1F";
-    Text->Line5 = "扎把:散烟";
+    Text->Line5 = "    散烟";
 
     utoutf8(s);
     utf8ToGb2312(Text->BarCode);
@@ -152,6 +152,9 @@ string printer::format(string &s)
     sPrinterParam.Size_X = 100;
     sPrinterParam.Size_Y = 80;
 
+    qrx = 540;
+    qry = Param->BarCodeV - 0x40;
+
     buf = "SIZE 100 mm,80 mm\n";
     buf += "GAP 3 mm,0\n";
     buf += "OFFSET 5 mm\n";
@@ -163,22 +166,21 @@ string printer::format(string &s)
     buf += "CLS\n";
 
     x = Param->BarCodeH;
+    y = qry;
 
-    sprintf(pw, TEXT, x, Param->Font_V - 0x40, Text->BarCode.c_str());
-    buf += pw;
-    sprintf(pw, TEXTLV, x, Param->BarCodeV, Text->Line4.c_str());
-    buf += pw;
-    sprintf(pw, TEXTLV, x, Param->BarCodeV + 0x60, Text->Line5.c_str());
-    buf += pw;
-    sprintf(pw, TEXT, x, Param->Font_V + 32, Text->Line1.c_str());
-    buf += pw;
-    sprintf(pw, TEXT, x, Param->Font_V + 72, Text->Line2.c_str());
-    buf += pw;
-    sprintf(pw, TEXT, x, Param->Font_V + 112, Text->Line3.c_str());
+    sprintf(pw, TEXTLV, x, y, Text->Line4.c_str());
+    buf += pw; y += 80;
+    sprintf(pw, TEXTLV, x, y, Text->Line5.c_str());
+    buf += pw; y += 120;
+    sprintf(pw, TEXT, x, y, Text->Line1.c_str());
+    buf += pw; y += 36;
+    sprintf(pw, TEXT, x, y, Text->Line2.c_str());
+    buf += pw; y += 36;
+    sprintf(pw, TEXT, x, y, Text->Line3.c_str());
+    buf += pw; y += 36;
+    sprintf(pw, BARCODE, x, y, Param->BarCodeWidth/2, Text->BarCode.c_str());
     buf += pw;
 
-    qrx = 520;
-    qry = Param->BarCodeV - 0x40;
     sprintf(pw, "DMATRIX %d,%d,%d,%d,x4,\"", qrx, qry, 8*8, 8*8);
     buf += pw;
     buf += s;

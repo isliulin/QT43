@@ -20,6 +20,7 @@ public:
     mwworker(QWidget *parent);
 
     void msgq_push(int msg);
+    void ShowStatus(const char *s);
 
 signals:
     void ShowStatus(string s);

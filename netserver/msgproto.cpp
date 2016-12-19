@@ -27,7 +27,7 @@ bool msgproto::makeheartbeat(char *out, int &size)
 
     hdr = (proto_hdr_t *)out;
     proto_head_init(hdr, 0xA1, 0);
-    size = sizeof(proto_hdr_t) + 1;
+    size = sizeof(proto_hdr_t);
     proto_end((uint8_t*)out, size);
 
     return true;
@@ -39,7 +39,7 @@ bool msgproto::makelogin(char *out, int &size)
 
     lg = (devlogin_t *)out;
     lg->status = 0;
-    proto_head_init(&lg->hdr, 8, 1);
+    proto_head_init(&lg->hdr, 0xAF, 1);
     size = sizeof(devlogin_t);
     proto_end((uint8_t*)out, size);
 
@@ -53,9 +53,11 @@ void msgproto::makeprint(string &text, char *out, int &size)
 
     pt = (textprint_t*)out;
     len = text.size();
-    proto_head_init(&pt->hdr, 8, len);
+    proto_head_init(&pt->hdr, 0x08, len + 8);
+    pt->msgid = 1;
+    pt->size = len;
     memcpy(pt->data, text.c_str(), len);
-    size = len + sizeof(textprint_t);
+    size = len + sizeof(textprint_t) - sizeof(pt->data);
 
     proto_end((uint8_t*)out, size);
 }
@@ -83,7 +85,7 @@ void msgproto::proto_head_init(proto_hdr_t *hdr, unsigned char cmd, short size)
 
 void msgproto::proto_end(uint8_t *data, int &size)
 {
-    data[size - 1] = chksum(data, size - 1);
-    data[size] = 0x16;
+    data[size] = chksum(data, size);
     size ++;
+    data[size++] = 0x16;
 }
