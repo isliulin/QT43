@@ -77,11 +77,10 @@ Console::Console(QWidget *parent)
 
 void Console::newModem()
 {
-    ModemEn = true;
     modem = new Ymodem(this);
-
+    ModemEn = true;
     connect(modem, SIGNAL(finished()), this, SLOT(deleteModem()));
-    modem->start();
+    modem->start(); 
 }
 
 void Console::deleteModem()
@@ -98,6 +97,13 @@ void Console::showMsg(const char *s)
     insertPlainText(qs);
 }
 
+void Console::showStatus(const char *s)
+{
+    string ss = s;
+
+    emit showStatus(ss);
+}
+
 void Console::putData(const QByteArray &data)
 {
     if (ModemEn)
@@ -111,8 +117,6 @@ void Console::putData(const QByteArray &data)
         {
             modemCheck.start(20);
         }
-
-
     }
 
     insertPlainText(QString(data));

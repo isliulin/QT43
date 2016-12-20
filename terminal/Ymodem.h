@@ -14,21 +14,40 @@ class Ymodem : public QThread
 public:
     Ymodem(Console *parent);
 
+    void close();
     void put(const QByteArray &data);
 
-    int makeFirstRsp(const char *name, char *buf);
-    int makeNextRsp(char *data, int size, char *buf);
-    void close();
+    int makeFirstRsp(string &name, int size, char *buf, QByteArray &byte);
+    int makeNextRsp(char *data, int size, char *buf, QByteArray &byte);
+    int makeEotRsp(QByteArray &byte);
+    int makeFinishRsp(QByteArray &byte);
 
 private:
-    enum modemState
+    enum modemWaitfor
     {
-        msWaitReq,
-        msWaitAck,
+        mwNon = 0x00,
+        mwReq = 0x43,
+        mwAck = 0x06,
+    };
+
+    enum modemStage
+    {
         msFirst,
-        msNext,
+        msData,
         msRepeat,
-        msEnding
+        msEnding,
+        msFinish,
+    };
+
+    enum modemCode
+    {
+        mcSOH = 0x01,
+        mcSTX = 0x02,
+        mcEOT = 0x04,
+        mcACK = 0x06,
+        mcNAK = 0x15,
+        mcCAN = 0x18,
+        mcREQ = 0x43,
     };
 
     typedef struct
@@ -47,6 +66,8 @@ private:
     uint16_t crc16(char *data, int size);
 
 private:
+    enum modemStage Stage;
+    enum modemWaitfor Wait;
     bool isrun;
     Console *ui;
     uint8_t sn;

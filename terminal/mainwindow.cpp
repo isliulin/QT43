@@ -150,12 +150,14 @@ void MainWindow::about()
                           "using Qt, with a menu bar, toolbars, and a status bar."));
 }
 
-//! [6]
 void MainWindow::writeData(const QByteArray &data)
 {
+    char ch[32];
+
     serial->write(data);
+    sprintf(ch, "%d", data.size());
+    qDebug(ch);
 }
-//! [6]
 
 //! [7]
 void MainWindow::readData()

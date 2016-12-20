@@ -377,6 +377,7 @@ int KCReader::Write(char *buf, int size)
 {
     int len;
 
+    Dev.clear(QSerialPort::Input);
     len = Dev.write(buf, size);
     Dev.waitForBytesWritten(300);
 
