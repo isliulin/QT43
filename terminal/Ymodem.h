@@ -33,6 +33,7 @@ private:
     enum modemStage
     {
         msFirst,
+        msReady,
         msData,
         msRepeat,
         msEnding,

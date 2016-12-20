@@ -61,14 +61,14 @@ int Ymodem::makeNextRsp(char *data, int size, char *buf, QByteArray &byte)
     sn ++;
     pkt->start = 0x02;
     pkt->sn = sn;
-    pkt->nsn = 0x255 - sn;
+    pkt->nsn = 0xFF - sn;
     memcpy(pkt->data, data, size);
     if (size < 1024)
     {
         memset(&pkt->data[size], 0, 1024 - size);
     }
     len = 1024 + 3;
-    sum = (uint16_t*)((char*)pkt + len);
+    sum = (uint16_t*)(((char*)pkt) + len);
     *sum = crc16(pkt->data, 1024);
     len += 2;
 
@@ -187,6 +187,18 @@ void Ymodem::run()
             break;
             case mcACK:
             {
+                Stage = msReady;
+            }
+            break;
+            }
+        }
+        break;
+        case msReady:
+        {
+            switch (msg)
+            {
+            case mcREQ:
+            {
                 Stage = msData;
             }
             break;
@@ -197,15 +209,6 @@ void Ymodem::run()
         {
             if (!isread)
             {
-
-            }
-
-            switch (msg)
-            {
-            case mcACK:
-                isread = false;
-                break;
-            case mcREQ:
                 ui->showStatus("传输数据");
                 filesize = file.read(fbuf, 1024);
                 remain -= filesize;
@@ -218,6 +221,12 @@ void Ymodem::run()
                     Stage = msEnding;
                 }
                 ui->getData(byte);
+            }
+
+            switch (msg)
+            {
+            case mcACK:
+                isread = false;
                 break;
             }
         }
