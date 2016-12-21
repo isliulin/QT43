@@ -140,7 +140,6 @@ void MainWindow::closeSerialPort()
     ui->actionConfigure->setEnabled(true);
     showStatusMessage(tr("Disconnected"));
 }
-//! [5]
 
 void MainWindow::about()
 {
@@ -152,20 +151,14 @@ void MainWindow::about()
 
 void MainWindow::writeData(const QByteArray &data)
 {
-    char ch[32];
-
     serial->write(data);
-    sprintf(ch, "%d", data.size());
-    qDebug(ch);
 }
 
-//! [7]
 void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
     console->putData(data);
 }
-//! [7]
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {

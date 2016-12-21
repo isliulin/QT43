@@ -17,8 +17,8 @@ public:
     void close();
     void put(const QByteArray &data);
 
-    int makeFirstRsp(string &name, int size, char *buf, QByteArray &byte);
-    int makeNextRsp(char *data, int size, char *buf, QByteArray &byte);
+    int makeFirstRsp(string &name, int size, QByteArray &byte);
+    int makeNextRsp(char *data, int size, QByteArray &byte);
     int makeEotRsp(QByteArray &byte);
     int makeFinishRsp(QByteArray &byte);
 

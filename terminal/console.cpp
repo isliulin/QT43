@@ -126,7 +126,9 @@ void Console::putData(const QByteArray &data)
         {
             modemCheck.start(20);
         }
-
+        QString str;
+        str.sprintf("%02X", data.at(0));
+        qDebug(str.toStdString().c_str());
         insertPlainText(QString(data));
 
         QScrollBar *bar = verticalScrollBar();
@@ -179,9 +181,12 @@ void Console::dropEvent(QDropEvent *event)
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
+    int key;
+
+    key = e->key();
     if (localEchoEnabled)
     {
-        switch (e->key())
+        switch (key)
         {
         case Qt::Key_Backspace:
         case Qt::Key_Left:
@@ -197,7 +202,14 @@ void Console::keyPressEvent(QKeyEvent *e)
         }
     }
 
-    emit getData(e->text().toLocal8Bit());
+    switch (key)
+    {
+    case Qt::Key_Shift:
+        break;
+    default:
+        emit getData(e->text().toLocal8Bit());
+        break;
+    }
 }
 
 void Console::mousePressEvent(QMouseEvent *e)

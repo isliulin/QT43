@@ -28,13 +28,15 @@ void Ymodem::put(const QByteArray &data)
     msgq_push(data.at(0));
 }
 
-int Ymodem::makeFirstRsp(string &name, int size, char *buf, QByteArray &byte)
+int Ymodem::makeFirstRsp(string &name, int size, QByteArray &byte)
 {
     int len = 133;
     ymhead_t *pkt;
     uint16_t *sum;
 
-    pkt = (ymhead_t*)buf;
+    byte.resize(len);
+    sn = 0;
+    pkt = (ymhead_t*)byte.data();
     pkt->start = 0x01;
     pkt->sn = 0;
     pkt->nsn = 0xFF;
@@ -42,16 +44,13 @@ int Ymodem::makeFirstRsp(string &name, int size, char *buf, QByteArray &byte)
     strcpy(pkt->data, name.c_str());
     sprintf(&pkt->data[name.size() + 1], "%d", size);
 
-    sum = (uint16_t*)(buf + 131);
+    sum = (uint16_t*)(((char*)pkt) + 131);
     *sum = crc16(pkt->data, 128);
-
-    byte.resize(len);
-    memcpy(byte.data(), buf, len);
 
     return len;
 }
 
-int Ymodem::makeNextRsp(char *data, int size, char *buf, QByteArray &byte)
+int Ymodem::makeNextRsp(char *data, int size, QByteArray &byte)
 {
     int len = 0;
     ymhead_t *pkt;
@@ -137,7 +136,6 @@ int Ymodem::makeEotRsp(QByteArray &byte)
 void Ymodem::run()
 {
     QString filename;
-    char buf[1200];
     char fbuf[1024];
     bool isread = false;
     QByteArray byte;
@@ -185,7 +183,7 @@ void Ymodem::run()
                 stext = info.fileName().toStdString();
                 remain = file.size();
                 filesize = remain;
-                makeFirstRsp(stext, remain, buf, byte);
+                makeFirstRsp(stext, remain, byte);
                 ui->getData(byte);
             }
             break;
@@ -217,7 +215,7 @@ void Ymodem::run()
 
                 size = file.read(fbuf, 1024);
                 remain -= size;
-                makeNextRsp(fbuf, size, buf, byte);
+                makeNextRsp(fbuf, size, byte);
 
                 isread = true;
 
