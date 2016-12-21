@@ -126,10 +126,22 @@ void Console::putData(const QByteArray &data)
         {
             modemCheck.start(20);
         }
-        QString str;
-        str.sprintf("%02X", data.at(0));
-        qDebug(str.toStdString().c_str());
-        insertPlainText(QString(data));
+
+        switch (data.at(0))
+        {
+        case 0x08:
+        {
+            QKeyEvent ke(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
+
+            QPlainTextEdit::keyPressEvent(&ke);
+        }
+        break;
+        default:
+        {
+            insertPlainText(QString(data));
+        }
+        break;
+        }
 
         QScrollBar *bar = verticalScrollBar();
         bar->setValue(bar->maximum());
@@ -192,17 +204,27 @@ void Console::keyPressEvent(QKeyEvent *e)
         byte[0] = 0x08;
         break;
     case Qt::Key_Left:
-        byte[0] = 0x08;
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x44;
         break;
     case Qt::Key_Right:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x43;
+        break;
     case Qt::Key_Up:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x41;
+        break;
     case Qt::Key_Down:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x42;
+        break;
     case Qt::Key_Enter:
-    case Qt::Key_Return:
         break;
     default:
-        emit getData(e->text().toLocal8Bit());
+        byte = e->text().toLocal8Bit();
         break;
+    }
+
+    if (byte.size() != 0)
+    {
+        emit getData(byte);
     }
 }
 
