@@ -182,29 +182,23 @@ void Console::dropEvent(QDropEvent *event)
 void Console::keyPressEvent(QKeyEvent *e)
 {
     int key;
+    QByteArray byte;
 
     key = e->key();
-    if (localEchoEnabled)
-    {
-        switch (key)
-        {
-        case Qt::Key_Backspace:
-        case Qt::Key_Left:
-        case Qt::Key_Right:
-        case Qt::Key_Up:
-        case Qt::Key_Down:
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-            break;
-        default:
-            QPlainTextEdit::keyPressEvent(e);
-            break;
-        }
-    }
 
     switch (key)
     {
-    case Qt::Key_Shift:
+    case Qt::Key_Backspace:
+        byte[0] = 0x08;
+        break;
+    case Qt::Key_Left:
+        byte[0] = 0x08;
+        break;
+    case Qt::Key_Right:
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
         break;
     default:
         emit getData(e->text().toLocal8Bit());
