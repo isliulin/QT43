@@ -10,16 +10,17 @@ Ymodem::Ymodem(Console *parent)
     Stage = msFirst;
     sn = 0;
     isrun = false;
-    ui =parent;
+    ui = parent;
 }
 
 void Ymodem::close()
 {
-   if (!isFinished())
-   {
-       isrun = false;
-       wait();
-   }
+    if (!isFinished())
+    {
+        isrun = false;
+
+        wait();
+    }
 }
 
 void Ymodem::put(const QByteArray &data)
@@ -140,7 +141,7 @@ void Ymodem::run()
     char fbuf[1024];
     bool isread = false;
     QByteArray byte;
-    int filesize;
+    int filesize = 0;
     QFile file;
     string stext;
     int remain = 0;
@@ -162,6 +163,8 @@ void Ymodem::run()
         goto err;
     }
 
+    msgq_push(mcREQ);
+
     isrun = true;
     while (isrun)
     {
@@ -181,6 +184,7 @@ void Ymodem::run()
 
                 stext = info.fileName().toStdString();
                 remain = file.size();
+                filesize = remain;
                 makeFirstRsp(stext, remain, buf, byte);
                 ui->getData(byte);
             }
@@ -209,10 +213,11 @@ void Ymodem::run()
         {
             if (!isread)
             {
-                ui->showStatus("传输数据");
-                filesize = file.read(fbuf, 1024);
-                remain -= filesize;
-                makeNextRsp(fbuf, filesize, buf, byte);
+                int size;
+
+                size = file.read(fbuf, 1024);
+                remain -= size;
+                makeNextRsp(fbuf, size, buf, byte);
 
                 isread = true;
 
@@ -227,6 +232,7 @@ void Ymodem::run()
             {
             case mcACK:
                 isread = false;
+                ui->showTransfer(filesize, remain, 1);
                 break;
             }
         }

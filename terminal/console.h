@@ -66,6 +66,7 @@ class Console : public QPlainTextEdit
 public:
     void setEnabled(bool on);
     void showStatus(const char *s);
+    void showTransfer(int total, int remain, int speed);
 
 signals:
     void getData(const QByteArray &data);

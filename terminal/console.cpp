@@ -86,6 +86,7 @@ void Console::newModem()
 void Console::deleteModem()
 {
     ModemEn = false;
+    modem->close();
     delete modem;
     modem = NULL;
 }
@@ -95,6 +96,14 @@ void Console::showMsg(const char *s)
     QString qs = s;
 
     insertPlainText(qs);
+}
+
+void Console::showTransfer(int total, int remain, int speed)
+{
+    QString str;
+
+    str.sprintf("数据传输:%d/%d %d", total - remain, total, speed);
+    emit showStatus(str.toStdString());
 }
 
 void Console::showStatus(const char *s)
@@ -117,12 +126,12 @@ void Console::putData(const QByteArray &data)
         {
             modemCheck.start(20);
         }
+
+        insertPlainText(QString(data));
+
+        QScrollBar *bar = verticalScrollBar();
+        bar->setValue(bar->maximum());
     }
-
-    insertPlainText(QString(data));
-
-    QScrollBar *bar = verticalScrollBar();
-    bar->setValue(bar->maximum());
 }
 
 void Console::setLocalEchoEnabled(bool set)
