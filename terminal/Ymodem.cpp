@@ -23,6 +23,21 @@ void Ymodem::close()
     }
 }
 
+void Ymodem::time_start()
+{
+    stx_time = QTime::currentTime().secsTo(QTime(1970,1,1));
+}
+
+int Ymodem::speed_clc(int total, int remain)
+{
+   int s;
+
+   stx_time = QTime::currentTime().secsTo(QTime(1970,1,1)) - stx_time;
+   s = (total - remain)/(stx_time);
+
+   return s;
+}
+
 void Ymodem::put(const QByteArray &data)
 {
     msgq_push(data.at(0));
@@ -202,6 +217,7 @@ void Ymodem::run()
             case mcREQ:
             {
                 Stage = msData;
+                time_start();
             }
             break;
             }
@@ -229,8 +245,11 @@ void Ymodem::run()
             switch (msg)
             {
             case mcACK:
+                int speed;
+
                 isread = false;
-                ui->showTransfer(filesize, remain, 1);
+                speed = speed_clc(filesize, remain);
+                ui->showTransfer(filesize, remain, speed);
                 break;
             }
         }
