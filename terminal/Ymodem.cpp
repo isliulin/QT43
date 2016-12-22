@@ -105,9 +105,6 @@ uint16_t Ymodem::crc16(char *data, int size)
 void Ymodem::msgq_push(int msg)
 {
     msgq.push(msg);
-    char ch[4];
-    sprintf(ch, "%02X", msg);
-    qDebug(ch);
 }
 
 bool Ymodem::msgq_get(int &msg)

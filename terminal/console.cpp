@@ -79,10 +79,17 @@ Console::Console(QWidget *parent)
 
 void Console::newModem()
 {
-    modem = new Ymodem(this);
-    ModemEn = true;
-    connect(modem, SIGNAL(finished()), this, SLOT(deleteModem()));
-    modem->start(); 
+    if (fileName.isEmpty())
+    {
+        showStatus("请拖入文件");
+    }
+    else
+    {
+        modem = new Ymodem(this);
+        ModemEn = true;
+        connect(modem, SIGNAL(finished()), this, SLOT(deleteModem()));
+        modem->start();
+    }
 }
 
 void Console::deleteModem()

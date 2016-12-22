@@ -58,7 +58,6 @@
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
 
-//! [0]
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -96,7 +95,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//! [4]
 void MainWindow::openSerialPort()
 {
     SettingsDialog::Settings p = settings->settings();
@@ -143,10 +141,8 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About Simple Terminal"),
-                       tr("The <b>Simple Terminal</b> example demonstrates how to "
-                          "use the Qt Serial Port module in modern GUI applications "
-                          "using Qt, with a menu bar, toolbars, and a status bar."));
+    QMessageBox::about(this, tr("版本:1.0.0 作者:heyuanjie"),
+                       tr("将文件拖入窗口，收到'C'后进入Ymodem模式"));
 }
 
 void MainWindow::writeData(const QByteArray &data)
