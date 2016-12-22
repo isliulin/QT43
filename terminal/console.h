@@ -66,7 +66,7 @@ class Console : public QPlainTextEdit
 public:
     void setEnabled(bool on);
     void showStatus(const char *s);
-    void showTransfer(int total, int remain, int speed);
+    void showTransfer(int total, int remain, float speed);
 
 signals:
     void getData(const QByteArray &data);
@@ -82,9 +82,7 @@ public:
     explicit Console(QWidget *parent = 0);
 
     void putData(const QByteArray &data);
-
     void setLocalEchoEnabled(bool set);
-    void showMsg(const char *s);
     void getFile(QString &name);
 
 protected:

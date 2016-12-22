@@ -91,18 +91,13 @@ void Console::deleteModem()
     modem = NULL;
 }
 
-void Console::showMsg(const char *s)
-{
-    QString qs = s;
-
-    insertPlainText(qs);
-}
-
-void Console::showTransfer(int total, int remain, int speed)
+void Console::showTransfer(int total, int remain, float speed)
 {
     QString str;
+    float p;
 
-    str.sprintf("数据传输:%d/%d %d", total - remain, total, speed);
+    p = (total - remain)/(float)total;
+    str.sprintf("进度:%0.1f%% 速度:%.3f KB/S", p*100, speed/1024);
     emit showStatus(str.toStdString());
 }
 

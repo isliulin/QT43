@@ -4,6 +4,7 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <time.h>
 
 Ymodem::Ymodem(Console *parent)
 {
@@ -25,15 +26,16 @@ void Ymodem::close()
 
 void Ymodem::time_start()
 {
-    stx_time = QTime::currentTime().secsTo(QTime(1970,1,1));
+    stx_time = time(NULL);
 }
 
-int Ymodem::speed_clc(int total, int remain)
+float Ymodem::speed_clc(int total, int remain)
 {
-   int s;
+   float s = 0;
+   int t;
 
-   stx_time = QTime::currentTime().secsTo(QTime(1970,1,1)) - stx_time;
-   s = (total - remain)/(stx_time);
+   t = (int)(time(NULL) - stx_time);
+   s = (total - remain)/(float)t;
 
    return s;
 }
@@ -159,20 +161,18 @@ void Ymodem::run()
     string stext;
     int remain = 0;
 
-    ui->showMsg("\n已启动Ymodem\n");
+    ui->showStatus("已启动Ymodem");
     ui->getFile(filename);
     if (filename.isEmpty())
     {
-       stext = "错误:文件名为空";
-       emit ui->showStatus(stext);
+       emit ui->showStatus("错误:文件名为空");
        goto err;
     }
 
     file.setFileName(filename);
     if (!file.open(QFile::ReadOnly))
     {
-        stext = "错误:打开文件失败";
-        emit ui->showStatus(stext);
+        emit ui->showStatus("错误:打开文件失败");
         goto err;
     }
 
@@ -195,6 +195,7 @@ void Ymodem::run()
             {
                 QFileInfo info(filename);
 
+                ui->showStatus("第一次传输请求");
                 stext = info.fileName().toStdString();
                 remain = file.size();
                 filesize = remain;
@@ -216,14 +217,15 @@ void Ymodem::run()
             {
             case mcREQ:
             {
-                Stage = msData;
+                ui->showStatus("第二次传输请求");
+                Stage = msTrans;
                 time_start();
             }
             break;
             }
         }
         break;
-        case msData:
+        case msTrans:
         {
             if (!isread)
             {
@@ -234,22 +236,22 @@ void Ymodem::run()
                 makeNextRsp(fbuf, size, byte);
 
                 isread = true;
-
-                if (remain == 0)
-                {
-                    Stage = msEnding;
-                }
                 ui->getData(byte);
             }
 
             switch (msg)
             {
             case mcACK:
-                int speed;
+                float speed;
 
                 isread = false;
                 speed = speed_clc(filesize, remain);
                 ui->showTransfer(filesize, remain, speed);
+                if (remain == 0)
+                {
+                    Stage = msEnding;
+                    msgq_push(mcACK);
+                }
                 break;
             }
         }
@@ -295,5 +297,5 @@ void Ymodem::run()
     }
 
 err:
-    ui->showMsg("\n退出Ymodem\n");
+    ui->showStatus("退出Ymodem");
 }

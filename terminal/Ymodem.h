@@ -4,6 +4,7 @@
 #include <QThread>
 #include <queue>
 #include <QTime>
+#include <time.h>
 
 using namespace std;
 class Console;
@@ -35,7 +36,7 @@ private:
     {
         msFirst,
         msReady,
-        msData,
+        msTrans,
         msRepeat,
         msEnding,
         msFinish,
@@ -67,7 +68,7 @@ private:
     bool msgq_get(int &msg);
     uint16_t crc16(char *data, int size);
     void time_start();
-    int speed_clc(int total, int remain);
+    float speed_clc(int total, int remain);
 
 private:
     enum modemStage Stage;
@@ -76,7 +77,7 @@ private:
     Console *ui;
     uint8_t sn;
     queue <int> msgq;
-    int  stx_time;
+    time_t  stx_time;
 };
 
 #endif // YMODEM_H
