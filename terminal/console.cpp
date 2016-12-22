@@ -54,6 +54,8 @@
 #include <QScrollBar>
 #include <QFont>
 #include <QMimeData>
+#include <QApplication>
+#include <QClipboard>
 
 #include "Ymodem.h"
 
@@ -225,6 +227,13 @@ void Console::keyPressEvent(QKeyEvent *e)
 
 void Console::mousePressEvent(QMouseEvent *e)
 {
+    if (e->button() == Qt::RightButton)
+    {
+        QClipboard *clipboard = QApplication::clipboard();
+        QByteArray byte = clipboard->text().toStdString().c_str();
+
+        getData(byte);
+    }
     Q_UNUSED(e)
     setFocus();
 }
