@@ -92,11 +92,15 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent *e);
 
 private:
+    void charProcess(const QByteArray &data);
+
+private:
     bool localEchoEnabled;
     Ymodem *modem;
     bool ModemEn;
     QTimer modemCheck;
     QString fileName;
+    int lastkey;
 };
 
 #endif // CONSOLE_H

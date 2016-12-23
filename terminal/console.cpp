@@ -56,6 +56,7 @@
 #include <QMimeData>
 #include <QApplication>
 #include <QClipboard>
+#include <QTextCursor>
 
 #include "Ymodem.h"
 
@@ -125,31 +126,56 @@ void Console::putData(const QByteArray &data)
     }
     else
     {
+        QByteArray byte;
+
         modemCheck.stop();
         if (data.at(data.size()- 1) == 'C')
         {
             modemCheck.start(20);
         }
 
-        switch (data.at(0))
+        for (int i = 0; i < data.size(); i ++)
         {
-        case 0x08:
+            byte[0] = data[i];
+            charProcess(byte);
+        }
+    }
+}
+
+void Console::charProcess(const QByteArray &data)
+{
+    switch (data.at(0))
+    {
+    case 0x08:
+    {
+        //选中字符
+        QTextCursor  cur = textCursor();
+
+        if (lastkey == Qt::Key_Left)
+        {
+            //pos = cur.position();
+            //cur.setPosition(pos, QTextCursor::MoveAnchor);
+            //cur.setPosition(pos - 1, QTextCursor::KeepAnchor);
+            cur.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1);
+            setTextCursor(cur);
+        }
+        else
         {
             QKeyEvent ke(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
 
             QPlainTextEdit::keyPressEvent(&ke);
         }
-        break;
-        default:
-        {
-            insertPlainText(QString(data));
-        }
-        break;
-        }
-
-        QScrollBar *bar = verticalScrollBar();
-        bar->setValue(bar->maximum());
     }
+    break;
+    default:
+    {
+        insertPlainText(QString(data));
+    }
+    break;
+    }
+
+    QScrollBar *bar = verticalScrollBar();
+    bar->setValue(bar->maximum());
 }
 
 void Console::setLocalEchoEnabled(bool set)
@@ -197,12 +223,11 @@ void Console::dropEvent(QDropEvent *event)
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
-    int key;
     QByteArray byte;
 
-    key = e->key();
+    lastkey = e->key();
 
-    switch (key)
+    switch (lastkey)
     {
     case Qt::Key_Backspace:
         byte[0] = 0x08;
@@ -221,6 +246,13 @@ void Console::keyPressEvent(QKeyEvent *e)
         break;
     case Qt::Key_Enter:
         break;
+    case Qt::Key_Return:
+    {
+        QTextCursor cur = textCursor();
+
+        cur.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor, 0);
+        setTextCursor(cur);
+    }
     default:
         byte = e->text().toLocal8Bit();
         break;
