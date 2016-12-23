@@ -127,6 +127,7 @@ void Console::putData(const QByteArray &data)
     else
     {
         QByteArray byte;
+        int pos = 0;
 
         modemCheck.stop();
         if (data.at(data.size()- 1) == 'C')
@@ -134,9 +135,18 @@ void Console::putData(const QByteArray &data)
             modemCheck.start(20);
         }
 
-        for (int i = 0; i < data.size(); i ++)
+        if (data.startsWith("\x1B[2K"))
         {
-            byte[0] = data[i];
+            //删除当前行
+            QTextCursor tc = textCursor();
+            tc.select(QTextCursor::BlockUnderCursor);
+            tc.removeSelectedText();
+            pos = 4;
+        }
+
+        for (int i = 0; i < data.size() - pos; i ++)
+        {
+            byte[0] = data[i + pos];
             charProcess(byte);
         }
     }
@@ -153,9 +163,6 @@ void Console::charProcess(const QByteArray &data)
 
         if (lastkey == Qt::Key_Left)
         {
-            //pos = cur.position();
-            //cur.setPosition(pos, QTextCursor::MoveAnchor);
-            //cur.setPosition(pos - 1, QTextCursor::KeepAnchor);
             cur.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1);
             setTextCursor(cur);
         }
@@ -169,7 +176,18 @@ void Console::charProcess(const QByteArray &data)
     break;
     default:
     {
-        insertPlainText(QString(data));
+        if (lastkey == Qt::Key_Right)
+        {
+            QTextCursor cur = textCursor();
+
+            lastkey = 0;
+            cur.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, 1);
+            setTextCursor(cur);
+        }
+        else
+        {
+            insertPlainText(QString(data));
+        }
     }
     break;
     }
