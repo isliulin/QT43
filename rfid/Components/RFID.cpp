@@ -188,7 +188,7 @@ bool RFID::BlockRead(unsigned char blkn, unsigned char *buf, short size)
 
 exit:
 
-	return true;
+    return ret;
 }
 
 bool RFID::Authen(unsigned char blkn, unsigned char type, unsigned char *pwd, short size)
@@ -283,9 +283,23 @@ int RFID::AckRecv(unsigned char *buf, short bsize)
         memcpy(buf, pkt->data, len);
 	}
 
+    recvstr.clear();
+//    for (int i = 0; i < len; i ++)
+//    {
+//        QString str;
+
+//        str.sprintf("%02X ", buf[i]);
+//        recvstr += str;
+//    }
+
 FAIL:
 
 	return len;
+}
+
+QString RFID::readText()
+{
+    return recvstr;
 }
 
 unsigned char RFID::Crc8(unsigned char *buf, short len)

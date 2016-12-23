@@ -90,7 +90,15 @@ NEXT:
             }
             break;
         case 3:
+        {
+            string str;
+
             ret = theNfc.M1BankCardRead(tmp);
+            str = theNfc.readText().toStdString();
+            str += "\r\n";
+            data.write(str.c_str());
+            data.flush();
+        }
             break;
         case 4:
             ret = theNfc.CreditCardRead(tmp);

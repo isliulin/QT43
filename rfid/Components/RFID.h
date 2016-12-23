@@ -70,6 +70,7 @@ public:
 
     bool Alive(void);
     string ErrMsg();
+    QString readText();
 
 protected:
     bool CardScan();
@@ -92,5 +93,6 @@ private:
 	int Read(unsigned char *buf, short size);
 	int Write(unsigned char *buf, short size);
 	unsigned char Crc8(unsigned char *buf, short size);
+    QString recvstr;
 };
 #endif
