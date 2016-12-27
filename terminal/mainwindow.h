@@ -55,7 +55,7 @@
 #include <QtCore/QtGlobal>
 
 #include <QMainWindow>
-
+#include <QtWidgets/QToolButton>
 #include <QtSerialPort/QSerialPort>
 #include <string>
 
@@ -64,6 +64,7 @@ using namespace std;
 QT_BEGIN_NAMESPACE
 
 class QLabel;
+class SendSave;
 
 namespace Ui {
 class MainWindow;
@@ -92,6 +93,8 @@ private slots:
     void handleError(QSerialPort::SerialPortError error);
     void showStatus(string s);
 
+    void on_toolButton_clicked();
+
 private:
     void initActionsConnections();
 
@@ -103,6 +106,7 @@ private:
     Console *console;
     SettingsDialog *settings;
     QSerialPort *serial;
+    SendSave *dlgSS;
 };
 
 #endif // MAINWINDOW_H

@@ -53,6 +53,7 @@
 #include "ui_mainwindow.h"
 #include "console.h"
 #include "settingsdialog.h"
+#include "SendSave.h"
 
 #include <QMessageBox>
 #include <QLabel>
@@ -87,6 +88,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serial, &QSerialPort::readyRead, this, &MainWindow::readData);
     connect(console, &Console::getData, this, &MainWindow::writeData);
     connect(console, SIGNAL(showStatus(string)), this, SLOT(showStatus(string)));
+
+    dlgSS = new SendSave;
+    statusBar()->addWidget(ui->toolButton);
+
+    connect(dlgSS, &dlgSS->dataSend, this, &MainWindow::writeData);
 }
 
 MainWindow::~MainWindow()
@@ -178,4 +184,9 @@ void MainWindow::initActionsConnections()
 void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
+}
+
+void MainWindow::on_toolButton_clicked()
+{
+    dlgSS->show();
 }
