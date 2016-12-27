@@ -42,6 +42,8 @@ private slots:
 
     void VHeaderClicked(int index);
 
+    void on_send_clicked();
+
 private:
     Ui::SendSave *ui;
     SSWorker *worker;

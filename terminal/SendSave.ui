@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>发送列表</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="6">
@@ -39,7 +39,7 @@
     </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QToolButton" name="send3_2">
+    <widget class="QToolButton" name="send">
      <property name="text">
       <string>发送</string>
      </property>

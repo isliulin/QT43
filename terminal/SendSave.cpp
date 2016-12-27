@@ -23,6 +23,7 @@ SendSave::SendSave(QWidget *parent) :
 SendSave::~SendSave()
 {
     delete ui;
+    delete worker;
 }
 
 void SendSave::tableInit()
@@ -50,6 +51,17 @@ void SendSave::VHeaderClicked(int index)
     QString type;
     QString value;
     QString endline;
+    QTableWidgetItem *item;
+
+    if (index >= ui->tbSave->rowCount() || index < 0)
+        return;
+
+    item = ui->tbSave->item(index, 1);
+    type = item->text();
+    item = ui->tbSave->item(index, 2);
+    value = item->text();
+    item = ui->tbSave->item(index, 3);
+    endline = item->text();
 
     dataMake(buf, type, value, endline);
     if (buf.size())
@@ -84,16 +96,19 @@ void SendSave::tableAddRow(QString &name, QString &type, QString &value, QString
 
 void SendSave::on_send1_clicked()
 {
+    VHeaderClicked(0);
     hide();
 }
 
 void SendSave::on_send2_clicked()
 {
+    VHeaderClicked(1);
     hide();
 }
 
 void SendSave::on_send3_clicked()
 {
+    VHeaderClicked(2);
     hide();
 }
 
@@ -157,4 +172,11 @@ void SendSave::dataMake(QByteArray &buf, QString &type, QString &value, QString 
             buf.append('\n');
         }
     }
+}
+
+void SendSave::on_send_clicked()
+{
+    int sel = ui->tbSave->currentRow();
+
+    VHeaderClicked(sel);
 }

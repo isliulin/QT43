@@ -15,6 +15,12 @@ SSWorker::SSWorker(SendSave *parent)
     ui = parent;
 }
 
+SSWorker::~SSWorker()
+{
+    delete dbSS;
+    delete query;
+}
+
 bool SSWorker::dbInit()
 {
     dbSS = new QSqlDatabase;
@@ -58,7 +64,7 @@ void SSWorker::dbAddRow(QString &sn, QString &name, QString &type, QString &valu
         << ");";
 
     str = QString::fromStdString(tmp.str());
-    qDebug(tmp.str().c_str());
+
     query->exec(str);
 }
 
@@ -76,13 +82,13 @@ void SSWorker::dbUpdateRow(QString &sn, int col, QString &val)
         temp << "name = '" << val.toStdString()  << "'";
         break;
     case 1:
-        temp << "type = " << val.toStdString()   << "'";
+        temp << "type = '" << val.toStdString()   << "'";
         break;
     case 2:
-        temp << "value = " << val.toStdString() << "'";
+        temp << "value = '" << val.toStdString() << "'";
         break;
     case 3:
-        temp << "endline = " << val.toStdString() << "'";
+        temp << "endline = '" << val.toStdString() << "'";
         break;
     default:
         break;
@@ -129,8 +135,6 @@ void SSWorker::dbQuery()
 
 void SSWorker::run()
 {
-    QString sn = "1", dd = "tt";
-
     dbInit();
     dbNewTable();
     dbQuery();

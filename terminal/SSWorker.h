@@ -11,6 +11,7 @@ class SSWorker : public QThread
 {
 public:
     SSWorker(SendSave *parent);
+    ~SSWorker();
 
 private:
     void run();

@@ -99,6 +99,7 @@ MainWindow::~MainWindow()
 {
     delete settings;
     delete ui;
+    delete dlgSS;
 }
 
 void MainWindow::openSerialPort()
