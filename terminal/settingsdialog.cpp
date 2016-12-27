@@ -131,9 +131,6 @@ void SettingsDialog::fillPortsParameters()
     ui->parityBox->addItem(QStringLiteral("Space"), QSerialPort::SpaceParity);
 
     ui->stopBitsBox->addItem(QStringLiteral("1"), QSerialPort::OneStop);
-#ifdef Q_OS_WIN
-    ui->stopBitsBox->addItem(QStringLiteral("1.5"), QSerialPort::OneAndHalfStop);
-#endif
     ui->stopBitsBox->addItem(QStringLiteral("2"), QSerialPort::TwoStop);
 
     ui->flowControlBox->addItem(QStringLiteral("None"), QSerialPort::NoFlowControl);

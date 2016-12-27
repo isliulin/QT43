@@ -93,6 +93,10 @@ MainWindow::MainWindow(QWidget *parent) :
     statusBar()->addWidget(ui->toolButton);
 
     connect(dlgSS, &dlgSS->dataSend, this, &MainWindow::writeData);
+
+    statusBar()->addWidget(dlgSS->toolButton(0));
+    statusBar()->addWidget(dlgSS->toolButton(1));
+    statusBar()->addWidget(dlgSS->toolButton(2));
 }
 
 MainWindow::~MainWindow()
@@ -117,13 +121,13 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
-        showStatusMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
+        showStatusMessage(tr("连接到 %1 : %2, %3, %4, %5, %6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
-    } else {
-        QMessageBox::critical(this, tr("Error"), serial->errorString());
-
-        showStatusMessage(tr("Open error"));
+    }
+    else
+    {
+        showStatus(string("打开出错"));
     }
 }
 
@@ -143,7 +147,7 @@ void MainWindow::closeSerialPort()
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
-    showStatusMessage(tr("Disconnected"));
+    showStatus(string("已断开"));
 }
 
 void MainWindow::about()

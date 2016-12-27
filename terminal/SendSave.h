@@ -9,6 +9,7 @@ class SendSave;
 
 class SSWorker;
 class QTableWidgetItem;
+class QToolButton;
 
 class SendSave : public QDialog
 {
@@ -19,6 +20,7 @@ public:
     ~SendSave();
 
     void tableAddRow(QString &name, QString &type, QString &value, QString &endline);
+    QToolButton* toolButton(int index = 0);
 
 signals:
     void dataSend(const QByteArray &data);
@@ -26,6 +28,7 @@ signals:
 private:
     void tableInit();
     void dataMake(QByteArray &buf, QString &type, QString &value, QString &endline);
+    void setBtName(int row, QString name);
 
 private slots:
     void on_send1_clicked();

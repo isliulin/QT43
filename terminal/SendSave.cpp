@@ -92,6 +92,8 @@ void SendSave::tableAddRow(QString &name, QString &type, QString &value, QString
 
     item->setText(endline);
     ui->tbSave->setItem(row, 3, item);
+
+    setBtName(row, name);
 }
 
 void SendSave::on_send1_clicked()
@@ -132,6 +134,30 @@ void SendSave::on_tbSave_itemChanged(QTableWidgetItem *item)
     sn.sprintf("%d", item->row() + 1);
     val = item->text();
     worker->dbUpdateRow(sn, item->column(), val);
+
+    if (item->column() == 0)
+    {
+        setBtName(item->row(), val);
+    }
+}
+
+void SendSave::setBtName(int row, QString name)
+{
+    if (row > 2)
+        return;
+
+    switch (row)
+    {
+    case 0:
+        ui->send1->setText(name);
+        break;
+    case 1:
+        ui->send2->setText(name);
+        break;
+    case 2:
+        ui->send3->setText(name);
+        break;
+    }
 }
 
 void SendSave::on_clear_clicked()
@@ -179,4 +205,24 @@ void SendSave::on_send_clicked()
     int sel = ui->tbSave->currentRow();
 
     VHeaderClicked(sel);
+}
+
+QToolButton* SendSave::toolButton(int index)
+{
+    QToolButton* bt = NULL;
+
+    switch (index)
+    {
+    case 0:
+        bt = ui->send1;
+        break;
+    case 1:
+        bt = ui->send2;
+        break;
+    case 2:
+        bt = ui->send3;
+        break;
+    }
+
+    return bt;
 }
