@@ -178,6 +178,11 @@ void Console::charProcess(const QByteArray &data)
         }
     }
     break;
+    case '\r':
+        break;
+    case '\n':
+        insertPlainText(QString(data));
+        break;
     default:
     {
         if (lastkey == Qt::Key_Right)
