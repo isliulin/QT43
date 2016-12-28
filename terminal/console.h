@@ -73,7 +73,6 @@ signals:
     void showStatus(string s);
 
 private slots:
-    void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void newModem();
     void deleteModem();
@@ -98,7 +97,7 @@ private:
     bool localEchoEnabled;
     Ymodem *modem;
     bool ModemEn;
-    QTimer modemCheck;
+    QTimer *modemCheck;
     QString fileName;
     int lastkey;
 };

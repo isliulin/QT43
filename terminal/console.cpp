@@ -74,8 +74,9 @@ Console::Console(QWidget *parent)
 
     setAcceptDrops(true);
 
-    modemCheck.setSingleShot(true);
-    connect(&modemCheck, SIGNAL(timeout()), this, SLOT(newModem()));
+    modemCheck = new QTimer;
+    modemCheck->setSingleShot(true);
+    connect(modemCheck, SIGNAL(timeout()), this, SLOT(newModem()));
 }
 
 void Console::newModem()
@@ -96,9 +97,12 @@ void Console::newModem()
 void Console::deleteModem()
 {
     ModemEn = false;
-    modem->close();
-    delete modem;
-    modem = NULL;
+    if (modem)
+    {
+        modem->close();
+        delete modem;
+        modem = NULL;
+    }
 }
 
 void Console::showTransfer(int total, int remain, float speed)
@@ -129,10 +133,10 @@ void Console::putData(const QByteArray &data)
         QByteArray byte;
         int pos = 0;
 
-        modemCheck.stop();
+        modemCheck->stop();
         if (data.at(data.size()- 1) == 'C')
         {
-            modemCheck.start(20);
+            modemCheck->start(20);
         }
 
         if (data.startsWith("\x1B[2K"))
@@ -201,31 +205,6 @@ void Console::setLocalEchoEnabled(bool set)
     localEchoEnabled = set;
 }
 
-void Console::dragEnterEvent(QDragEnterEvent *event)
-{
-    event->acceptProposedAction();
-}
-
-void Console::getFile(QString &name)
-{
-   name = fileName;
-}
-
-void Console::setEnabled(bool on)
-{
-    if (!on)
-    {
-        if (modem)
-        {
-            modem->close();
-            delete modem;
-            modem = NULL;
-        }
-    }
-
-    QPlainTextEdit::setEnabled(on);
-}
-
 void Console::dropEvent(QDropEvent *event)
 {
     QList<QUrl> urls;
@@ -237,7 +216,27 @@ void Console::dropEvent(QDropEvent *event)
     fileName = urls.first().toLocalFile();
 
     emit showStatus(fileName.toStdString());
+    QDropEvent et(event->pos(), Qt::IgnoreAction, NULL,
+                  Qt::NoButton, Qt::NoModifier);
+
+    QPlainTextEdit::dropEvent(&et);
 }
+
+void Console::getFile(QString &name)
+{
+   name = fileName;
+}
+
+void Console::setEnabled(bool on)
+{
+    if (!on)
+    {
+        deleteModem();
+    }
+
+    QPlainTextEdit::setEnabled(on);
+}
+
 
 void Console::keyPressEvent(QKeyEvent *e)
 {

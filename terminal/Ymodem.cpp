@@ -16,10 +16,9 @@ Ymodem::Ymodem(Console *parent)
 
 void Ymodem::close()
 {
+    isrun = false;
     if (!isFinished())
     {
-        isrun = false;
-
         wait();
     }
 }

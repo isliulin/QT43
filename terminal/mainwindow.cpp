@@ -121,9 +121,8 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
-        showStatusMessage(tr("连接到 %1 : %2, %3, %4, %5, %6")
-                          .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
-                          .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
+        showStatusMessage(tr("连接到 %1")
+                          .arg(p.name));
     }
     else
     {
@@ -152,7 +151,7 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("版本:1.0.0 作者:heyuanjie"),
+    QMessageBox::about(this, tr("版本:1.0.1 作者:heyuanjie"),
                        tr("将文件拖入窗口，收到'C'后进入Ymodem模式"));
 }
 

@@ -13,7 +13,7 @@
   <property name="font">
    <font>
     <family>Consolas</family>
-    <pointsize>14</pointsize>
+    <pointsize>12</pointsize>
    </font>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
      <x>0</x>
      <y>0</y>
      <width>837</width>
-     <height>23</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
