@@ -151,6 +151,7 @@ void Console::delCurLine()
     QTextCursor tc = textCursor();
     tc.select(QTextCursor::BlockUnderCursor);
     tc.removeSelectedText();
+    insertPlainText("\n");
 }
 
 void Console::charProcess(const QByteArray &data)
