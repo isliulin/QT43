@@ -189,6 +189,15 @@ void Console::charProcess(const QByteArray &data)
 
             terCtl.mode = 0;
         }break;
+        case 'J':
+        case 'i':
+        case 'r':
+        case 'n':
+        case 'c':
+            terCtl.mode = 0;
+            break;
+        case ';':
+        break;
         default:
         {
             terCtl.param.push_back(ch);
@@ -200,6 +209,7 @@ void Console::charProcess(const QByteArray &data)
 
     switch (ch)
     {
+#if 1
     case 0x1B:
     {
         terCtl.mode = 1;
@@ -213,6 +223,7 @@ void Console::charProcess(const QByteArray &data)
             terCtl.param.clear();
         }
     }break;
+#endif
     case 0x08:
     {
         //选中字符
