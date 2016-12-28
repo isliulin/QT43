@@ -125,3 +125,8 @@ void MainWindow::on_pushButton_10_clicked()
 {
     worker->msgq_push(9);
 }
+
+void MainWindow::on_error_clicked()
+{
+    worker->msgq_push(10);
+}

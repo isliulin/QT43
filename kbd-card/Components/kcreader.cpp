@@ -168,11 +168,28 @@ bool KCReader::ShuaKaShowCont(float ctremain, string &name)
 
     ct->status = 0;
     ct->ctremain = (uint32_t)(ctremain * 100);
-    ct->namelen = name.size();
 
     sprintf(ct->name, "%s", name.c_str());
 
-    len = sizeof(*ct) + ct->namelen;
+    len = sizeof(*ct) + name.size();
+
+    ToShuaKa(0x15, ++MsgIdSK, buf, len);
+
+    return true;
+}
+
+bool KCReader::ShuaKaError(int err)
+{
+    kcshowct_t *ct;
+    uint8_t buf[64];
+    int len;
+
+    ct = (kcshowct_t*)buf;
+
+    ct->status = err;
+    ct->ctremain = 0;
+
+    len = sizeof(*ct);
 
     ToShuaKa(0x15, ++MsgIdSK, buf, len);
 

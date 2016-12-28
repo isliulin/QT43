@@ -47,6 +47,8 @@ private slots:
 
     void on_pushButton_10_clicked();
 
+    void on_error_clicked();
+
 private:
     Ui::MainWindow *ui;
     mwWorker *worker;

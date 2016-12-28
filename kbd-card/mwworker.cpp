@@ -146,6 +146,8 @@ NEXT:
                 }
                 emit ShowStatus(tmp);
                 break;
+            case 10:
+                break;
             }
         }
 
