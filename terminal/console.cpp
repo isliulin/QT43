@@ -131,7 +131,6 @@ void Console::putData(const QByteArray &data)
     else
     {
         QByteArray byte;
-        int pos = 0;
 
         modemCheck->stop();
         if (data.at(data.size()- 1) == 'C')
@@ -139,27 +138,80 @@ void Console::putData(const QByteArray &data)
             modemCheck->start(20);
         }
 
-        if (data.startsWith("\x1B[2K"))
+        for (int i = 0; i < data.size(); i ++)
         {
-            //删除当前行
-            QTextCursor tc = textCursor();
-            tc.select(QTextCursor::BlockUnderCursor);
-            tc.removeSelectedText();
-            pos = 4;
-        }
-
-        for (int i = 0; i < data.size() - pos; i ++)
-        {
-            byte[0] = data[i + pos];
+            byte[0] = data[i];
             charProcess(byte);
         }
     }
 }
 
+void Console::delCurLine()
+{
+    QTextCursor tc = textCursor();
+    tc.select(QTextCursor::BlockUnderCursor);
+    tc.removeSelectedText();
+}
+
 void Console::charProcess(const QByteArray &data)
 {
-    switch (data.at(0))
+    uint8_t ch;
+
+    ch = data[0];
+
+    if (terCtl.mode == 2)
     {
+        switch (ch)
+        {
+        case 'K':
+        {
+            if (terCtl.param[0] == '2')
+            {
+                delCurLine();
+            }
+            terCtl.mode = 0;
+        }break;
+        case 'm':
+        {
+            for (int i = 0; i < terCtl.param.size(); i ++)
+            {
+                uint8_t p = terCtl.param[i];
+
+                switch (p)
+                {
+                case 0:
+                {
+                   setStyleSheet("background-color:black;");
+                }break;
+                }
+            }
+
+            terCtl.mode = 0;
+        }break;
+        default:
+        {
+            terCtl.param.push_back(ch);
+        }break;
+        }
+
+        return;
+    }
+
+    switch (ch)
+    {
+    case 0x1B:
+    {
+        terCtl.mode = 1;
+    }
+    break;
+    case '[':
+    {
+        if (terCtl.mode == 1)
+        {
+            terCtl.mode = 2;
+            terCtl.param.clear();
+        }
+    }break;
     case 0x08:
     {
         //选中字符
@@ -197,12 +249,12 @@ void Console::charProcess(const QByteArray &data)
         {
             insertPlainText(QString(data));
         }
+
+        QScrollBar *bar = verticalScrollBar();
+        bar->setValue(bar->maximum());
     }
     break;
     }
-
-    QScrollBar *bar = verticalScrollBar();
-    bar->setValue(bar->maximum());
 }
 
 void Console::setLocalEchoEnabled(bool set)

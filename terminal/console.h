@@ -59,6 +59,18 @@
 using namespace std;
 class Ymodem;
 
+typedef enum
+{
+    TerActColor = 'm',
+}term_act_t;
+
+typedef struct
+{
+    int mode;
+    vector <uint8_t> param;
+    term_act_t act;
+}term_ctl_t;
+
 class Console : public QPlainTextEdit
 {
     Q_OBJECT
@@ -92,6 +104,7 @@ protected:
 
 private:
     void charProcess(const QByteArray &data);
+    void delCurLine();
 
 private:
     bool localEchoEnabled;
@@ -100,6 +113,7 @@ private:
     QTimer *modemCheck;
     QString fileName;
     int lastkey;
+    term_ctl_t terCtl;
 };
 
 #endif // CONSOLE_H
