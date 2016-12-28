@@ -27,6 +27,7 @@ public:
     void GetCntLimit(int &cnt);
     void GetInterval(int &sec);
     bool GetFileOut(void);
+    void GetErrorCode(int &err);
 
 private slots:
     void ShowStatus(string s);

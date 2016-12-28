@@ -147,6 +147,10 @@ NEXT:
                 emit ShowStatus(tmp);
                 break;
             case 10:
+                int errc = 0;
+
+                ui->GetErrorCode(errc);
+                theKc.ShuaKaError(errc);
                 break;
             }
         }

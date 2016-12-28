@@ -50,6 +50,18 @@ void MainWindow::ShowStatus(string s)
     statusBar()->showMessage(qs, 1000);
 }
 
+void MainWindow::GetErrorCode(int &err)
+{
+    QString qs;
+    int pos;
+
+    qs = ui->cbErr->currentText();
+    pos = qs.indexOf(' ', 0);
+
+    qs = qs.left(pos);
+    err = qs.toInt();
+}
+
 void MainWindow::GetSerial(string &s)
 {
     QString qs;
