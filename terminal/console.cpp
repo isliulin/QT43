@@ -105,6 +105,25 @@ void Console::deleteModem()
     }
 }
 
+void Console::setTextColor(uint8_t c)
+{
+    QColor col[8] =
+    {
+        "black", "red", "green", "yellow",
+        "blue", "purple", "cyan", "white"
+    };
+
+    c = c - 30;
+    if (c <= 7)
+    {
+        QTextCharFormat fmt;
+        fmt.setForeground(col[c]);
+        QTextCursor cursor = textCursor();
+        cursor.mergeCharFormat(fmt);
+        setTextCursor(cursor);
+    }
+}
+
 void Console::showTransfer(int total, int remain, float speed)
 {
     QString str;
@@ -154,6 +173,38 @@ void Console::delCurLine()
     insertPlainText("\n");
 }
 
+void Console::getConColor(string &param, int &act, int &c1, int &c2)
+{
+    QString tmp[3];
+    int pos = 0;
+
+    act = -1;
+    c1 = -1;
+    c2 = -1;
+
+    for (int i = 0; i < param.size(); i ++)
+    {
+        char ch = param.data()[i];
+
+        if (ch == ';')
+        {
+            pos ++;
+            continue;
+        }
+        tmp[pos].push_back(ch);
+    }
+    act = tmp[0].toInt();
+    if (!tmp[1].isEmpty())
+    {
+        c1 = tmp[1].toInt();
+    }
+
+    if (!tmp[2].isEmpty())
+    {
+        c2 = tmp[2].toInt();
+    }
+}
+
 void Console::charProcess(const QByteArray &data)
 {
     uint8_t ch;
@@ -174,19 +225,10 @@ void Console::charProcess(const QByteArray &data)
         }break;
         case 'm':
         {
-            for (int i = 0; i < terCtl.param.size(); i ++)
-            {
-                uint8_t p = terCtl.param[i];
+            int act, c1, c2;
 
-                switch (p)
-                {
-                case 0:
-                {
-                   setStyleSheet("background-color:black;");
-                }break;
-                }
-            }
-
+            getConColor(terCtl.param, act, c1, c2);
+            setTextColor(c1);
             terCtl.mode = 0;
         }break;
         case 'J':
@@ -196,8 +238,6 @@ void Console::charProcess(const QByteArray &data)
         case 'c':
             terCtl.mode = 0;
             break;
-        case ';':
-        break;
         default:
         {
             terCtl.param.push_back(ch);

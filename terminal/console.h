@@ -67,7 +67,7 @@ typedef enum
 typedef struct
 {
     int mode;
-    vector <uint8_t> param;
+    string param;
     term_act_t act;
 }term_ctl_t;
 
@@ -79,6 +79,7 @@ public:
     void setEnabled(bool on);
     void showStatus(const char *s);
     void showTransfer(int total, int remain, float speed);
+    void setTextColor(uint8_t c);
 
 signals:
     void getData(const QByteArray &data);
@@ -105,6 +106,7 @@ protected:
 private:
     void charProcess(const QByteArray &data);
     void delCurLine();
+    void getConColor(string &param, int &act, int &bc, int &fc);
 
 private:
     bool localEchoEnabled;
