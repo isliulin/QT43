@@ -79,6 +79,23 @@ Console::Console(QWidget *parent)
     connect(modemCheck, SIGNAL(timeout()), this, SLOT(newModem()));
 }
 
+void Console::CursorStartOfLine()
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::StartOfLine);
+    setTextCursor(tc);
+}
+
+void Console::CursorNewLine()
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::EndOfLine);
+    tc.insertText("\n");
+    setTextCursor(tc);
+}
+
 void Console::newModem()
 {
     if (fileName.isEmpty())
@@ -102,6 +119,24 @@ void Console::deleteModem()
         modem->close();
         delete modem;
         modem = NULL;
+    }
+}
+
+QColor Console::getColor(ConsoleCorlours col)
+{
+    QColor color[8] =
+    {
+        "black", "red", "green", "yellow",
+        "blue", "magenta", "cyan", "white"
+    };
+
+    if (col >= Black && col <= White)
+    {
+        return color[col];
+    }
+    else
+    {
+        return color[0];
     }
 }
 
@@ -156,21 +191,68 @@ void Console::putData(const QByteArray &data)
         {
             modemCheck->start(20);
         }
+        QString str;
 
         for (int i = 0; i < data.size(); i ++)
         {
+            QString tmp;
             byte[0] = data[i];
             charProcess(byte);
+            str += tmp.sprintf("%02X ", byte.data()[0]);
         }
+qDebug(str.toStdString().c_str());
     }
 }
 
-void Console::delCurLine()
+void Console::EraseLine()
 {
     QTextCursor tc = textCursor();
-    tc.select(QTextCursor::BlockUnderCursor);
+    tc.select(QTextCursor::LineUnderCursor);
     tc.removeSelectedText();
-    insertPlainText("\n");
+}
+
+void Console::EraseDown()
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+}
+
+void Console::DisplayReset()
+{
+    QColor color = getColor(White);
+
+    QTextCharFormat fmt;
+    fmt.setForeground(color);
+    QTextCursor cursor = textCursor();
+    cursor.mergeCharFormat(fmt);
+    setTextCursor(cursor);
+}
+
+void Console::DisplayForegroundColour(ConsoleCorlours col)
+{
+    QColor color = getColor(col);
+
+    QTextCharFormat fmt;
+    fmt.setForeground(color);
+    QTextCursor cursor = textCursor();
+    cursor.mergeCharFormat(fmt);
+    setTextCursor(cursor);
+}
+
+void Console::DisplayBackgroundColour(ConsoleCorlours col)
+{
+
+}
+
+void Console::CurSorHome(int row, int column)
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::NextRow, QTextCursor::MoveAnchor, row);
+    tc.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, column);
+    setTextCursor(tc);
 }
 
 void Console::getConColor(string &param, int &act, int &c1, int &c2)
@@ -193,7 +275,11 @@ void Console::getConColor(string &param, int &act, int &c1, int &c2)
         }
         tmp[pos].push_back(ch);
     }
-    act = tmp[0].toInt();
+    if (!tmp[0].isEmpty())
+    {
+       act =  tmp[0].toInt();
+    }
+
     if (!tmp[1].isEmpty())
     {
         c1 = tmp[1].toInt();
@@ -219,7 +305,7 @@ void Console::charProcess(const QByteArray &data)
         {
             if (terCtl.param[0] == '2')
             {
-                delCurLine();
+                EraseLine();
             }
             terCtl.mode = 0;
         }break;
@@ -228,15 +314,38 @@ void Console::charProcess(const QByteArray &data)
             int act, c1, c2;
 
             getConColor(terCtl.param, act, c1, c2);
-            setTextColor(c1);
+            if (act == 0)
+            {
+                DisplayReset();
+            }
+            if (c1 <= 37 && c1 >= 30)
+            {
+                ConsoleCorlours c = (ConsoleCorlours)(c1 - 30);
+                DisplayForegroundColour(c);
+            }
             terCtl.mode = 0;
         }break;
         case 'J':
+            EraseDown();
+            terCtl.mode = 0;
+            break;
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
         case 'i':
         case 'r':
         case 'n':
         case 'c':
+        case 'H':
+        {
+            int r, c,n;
+            string dbg = terCtl.param + data.toStdString();
+            qDebug(dbg.c_str());
+            getConColor(terCtl.param, r, c, n);
+            CurSorHome(r,c);
             terCtl.mode = 0;
+        }
             break;
         default:
         {
@@ -283,9 +392,10 @@ void Console::charProcess(const QByteArray &data)
     }
     break;
     case '\r':
+        CursorStartOfLine();
         break;
     case '\n':
-        insertPlainText(QString(data));
+        CursorNewLine();
         break;
     default:
     {

@@ -76,6 +76,19 @@ class Console : public QPlainTextEdit
     Q_OBJECT
 
 public:
+    typedef enum
+    {
+        Black = 0,
+        Red = 1,
+        Green = 2,
+        Yellow = 3,
+        Blue = 4,
+        Magenta = 5,
+        Cyan = 6,
+        White = 7,
+    }ConsoleCorlours;
+
+public:
     void setEnabled(bool on);
     void showStatus(const char *s);
     void showTransfer(int total, int remain, float speed);
@@ -96,6 +109,29 @@ public:
     void putData(const QByteArray &data);
     void setLocalEchoEnabled(bool set);
     void getFile(QString &name);
+    QColor getColor(ConsoleCorlours col);
+
+public:
+    /*Cursor Control */
+
+    void CursorStartOfLine();
+    void CursorNewLine();
+    void CursorUp(int n);
+    void CursorDown(int n);
+    void CurSorHome(int row = 0, int column = 0);
+
+public:
+    /* Erasing Text */
+
+    void EraseLine();
+    void EraseDown();
+
+public:
+    /* Set Display Attributes */
+
+    void DisplayReset();
+    void DisplayForegroundColour(ConsoleCorlours col);
+    void DisplayBackgroundColour(ConsoleCorlours col);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
@@ -105,7 +141,6 @@ protected:
 
 private:
     void charProcess(const QByteArray &data);
-    void delCurLine();
     void getConColor(string &param, int &act, int &bc, int &fc);
 
 private:
