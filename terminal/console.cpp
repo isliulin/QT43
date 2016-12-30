@@ -57,6 +57,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTextCursor>
+#include <QTextBlock>
 
 #include "Ymodem.h"
 
@@ -215,7 +216,7 @@ void Console::EraseDown()
 {
     QTextCursor tc = textCursor();
 
-    tc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    tc.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
     tc.removeSelectedText();
 }
 
@@ -248,11 +249,17 @@ void Console::DisplayBackgroundColour(ConsoleCorlours col)
 
 void Console::CurSorHome(int row, int column)
 {
-    QTextCursor tc = textCursor();
+    QTextCursor tc = cursorForPosition(QPoint(0, 0));
 
-    tc.movePosition(QTextCursor::NextRow, QTextCursor::MoveAnchor, row);
-    tc.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, column);
-    setTextCursor(tc);
+    for (int i = 0; i < row - 1; i ++)
+    {
+        tc.movePosition(QTextCursor::Down);
+    }
+    for (int i = 0; i < column - 1; i ++)
+    {
+        tc.movePosition(QTextCursor::Right);
+    }
+    setTextCursor( tc );
 }
 
 void Console::getConColor(string &param, int &act, int &c1, int &c2)

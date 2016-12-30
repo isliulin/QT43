@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>959</width>
-    <height>616</height>
+    <height>817</height>
    </rect>
   </property>
   <property name="font">
@@ -25,6 +25,20 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>mvc</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>erase</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QToolButton" name="toolButton">
       <property name="text">
        <string>保存</string>
@@ -39,7 +53,7 @@
      <x>0</x>
      <y>0</y>
      <width>959</width>
-     <height>33</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">

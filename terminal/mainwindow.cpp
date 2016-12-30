@@ -91,7 +91,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dlgSS = new SendSave;
     statusBar()->addWidget(ui->toolButton);
-
+statusBar()->addWidget(ui->pushButton);
+statusBar()->addWidget(ui->pushButton_2);
     connect(dlgSS, &dlgSS->dataSend, this, &MainWindow::writeData);
 
     statusBar()->addWidget(dlgSS->toolButton(0));
@@ -193,4 +194,14 @@ void MainWindow::showStatusMessage(const QString &message)
 void MainWindow::on_toolButton_clicked()
 {
     dlgSS->show();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    console->CurSorHome(12,1);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    console->EraseDown();
 }
