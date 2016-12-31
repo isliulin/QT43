@@ -212,6 +212,14 @@ void Console::EraseLine()
     tc.removeSelectedText();
 }
 
+void Console::EraseEndOfLine()
+{
+    QTextCursor tc = textCursor();
+    tc.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+    setTextCursor(tc);
+}
+
 void Console::EraseDown()
 {
     QTextCursor tc = textCursor();
@@ -313,6 +321,11 @@ void Console::charProcess(const QByteArray &data)
             if (terCtl.param[0] == '2')
             {
                 EraseLine();
+            }
+            if (terCtl.param[0] == '0')
+            {
+                qDebug("RRRR");
+                EraseEndOfLine();
             }
             terCtl.mode = 0;
         }break;

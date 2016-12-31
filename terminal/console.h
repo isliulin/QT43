@@ -125,6 +125,7 @@ public:
 
     void EraseLine();
     void EraseDown();
+    void EraseEndOfLine();
 
 public:
     /* Set Display Attributes */

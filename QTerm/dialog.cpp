@@ -1,0 +1,70 @@
+#include "dialog.h"
+#include "ui_dialog.h"
+
+Dialog::Dialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::Dialog)
+{
+    ui->setupUi(this);
+}
+
+Dialog::~Dialog()
+{
+    delete ui;
+}
+
+void Dialog::on_home_clicked()
+{
+    QByteArray data = "he\x1B[1;1Hllo";
+
+    emit outData(data);
+}
+
+void Dialog::on_start_clicked()
+{
+    QByteArray data = "\r行首";
+
+    emit outData(data);
+}
+
+void Dialog::on_up_clicked()
+{
+    QByteArray data = "\x1B[A";
+
+    emit outData(data);
+}
+
+void Dialog::on_down_clicked()
+{
+    QByteArray data = "\x1B[B";
+
+    emit outData(data);
+}
+
+void Dialog::on_left_clicked()
+{
+    QByteArray data = "\x1B[C";
+
+    emit outData(data);
+}
+
+void Dialog::on_right_clicked()
+{
+    QByteArray data = "\x1B[D";
+
+    emit outData(data);
+}
+
+void Dialog::on_reset_clicked()
+{
+    QByteArray data = "\x1B[m";
+
+    emit outData(data);
+}
+
+void Dialog::on_color_clicked()
+{
+    QByteArray data = "\x1B[2;5m";
+
+    emit outData(data);
+}
