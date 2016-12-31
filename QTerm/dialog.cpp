@@ -57,14 +57,20 @@ void Dialog::on_right_clicked()
 
 void Dialog::on_reset_clicked()
 {
-    QByteArray data = "\x1B[m";
+    QByteArray data = "\x1B[myes";
 
     emit outData(data);
 }
 
 void Dialog::on_color_clicked()
 {
-    QByteArray data = "\x1B[2;5m";
+    QByteArray data;
+    QString b,f,t;
+
+    b = ui->back->currentText();
+    f = ui->fore->currentText();
+    t = "\x1B[" + b + ";" + f + "mtest";
+    data = t.toLocal8Bit();
 
     emit outData(data);
 }

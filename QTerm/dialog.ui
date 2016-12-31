@@ -162,7 +162,7 @@
      <string>默认</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="back">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -173,16 +173,46 @@
     </property>
     <item>
      <property name="text">
-      <string>背景</string>
+      <string>30</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>前景</string>
+      <string>31</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>32</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>33</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>34</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>35</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>36</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>37</string>
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="comboBox_2">
+   <widget class="QComboBox" name="fore">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -191,6 +221,46 @@
       <height>22</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>41</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>40</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>42</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>44</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>43</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>46</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>47</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>45</string>
+     </property>
+    </item>
    </widget>
    <widget class="QPushButton" name="color">
     <property name="geometry">

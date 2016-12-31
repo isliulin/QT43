@@ -19,10 +19,11 @@ protected:
 
 private:
     void recvChar(char ch);
+    void parseParam(QVector<int> &param, int defval = 0);
 
 private:
     int m_Mode;
-    QByteArray m_Param;
+    QString m_Param;
     QByteArray m_Text;
 };
 

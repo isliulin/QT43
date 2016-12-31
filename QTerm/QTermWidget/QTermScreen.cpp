@@ -73,3 +73,80 @@ void QTermScreen::CursorHome(int row, int column)
     }
     setTextCursor( tc );
 }
+
+void QTermScreen::DisplayForeground(QColor &color)
+{
+    QTextCharFormat fmt;
+
+    fmt.setForeground(color);
+    QTextCursor cursor = textCursor();
+    cursor.mergeCharFormat(fmt);
+    setTextCursor(cursor);
+}
+
+void QTermScreen::DisplayBackground(QColor &color)
+{
+    QTextCharFormat fmt;
+
+    fmt.setBackground(color);
+    QTextCursor cursor = textCursor();
+    cursor.mergeCharFormat(fmt);
+    setTextCursor(cursor);
+}
+
+void QTermScreen::DisplayAttribute(QVector <int> &param)
+{
+    for(int i = 0; i < param.count(); i ++)
+    {
+        int v = param[i];
+
+        switch (v)
+        {
+        case 0:
+        {
+            DisplayReset();
+        }break;
+        default:
+        {
+            if (v >= 30 && v <= 37)
+            {
+                QColor c = GetColor(v - 30);
+                DisplayForeground(c);
+            }
+            if (v >= 40 && v <= 47)
+            {
+                QColor c = GetColor(v - 40);
+                DisplayBackground(c);
+            }
+        }break;
+        }
+    }
+}
+
+QColor QTermScreen::GetColor(int col)
+{
+    QColor color[8] =
+    {
+        "black", "red", "green", "yellow",
+        "blue", "magenta", "cyan", "white"
+    };
+
+    if (col >= 0 && col <= 7)
+    {
+        return color[col];
+    }
+    else
+    {
+        return color[0];
+    }
+}
+
+void QTermScreen::DisplayReset()
+{
+    QColor color;
+
+    color = GetColor(0);
+    DisplayBackground(color);
+    color = GetColor(7);
+    DisplayForeground(color);
+}

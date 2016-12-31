@@ -17,6 +17,13 @@ public:
     void CursorRight(int n = 1);
     void CursorHome(int row = 0, int column = 0);
 
+public:
+    QColor GetColor(int c);
+
+    void DisplayAttribute(QVector <int> &param);
+    void DisplayReset();
+    void DisplayForeground(QColor &color);
+    void DisplayBackground(QColor &color);
 };
 
 #endif // QTERMSCREEN_H

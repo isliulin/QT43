@@ -53,6 +53,14 @@ void QTermWidget::recvChar(char ch)
             m_Mode = 0;
             CursorHome();
         }break;
+        case 'm':
+        {
+            QVector <int> p;
+
+            m_Mode = 0;
+            parseParam(p);
+            DisplayAttribute(p);
+        }break;
         case '0':
         case '1':
         case '2':
@@ -120,4 +128,32 @@ void QTermWidget::mousePressEvent(QMouseEvent *e)
 {
     Q_UNUSED(e)
     setFocus();
+}
+
+void QTermWidget::parseParam(QVector <int> &param, int defval)
+{
+    if (m_Param.isEmpty())
+    {
+        param.push_back(defval);
+        return;
+    }
+
+    m_Param.append(';');
+
+    QString tmp;
+    for (int i = 0; i < m_Param.count(); i ++)
+    {
+        QChar ch = m_Param.at(i);
+
+        if (ch == ';')
+        {
+            int v;
+
+            v = tmp.toInt();
+            param.push_back(v);
+            tmp.clear();
+            continue;
+        }
+        tmp.push_back(ch);
+    }
 }
