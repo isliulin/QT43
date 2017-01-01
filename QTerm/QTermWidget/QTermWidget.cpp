@@ -29,29 +29,13 @@ void QTermWidget::recvChar(char ch)
         switch (ch)
         {
         case 'A':
-        {
-            m_Mode = 0;
-            CursorUp();
-        }break;
         case 'B':
-        {
-            m_Mode = 0;
-            CursorDown();
-        }break;
         case 'C':
-        {
-            m_Mode = 0;
-            CursorLeft();
-        }break;
         case 'D':
-        {
-            m_Mode = 0;
-            CursorRight();
-        }break;
         case 'H':
         {
             m_Mode = 0;
-            CursorHome();
+            moveCursor(ch);
         }break;
         case 'J':
         case 'K':
@@ -137,11 +121,14 @@ void QTermWidget::mousePressEvent(QMouseEvent *e)
     setFocus();
 }
 
-void QTermWidget::parseParam(QVector <int> &param, int defval)
+void QTermWidget::parseParam(QVector <int> &param, int np, int defval)
 {
     if (m_Param.isEmpty())
     {
-        param.push_back(defval);
+        for (int i = 0; i < np; i ++)
+        {
+            param.push_back(defval);
+        }
         return;
     }
 
@@ -205,5 +192,31 @@ void QTermWidget::eraseText(char ch)
             EraseEntireLine();
         }break;
         }
+    }
+}
+
+void QTermWidget::moveCursor(char ch)
+{
+    QVector <int> p;
+
+    parseParam(p, 2, 1);
+
+    switch (ch)
+    {
+    case 'A':
+        CursorUp(p[0]);
+        break;
+    case 'B':
+        CursorDown(p[0]);
+        break;
+    case 'C':
+        CursorLeft(p[0]);
+        break;
+    case 'D':
+        CursorRight(p[0]);
+        break;
+    case 'H':
+        CursorHome(p[0], p[1]);
+        break;
     }
 }

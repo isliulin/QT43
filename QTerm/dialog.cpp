@@ -15,7 +15,13 @@ Dialog::~Dialog()
 
 void Dialog::on_home_clicked()
 {
-    QByteArray data = "he\x1B[1;1Hllo";
+    QByteArray data;
+    QString r,c,t;
+
+    r = ui->row->text();
+    c = ui->column->text();
+    t = "he\x1B[" + r + ";" + c + "Hllo";
+    data = t.toLocal8Bit();
 
     emit outData(data);
 }
