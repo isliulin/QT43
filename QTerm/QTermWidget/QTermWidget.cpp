@@ -53,6 +53,13 @@ void QTermWidget::recvChar(char ch)
             m_Mode = 0;
             CursorHome();
         }break;
+        case 'J':
+        case 'K':
+        {
+            m_Mode = 0;
+
+            eraseText(ch);
+        }break;
         case 'm':
         {
             QVector <int> p;
@@ -155,5 +162,48 @@ void QTermWidget::parseParam(QVector <int> &param, int defval)
             continue;
         }
         tmp.push_back(ch);
+    }
+}
+
+void QTermWidget::eraseText(char ch)
+{
+    QVector <int> p;
+
+    parseParam(p);
+    if (ch == 'J')
+    {
+        switch (p[0])
+        {
+        case 0:
+        {
+            EraseDown();
+        }break;
+        case 1:
+        {
+            EraseUp();
+        }break;
+        case 2:
+        {
+            EraseScreen();
+        }break;
+        }
+    }
+    else
+    {
+        switch (p[0])
+        {
+        case 0:
+        {
+            EraseEndOfLine();
+        }break;
+        case 1:
+        {
+            EraseStartOfLine();
+        }break;
+        case 2:
+        {
+            EraseEntireLine();
+        }break;
+        }
     }
 }

@@ -20,6 +20,7 @@ protected:
 private:
     void recvChar(char ch);
     void parseParam(QVector<int> &param, int defval = 0);
+    void eraseText(char ch);
 
 private:
     int m_Mode;

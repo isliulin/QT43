@@ -24,6 +24,14 @@ public:
     void DisplayReset();
     void DisplayForeground(QColor &color);
     void DisplayBackground(QColor &color);
+
+public:
+    void EraseEndOfLine();
+    void EraseStartOfLine();
+    void EraseEntireLine();
+    void EraseDown();
+    void EraseUp();
+    void EraseScreen();
 };
 
 #endif // QTERMSCREEN_H

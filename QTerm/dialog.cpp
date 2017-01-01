@@ -74,3 +74,45 @@ void Dialog::on_color_clicked()
 
     emit outData(data);
 }
+
+void Dialog::on_lend_clicked()
+{
+    QByteArray data = "\x1B[K";
+
+    emit outData(data);
+}
+
+void Dialog::on_lstart_clicked()
+{
+    QByteArray data = "\x1B[1K";
+
+    emit outData(data);
+}
+
+void Dialog::on_lentire_clicked()
+{
+    QByteArray data = "\x1B[2K";
+
+    emit outData(data);
+}
+
+void Dialog::on_ldown_clicked()
+{
+    QByteArray data = "\x1B[J";
+
+    emit outData(data);
+}
+
+void Dialog::on_lup_clicked()
+{
+    QByteArray data = "\x1B[1J";
+
+    emit outData(data);
+}
+
+void Dialog::on_screen_clicked()
+{
+    QByteArray data = "\x1B[2J";
+
+    emit outData(data);
+}

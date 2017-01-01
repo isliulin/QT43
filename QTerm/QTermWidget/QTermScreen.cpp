@@ -150,3 +150,48 @@ void QTermScreen::DisplayReset()
     color = GetColor(7);
     DisplayForeground(color);
 }
+
+void QTermScreen::EraseEndOfLine()
+{
+    QTextCursor tc = textCursor();
+    tc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+    setTextCursor(tc);
+}
+
+void QTermScreen::EraseStartOfLine()
+{
+    QTextCursor tc = textCursor();
+    tc.movePosition(QTextCursor::StartOfBlock, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+    setTextCursor(tc);
+}
+
+void QTermScreen::EraseEntireLine()
+{
+    QTextCursor tc = textCursor();
+    tc.select(QTextCursor::BlockUnderCursor);
+    tc.removeSelectedText();
+}
+
+void QTermScreen::EraseDown()
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+}
+
+void QTermScreen::EraseUp()
+{
+    QTextCursor tc = textCursor();
+
+    tc.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
+    tc.removeSelectedText();
+}
+
+void QTermScreen::EraseScreen()
+{
+    EraseDown();
+    EraseUp();
+}

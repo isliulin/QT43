@@ -143,7 +143,7 @@
      <x>190</x>
      <y>30</y>
      <width>201</width>
-     <height>251</height>
+     <height>161</height>
     </rect>
    </property>
    <property name="title">
@@ -273,6 +273,97 @@
     </property>
     <property name="text">
      <string>颜色</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>30</y>
+     <width>151</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>擦出</string>
+   </property>
+   <widget class="QPushButton" name="lend">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>行尾</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="lstart">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>行首</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="lentire">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>整行</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ldown">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>下部</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="lup">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>上部</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="screen">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>260</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>全屏</string>
     </property>
    </widget>
   </widget>

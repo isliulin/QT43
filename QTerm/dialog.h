@@ -35,6 +35,18 @@ private slots:
 
     void on_color_clicked();
 
+    void on_lend_clicked();
+
+    void on_lstart_clicked();
+
+    void on_lentire_clicked();
+
+    void on_ldown_clicked();
+
+    void on_lup_clicked();
+
+    void on_screen_clicked();
+
 private:
     Ui::Dialog *ui;
 };
