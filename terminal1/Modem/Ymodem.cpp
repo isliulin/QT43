@@ -1,12 +1,12 @@
 #include "Ymodem.h"
-#include "console.h"
+#include "Modem.h"
 #include "crc.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <time.h>
 
-Ymodem::Ymodem(Console *parent)
+Ymodem::Ymodem(Modem *parent)
 {
     Stage = msFirst;
     sn = 0;
@@ -146,6 +146,16 @@ int Ymodem::makeEotRsp(QByteArray &byte)
    return 1;
 }
 
+void Ymodem::outData(const QByteArray &data)
+{
+    emit ui->outData(data);
+}
+
+void Ymodem::showStatus(const char *s)
+{
+
+}
+
 void Ymodem::run()
 {
     QString filename;
@@ -157,18 +167,18 @@ void Ymodem::run()
     string stext;
     int remain = 0;
 
-    ui->showStatus("已启动Ymodem");
+    showStatus("已启动Ymodem");
     ui->getFile(filename);
     if (filename.isEmpty())
     {
-       emit ui->showStatus("错误:文件名为空");
+       showStatus("错误:文件名为空");
        goto err;
     }
 
     file.setFileName(filename);
     if (!file.open(QFile::ReadOnly))
     {
-        emit ui->showStatus("错误:打开文件失败");
+        showStatus("错误:打开文件失败");
         goto err;
     }
 
@@ -191,12 +201,12 @@ void Ymodem::run()
             {
                 QFileInfo info(filename);
 
-                ui->showStatus("第一次传输请求");
+                showStatus("第一次传输请求");
                 stext = info.fileName().toStdString();
                 remain = file.size();
                 filesize = remain;
                 makeFirstRsp(stext, remain, byte);
-                ui->getData(byte);
+                outData(byte);
             }
             break;
             case mcACK:
@@ -213,7 +223,7 @@ void Ymodem::run()
             {
             case mcREQ:
             {
-                ui->showStatus("第二次传输请求");
+                showStatus("第二次传输请求");
                 Stage = msTrans;
                 time_start();
             }
@@ -232,7 +242,7 @@ void Ymodem::run()
                 makeNextRsp(fbuf, size, byte);
 
                 isread = true;
-                ui->getData(byte);
+                outData(byte);
             }
 
             switch (msg)
@@ -254,7 +264,7 @@ void Ymodem::run()
         break;
         case msRepeat:
         {
-            ui->getData(byte);
+            outData(byte);
         }
         break;
         case msEnding:
@@ -263,7 +273,7 @@ void Ymodem::run()
             {
             case mcACK:
                 makeEotRsp(byte);
-                ui->getData(byte);
+                outData(byte);
                 Stage = msFinish;
                 break;
             }
@@ -275,12 +285,12 @@ void Ymodem::run()
             {
             case mcACK:
                 makeFinishRsp(byte);
-                ui->getData(byte);
+                outData(byte);
                 goto err;
                 break;
             case mcNAK:
                 makeEotRsp(byte);
-                ui->getData(byte);
+                outData(byte);
                 break;
             }
         }
@@ -293,5 +303,5 @@ void Ymodem::run()
     }
 
 err:
-    ui->showStatus("退出Ymodem");
+    showStatus("退出Ymodem");
 }

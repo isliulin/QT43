@@ -7,14 +7,14 @@
 #include <time.h>
 
 using namespace std;
-class Console;
+class Modem;
 
 class Ymodem : public QThread
 {
     Q_OBJECT
 
 public:
-    Ymodem(Console *parent);
+    Ymodem(Modem *parent);
 
     void close();
     void put(const QByteArray &data);
@@ -69,12 +69,14 @@ private:
     uint16_t crc16(char *data, int size);
     void time_start();
     float speed_clc(int total, int remain);
+    void outData(const QByteArray &data);
+    void showStatus(const char *s);
 
 private:
     enum modemStage Stage;
     enum modemWaitfor Wait;
     bool isrun;
-    Console *ui;
+    Modem *ui;
     uint8_t sn;
     queue <int> msgq;
     time_t  stx_time;

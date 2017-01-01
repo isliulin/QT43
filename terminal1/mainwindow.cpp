@@ -51,7 +51,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "console.h"
+
 #include "settingsdialog.h"
 #include "SendSave/SendSave.h"
 
@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     term = new QTermWidget;
 
     setCentralWidget(term);
-    console = new Console;
+
     serial = new QSerialPort(this);
 
     settings = new SettingsDialog;
@@ -116,8 +116,7 @@ void MainWindow::openSerialPort()
     serial->setStopBits(p.stopBits);
     serial->setFlowControl(p.flowControl);
     if (serial->open(QIODevice::ReadWrite)) {
-        console->setEnabled(true);
-        console->setLocalEchoEnabled(p.localEchoEnabled);
+
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
@@ -142,7 +141,7 @@ void MainWindow::closeSerialPort()
 {
     if (serial->isOpen())
         serial->close();
-    console->setEnabled(false);
+
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
@@ -188,7 +187,6 @@ void MainWindow::initActionsConnections()
     connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::closeSerialPort);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionConfigure, &QAction::triggered, settings, &MainWindow::show);
-    connect(ui->actionClear, &QAction::triggered, console, &Console::clear);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
 }
@@ -201,14 +199,4 @@ void MainWindow::showStatusMessage(const QString &message)
 void MainWindow::on_toolButton_clicked()
 {
     dlgSS->show();
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    console->CurSorHome(12,1);
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-    console->EraseEndOfLine();
 }

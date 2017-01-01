@@ -7,29 +7,30 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     settingsdialog.cpp \
-    console.cpp \
-    Ymodem.cpp \
     crc16.c \
     SendSave/SendSave.cpp \
     SendSave/SSWorker.cpp \
     QTermWidget/QTermScreen.cpp \
-    QTermWidget/QTermWidget.cpp
+    QTermWidget/QTermWidget.cpp \
+    Modem/Modem.cpp \
+    Modem/Ymodem.cpp
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
-    console.h \
-    Ymodem.h \
     crc.h \
     SendSave/SendSave.h \
     SendSave/SSWorker.h \
     QTermWidget/QTermScreen.h \
-    QTermWidget/QTermWidget.h
+    QTermWidget/QTermWidget.h \
+    Modem/Modem.h \
+    Modem/Ymodem.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
-    SendSave/SendSave.ui
+    SendSave/SendSave.ui \
+    Modem/modem.ui
 
 RESOURCES += \
     terminal.qrc

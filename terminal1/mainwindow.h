@@ -74,7 +74,6 @@ class MainWindow;
 
 QT_END_NAMESPACE
 
-class Console;
 class SettingsDialog;
 
 class MainWindow : public QMainWindow
@@ -97,10 +96,6 @@ private slots:
 
     void on_toolButton_clicked();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
 private:
     void initActionsConnections();
 
@@ -109,7 +104,6 @@ private:
 
     Ui::MainWindow *ui;
     QLabel *status;
-    Console *console;
     SettingsDialog *settings;
     QSerialPort *serial;
     SendSave *dlgSS;
