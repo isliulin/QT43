@@ -53,7 +53,7 @@
 #include "ui_mainwindow.h"
 #include "console.h"
 #include "settingsdialog.h"
-#include "SendSave.h"
+#include "SendSave/SendSave.h"
 
 #include <QMessageBox>
 #include <QLabel>
@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dlgSS = new SendSave;
     statusBar()->addWidget(ui->toolButton);
 
-    connect(dlgSS, &dlgSS->dataSend, this, &MainWindow::writeData);
+    connect(dlgSS, &dlgSS->outData, this, &MainWindow::writeData);
 
     statusBar()->addWidget(dlgSS->toolButton(0));
     statusBar()->addWidget(dlgSS->toolButton(1));

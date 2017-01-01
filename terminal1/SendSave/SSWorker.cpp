@@ -82,12 +82,9 @@ void SSWorker::dbUpdateRow(QString &sn, int col, QString &val)
         temp << "name = '" << val.toStdString()  << "'";
         break;
     case 1:
-        temp << "type = '" << val.toStdString()   << "'";
-        break;
-    case 2:
         temp << "value = '" << val.toStdString() << "'";
         break;
-    case 3:
+    case 2:
         temp << "endline = '" << val.toStdString() << "'";
         break;
     default:

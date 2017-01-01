@@ -28,16 +28,16 @@ SendSave::~SendSave()
 
 void SendSave::tableInit()
 {
-    ui->tbSave->setColumnCount(4);
+    ui->tbSave->setColumnCount(3);
 
     QStringList header;
 
-    header << "名称" << "类型" << "内容" << "换行符";
+    header << "名称" << "内容" << "换行符";
     ui->tbSave->setHorizontalHeaderLabels(header);
 
     ui->tbSave->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tbSave->horizontalHeader()->resizeSection(0, 60);
-    ui->tbSave->horizontalHeader()->resizeSection(1, 48);
+    ui->tbSave->horizontalHeader()->resizeSection(1, 160);
 
     QHeaderView *vh;
 
@@ -48,7 +48,6 @@ void SendSave::tableInit()
 void SendSave::VHeaderClicked(int index)
 {
     QByteArray buf;
-    QString type;
     QString value;
     QString endline;
     QTableWidgetItem *item;
@@ -57,16 +56,14 @@ void SendSave::VHeaderClicked(int index)
         return;
 
     item = ui->tbSave->item(index, 1);
-    type = item->text();
-    item = ui->tbSave->item(index, 2);
     value = item->text();
-    item = ui->tbSave->item(index, 3);
+    item = ui->tbSave->item(index, 2);
     endline = item->text();
 
-    dataMake(buf, type, value, endline);
+    dataMake(buf, value, endline);
     if (buf.size())
     {
-        emit dataSend(buf);
+        emit outData(buf);
     }
 }
 
@@ -76,22 +73,18 @@ void SendSave::tableAddRow(QString &name, QString &type, QString &value, QString
 
     row = ui->tbSave->rowCount();
     ui->tbSave->insertRow(row);
-    QTableWidgetItem *item = new QTableWidgetItem[4];
+    QTableWidgetItem *item = new QTableWidgetItem[3];
 
     item->setText(name);
     ui->tbSave->setItem(row, 0, item);
     item ++;
 
-    item->setText(type);
+    item->setText(value);
     ui->tbSave->setItem(row, 1, item);
     item ++;
 
-    item->setText(value);
-    ui->tbSave->setItem(row, 2, item);
-    item ++;
-
     item->setText(endline);
-    ui->tbSave->setItem(row, 3, item);
+    ui->tbSave->setItem(row, 2, item);
 
     setBtName(row, name);
 }
@@ -172,31 +165,24 @@ void SendSave::on_clear_clicked()
     }
 }
 
-void SendSave::dataMake(QByteArray &buf, QString &type, QString &value, QString &endline)
+void SendSave::dataMake(QByteArray &buf, QString &value, QString &endline)
 {
     if (value.isEmpty())
         return;
 
-    if (type == "hex")
-    {
+    buf = value.toStdString().c_str();
+    int r, n;
+    r = endline.count("\\r");
+    n = endline.count("\\n");
 
+    for (int i = 0; i < r; i++)
+    {
+        buf.append('\r');
     }
-    else
+
+    for (int i = 0; i < n; i++)
     {
-        buf = value.toStdString().c_str();
-        int r, n;
-        r = endline.count("\\r");
-        n = endline.count("\\n");
-
-        for (int i = 0; i < r; i++)
-        {
-            buf.append('\r');
-        }
-
-        for (int i = 0; i < n; i++)
-        {
-            buf.append('\n');
-        }
+        buf.append('\n');
     }
 }
 

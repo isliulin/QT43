@@ -1,6 +1,6 @@
 QT += widgets serialport sql
 
-TARGET = terminal
+TARGET = QTerm
 TEMPLATE = app
 
 SOURCES += \
@@ -10,8 +10,8 @@ SOURCES += \
     console.cpp \
     Ymodem.cpp \
     crc16.c \
-    SendSave.cpp \
-    SSWorker.cpp \
+    SendSave/SendSave.cpp \
+    SendSave/SSWorker.cpp \
     QTermWidget/QTermScreen.cpp \
     QTermWidget/QTermWidget.cpp
 
@@ -21,15 +21,15 @@ HEADERS += \
     console.h \
     Ymodem.h \
     crc.h \
-    SendSave.h \
-    SSWorker.h \
+    SendSave/SendSave.h \
+    SendSave/SSWorker.h \
     QTermWidget/QTermScreen.h \
     QTermWidget/QTermWidget.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
-    SendSave.ui
+    SendSave/SendSave.ui
 
 RESOURCES += \
     terminal.qrc

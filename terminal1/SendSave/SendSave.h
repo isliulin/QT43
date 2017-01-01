@@ -23,11 +23,11 @@ public:
     QToolButton* toolButton(int index = 0);
 
 signals:
-    void dataSend(const QByteArray &data);
+    void outData(const QByteArray &data);
 
 private:
     void tableInit();
-    void dataMake(QByteArray &buf, QString &type, QString &value, QString &endline);
+    void dataMake(QByteArray &buf, QString &value, QString &endline);
     void setBtName(int row, QString name);
 
 private slots:
