@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>959</width>
-    <height>817</height>
+    <width>861</width>
+    <height>693</height>
    </rect>
   </property>
   <property name="font">
    <font>
     <family>Consolas</family>
-    <pointsize>14</pointsize>
+    <pointsize>12</pointsize>
    </font>
   </property>
   <property name="windowTitle">
@@ -24,13 +24,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>erase</string>
-      </property>
-     </widget>
-    </item>
     <item>
      <widget class="QToolButton" name="toolButton">
       <property name="text">
@@ -45,8 +38,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>959</width>
-     <height>26</height>
+     <width>861</width>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">

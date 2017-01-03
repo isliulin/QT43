@@ -22,7 +22,6 @@ public:
 public:
     QColor GetColor(int c);
 
-    void DisplayAttribute(QVector <int> &param);
     void DisplayReset();
     void DisplayForeground(QColor &color);
     void DisplayBackground(QColor &color);

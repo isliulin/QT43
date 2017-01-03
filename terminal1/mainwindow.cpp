@@ -121,8 +121,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::startModem()
 {
-    m_modemEn = true;
-    modem->startTransfer();
+    QString filename;
+
+    modem->getFile(filename);
+
+    if (filename.isEmpty())
+    {
+        showStatus(string("请拖入文件"));
+    }
+    else
+    {
+        m_modemEn = true;
+        modem->startTransfer();
+    }
 }
 
 void MainWindow::openSerialPort()
@@ -156,9 +167,10 @@ void MainWindow::dropEvent(QDropEvent *event)
     if (urls.isEmpty())
        return;
 
-    QString fileName = urls.first().toLocalFile();
+    QString filename = urls.first().toLocalFile();
+    modem->setFile(filename);
 
-    emit showStatus(fileName.toStdString());
+    emit showStatus(filename.toStdString());
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -224,7 +236,7 @@ void MainWindow::readData()
         QString ch;
         tmp += ch.sprintf("0x%02X, ", (uint8_t)data[i]);
     }
-    qDebug(tmp.toStdString().c_str());
+    //qDebug(tmp.toStdString().c_str());
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)

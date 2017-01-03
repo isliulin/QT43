@@ -17,6 +17,7 @@ public:
     explicit Modem(QWidget *parent = 0);
     ~Modem();
 
+    void setFile(QString &name);
     void getFile(QString &name);
     void showTransfer(int filesize, int remain, float speed);
     void startTransfer(char type = 'C');
@@ -30,6 +31,7 @@ Q_SIGNALS:
 private:
     Ui::Modem *ui;
     Ymodem *ym;
+    QString filename;
 };
 
 #endif // MODEM_H

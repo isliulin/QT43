@@ -4,6 +4,7 @@ QTermWidget::QTermWidget(QWidget *parent):
     QTermScreen(parent)
 {
     m_Mode = 0;
+    setAcceptDrops(false);
 }
 
 void QTermWidget::putData(const QByteArray &data)
@@ -43,11 +44,8 @@ void QTermWidget::recvChar(char ch)
         }break;
         case 'm':
         {
-            QVector <int> p;
-
             m_Mode = 0;
-            parseParam(p);
-            DisplayAttribute(p);
+            setDisplay();
         }break;
         case '0':
         case '1':
@@ -100,13 +98,20 @@ void QTermWidget::recvChar(char ch)
         {
             CursorNewLine();
         }break;
+        case 0x08:
+        {
+            CursorLeft();
+        }break;
+        case 0x07:
+        {
+
+        }break;
         default:
         {
             QByteArray t;
             t[0]=ch;
             SelectRight();
             insertPlainText(t);
-            m_sel = true;
         }break;
         }
     }break;
@@ -225,6 +230,39 @@ void QTermWidget::eraseText(char ch)
         case 2:
         {
             EraseEntireLine();
+        }break;
+        }
+    }
+}
+
+void QTermWidget::setDisplay()
+{
+    QVector <int> p;
+
+    parseParam(p);
+
+    for(int i = 0; i < p.count(); i ++)
+    {
+        int v = p[i];
+
+        switch (v)
+        {
+        case 0:
+        {
+            DisplayReset();
+        }break;
+        default:
+        {
+            if (v >= 30 && v <= 37)
+            {
+                QColor c = GetColor(v - 30);
+                DisplayForeground(c);
+            }
+            if (v >= 40 && v <= 47)
+            {
+                QColor c = GetColor(v - 40);
+                DisplayBackground(c);
+            }
         }break;
         }
     }

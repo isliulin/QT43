@@ -19,7 +19,12 @@ Modem::~Modem()
 
 void Modem::getFile(QString &name)
 {
+    name = filename;
+}
 
+void Modem::setFile(QString &name)
+{
+    filename = name;
 }
 
 void Modem::showTransfer(int filesize, int remain, float speed)
@@ -35,5 +40,5 @@ void Modem::startTransfer(char type)
 
 void Modem::putData(const QByteArray &data)
 {
-
+    ym->put(data);
 }
