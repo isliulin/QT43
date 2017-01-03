@@ -2,7 +2,8 @@
 
 #include <QTextCursor>
 
-QTermScreen::QTermScreen()
+QTermScreen::QTermScreen(QWidget *parent):
+    QPlainTextEdit(parent)
 {
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::black);

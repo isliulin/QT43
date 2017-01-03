@@ -100,6 +100,10 @@ private slots:
 
     void on_actionClear_triggered();
 
+protected:
+    virtual void dropEvent(QDropEvent *event);
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+
 private:
     void initActionsConnections();
 

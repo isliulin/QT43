@@ -8,7 +8,7 @@ class QTermScreen : public QPlainTextEdit
     Q_OBJECT
 
 public:
-    QTermScreen();
+    QTermScreen(QWidget *parent = Q_NULLPTR);
 
 public:
     void CursorStartOfLine();

@@ -1,8 +1,10 @@
 #include "QTermWidget.h"
 
-QTermWidget::QTermWidget()
+QTermWidget::QTermWidget(QWidget *parent):
+    QTermScreen(parent)
 {
     m_Mode = 0;
+    setAcceptDrops(false);
 }
 
 void QTermWidget::putData(const QByteArray &data)

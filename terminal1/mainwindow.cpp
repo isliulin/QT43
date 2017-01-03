@@ -54,7 +54,7 @@
 
 #include "settingsdialog.h"
 #include "SendSave/SendSave.h"
-
+#include <QMimeData>
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
@@ -67,10 +67,11 @@ MainWindow::MainWindow(QWidget *parent) :
     m_modemEn(false)
 {
     ui->setupUi(this);
-    setAcceptDrops(true);
-    term = new QTermWidget;
+
+    term = new QTermWidget(this);
 
     setCentralWidget(term);
+    setAcceptDrops(true);
 
     serial = new QSerialPort(this);
 
@@ -145,6 +146,26 @@ void MainWindow::openSerialPort()
     {
         showStatus(string("打开出错"));
     }
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls;
+
+    urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+       return;
+
+    QString fileName = urls.first().toLocalFile();
+
+    emit showStatus(fileName.toStdString());
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    //如果为文件，则支持拖放
+    if (event->mimeData()->hasFormat("text/uri-list"))
+        event->acceptProposedAction();
 }
 
 void MainWindow::showStatus(string s)
