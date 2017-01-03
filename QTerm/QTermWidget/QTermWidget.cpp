@@ -10,14 +10,10 @@ void QTermWidget::putData(const QByteArray &data)
     if (data.size() == 0)
         return;
 
-    m_Text.clear();
-
     for (int i = 0; i < data.size(); i ++)
     {
         recvChar(data[i]);
     }
-
-    insertPlainText(m_Text);
 }
 
 void QTermWidget::recvChar(char ch)
@@ -94,21 +90,22 @@ void QTermWidget::recvChar(char ch)
         {
             m_Mode = 1;
             m_Param.clear();
-
-            insertPlainText(m_Text);
-            m_Text.clear();
         }break;
-        case '\r':
+        case 0x0D:
         {
             CursorStartOfLine();
         }break;
-        case '\n':
+        case 0x0A:
         {
             CursorNewLine();
         }break;
         default:
         {
-            m_Text.append(ch);
+            QByteArray t;
+            t[0]=ch;
+            SelectRight();
+            insertPlainText(t);
+            m_sel = true;
         }break;
         }
     }break;
@@ -119,6 +116,43 @@ void QTermWidget::mousePressEvent(QMouseEvent *e)
 {
     Q_UNUSED(e)
     setFocus();
+}
+
+void QTermWidget::keyPressEvent(QKeyEvent *e)
+{
+    QByteArray byte;
+
+    lastkey = e->key();
+
+    switch (lastkey)
+    {
+    case Qt::Key_Backspace:
+        byte[0] = 0x08;
+        break;
+    case Qt::Key_Left:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x44;
+        break;
+    case Qt::Key_Right:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x43;
+        break;
+    case Qt::Key_Up:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x41;
+        break;
+    case Qt::Key_Down:
+        byte[0] = 0x1B; byte[1] = 0x5B, byte[2] = 0x42;
+        break;
+    case Qt::Key_Enter:
+        break;
+    case Qt::Key_Return:
+    default:
+        byte = e->text().toLocal8Bit();
+        break;
+    }
+
+    if (byte.size() != 0)
+    {
+        emit outData(byte);
+    }
 }
 
 void QTermWidget::parseParam(QVector <int> &param, int np, int defval)

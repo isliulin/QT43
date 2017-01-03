@@ -8,6 +8,7 @@ QTermScreen::QTermScreen()
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::white);
     setPalette(p);
+    setLineWrapMode(NoWrap);
 }
 
 void QTermScreen::CursorStartOfLine()
@@ -23,8 +24,19 @@ void QTermScreen::CursorNewLine()
     QTextCursor tc = textCursor();
 
     tc.movePosition(QTextCursor::EndOfBlock);
-    tc.insertText("\n");
+    tc.insertBlock();
     setTextCursor(tc);
+}
+
+void QTermScreen::SelectRight(int n)
+{
+    QTextCursor tc = textCursor();
+
+    if (!tc.atBlockEnd())
+    {
+        tc.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, n);
+        setTextCursor(tc);
+    }
 }
 
 void QTermScreen::CursorUp(int n)

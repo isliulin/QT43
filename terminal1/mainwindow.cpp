@@ -168,7 +168,7 @@ void MainWindow::readData()
     for (int i = 0; i < data.size(); i ++)
     {
         QString ch;
-        tmp += ch.sprintf("%02X ", (uint8_t)data[i]);
+        tmp += ch.sprintf("0x%02X, ", (uint8_t)data[i]);
     }
     qDebug(tmp.toStdString().c_str());
 }

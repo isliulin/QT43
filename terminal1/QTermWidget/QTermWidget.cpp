@@ -14,14 +14,6 @@ void QTermWidget::putData(const QByteArray &data)
     {
         recvChar(data[i]);
     }
-
-    flushText();
-}
-
-void QTermWidget::flushText()
-{
-    insertPlainText(m_Text);
-    m_Text.clear();
 }
 
 void QTermWidget::recvChar(char ch)
@@ -50,11 +42,8 @@ void QTermWidget::recvChar(char ch)
         }break;
         case 'm':
         {
-            QVector <int> p;
-
             m_Mode = 0;
-            parseParam(p);
-            DisplayAttribute(p);
+            setDisplay();
         }break;
         case '0':
         case '1':
@@ -98,21 +87,29 @@ void QTermWidget::recvChar(char ch)
         {
             m_Mode = 1;
             m_Param.clear();
-
-            flushText();
         }break;
-        case '\r':
+        case 0x0D:
         {
-            flushText();
             CursorStartOfLine();
         }break;
-        case '\n':
+        case 0x0A:
         {
             CursorNewLine();
         }break;
+        case 0x08:
+        {
+            CursorLeft();
+        }break;
+        case 0x07:
+        {
+
+        }break;
         default:
         {
-            m_Text.append(ch);
+            QByteArray t;
+            t[0]=ch;
+            SelectRight();
+            insertPlainText(t);
         }break;
         }
     }break;
@@ -231,6 +228,39 @@ void QTermWidget::eraseText(char ch)
         case 2:
         {
             EraseEntireLine();
+        }break;
+        }
+    }
+}
+
+void QTermWidget::setDisplay()
+{
+    QVector <int> p;
+
+    parseParam(p);
+
+    for(int i = 0; i < p.count(); i ++)
+    {
+        int v = p[i];
+
+        switch (v)
+        {
+        case 0:
+        {
+            DisplayReset();
+        }break;
+        default:
+        {
+            if (v >= 30 && v <= 37)
+            {
+                QColor c = GetColor(v - 30);
+                DisplayForeground(c);
+            }
+            if (v >= 40 && v <= 47)
+            {
+                QColor c = GetColor(v - 40);
+                DisplayBackground(c);
+            }
         }break;
         }
     }

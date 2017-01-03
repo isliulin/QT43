@@ -8,6 +8,7 @@ QTermScreen::QTermScreen()
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::white);
     setPalette(p);
+    setLineWrapMode(NoWrap);
 }
 
 void QTermScreen::CursorStartOfLine()
@@ -23,8 +24,27 @@ void QTermScreen::CursorNewLine()
     QTextCursor tc = textCursor();
 
     tc.movePosition(QTextCursor::EndOfBlock);
-    tc.insertText("\n");
+    if (tc.atEnd())
+    {
+        tc.insertBlock();
+    }
+    else
+    {
+        tc.movePosition(QTextCursor::NextBlock);
+    }
+
     setTextCursor(tc);
+}
+
+void QTermScreen::SelectRight(int n)
+{
+    QTextCursor tc = textCursor();
+
+    if (!tc.atBlockEnd())
+    {
+        tc.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, n);
+        setTextCursor(tc);
+    }
 }
 
 void QTermScreen::CursorUp(int n)
@@ -92,35 +112,6 @@ void QTermScreen::DisplayBackground(QColor &color)
     QTextCursor cursor = textCursor();
     cursor.mergeCharFormat(fmt);
     setTextCursor(cursor);
-}
-
-void QTermScreen::DisplayAttribute(QVector <int> &param)
-{
-    for(int i = 0; i < param.count(); i ++)
-    {
-        int v = param[i];
-
-        switch (v)
-        {
-        case 0:
-        {
-            DisplayReset();
-        }break;
-        default:
-        {
-            if (v >= 30 && v <= 37)
-            {
-                QColor c = GetColor(v - 30);
-                DisplayForeground(c);
-            }
-            if (v >= 40 && v <= 47)
-            {
-                QColor c = GetColor(v - 40);
-                DisplayBackground(c);
-            }
-        }break;
-        }
-    }
 }
 
 QColor QTermScreen::GetColor(int col)

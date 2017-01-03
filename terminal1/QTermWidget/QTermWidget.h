@@ -25,12 +25,12 @@ private:
     void parseParam(QVector<int> &param, int np = 1, int defval = 0);
     void eraseText(char ch);
     void moveCursor(char ch);
-    void flushText();
+    void setDisplay();
 
 private:
     int m_Mode;
     QString m_Param;
-    QByteArray m_Text;
+    bool m_sel;
     int lastkey;
 };
 

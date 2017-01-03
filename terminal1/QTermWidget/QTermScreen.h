@@ -22,7 +22,6 @@ public:
 public:
     QColor GetColor(int c);
 
-    void DisplayAttribute(QVector <int> &param);
     void DisplayReset();
     void DisplayForeground(QColor &color);
     void DisplayBackground(QColor &color);
@@ -34,6 +33,9 @@ public:
     void EraseDown();
     void EraseUp();
     void EraseScreen();
+
+public:
+    void SelectRight(int n = 1);
 };
 
 #endif // QTERMSCREEN_H

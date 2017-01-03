@@ -5,6 +5,8 @@
 
 class QTermWidget : public QTermScreen
 {
+    Q_OBJECT
+
 public:
     QTermWidget();
 
@@ -16,6 +18,7 @@ signals:
 
 protected:
     virtual void mousePressEvent(QMouseEvent *e);
+    virtual void keyPressEvent(QKeyEvent *e);
 
 private:
     void recvChar(char ch);
@@ -26,7 +29,8 @@ private:
 private:
     int m_Mode;
     QString m_Param;
-    QByteArray m_Text;
+    bool m_sel;
+    int lastkey;
 };
 
 #endif // QTERMWIDGET_H

@@ -5,6 +5,8 @@
 
 class QTermScreen : public QPlainTextEdit
 {
+    Q_OBJECT
+
 public:
     QTermScreen();
 
@@ -32,6 +34,9 @@ public:
     void EraseDown();
     void EraseUp();
     void EraseScreen();
+
+public:
+    void SelectRight(int n = 1);
 };
 
 #endif // QTERMSCREEN_H

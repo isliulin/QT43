@@ -47,6 +47,14 @@ private slots:
 
     void on_screen_clicked();
 
+    void on_crlf_clicked();
+
+    void on_nl_clicked();
+
+    void on_test1_clicked();
+
+    void on_test2_clicked();
+
 private:
     Ui::Dialog *ui;
 };
