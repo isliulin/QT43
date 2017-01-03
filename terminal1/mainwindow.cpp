@@ -58,13 +58,16 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
+#include <QTimer>
+#include "Modem/Modem.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_modemEn(false)
 {
     ui->setupUi(this);
-
+    setAcceptDrops(true);
     term = new QTermWidget;
 
     setCentralWidget(term);
@@ -97,6 +100,14 @@ MainWindow::MainWindow(QWidget *parent) :
     statusBar()->addWidget(dlgSS->toolButton(0));
     statusBar()->addWidget(dlgSS->toolButton(1));
     statusBar()->addWidget(dlgSS->toolButton(2));
+
+    modem = new Modem(this);
+
+    modemCheck = new QTimer;
+    modemCheck->setSingleShot(true);
+    connect(modemCheck, SIGNAL(timeout()), this, SLOT(startModem()));
+
+
 }
 
 MainWindow::~MainWindow()
@@ -104,6 +115,13 @@ MainWindow::~MainWindow()
     delete settings;
     delete ui;
     delete dlgSS;
+    delete modem;
+}
+
+void MainWindow::startModem()
+{
+    m_modemEn = true;
+    modem->startTransfer();
 }
 
 void MainWindow::openSerialPort()
@@ -115,8 +133,8 @@ void MainWindow::openSerialPort()
     serial->setParity(p.parity);
     serial->setStopBits(p.stopBits);
     serial->setFlowControl(p.flowControl);
-    if (serial->open(QIODevice::ReadWrite)) {
-
+    if (serial->open(QIODevice::ReadWrite))
+    {
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
@@ -150,7 +168,7 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("版本:1.0.1 作者:heyuanjie"),
+    QMessageBox::about(this, tr("版本:1.0.2 作者:heyuanjie"),
                        tr("将文件拖入窗口，收到'C'后进入Ymodem模式"));
 }
 
@@ -162,7 +180,22 @@ void MainWindow::writeData(const QByteArray &data)
 void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
-    term->putData(data);
+
+    if (m_modemEn)
+    {
+        modem->putData(data);
+    }
+    else
+    {
+        modemCheck->stop();
+        if (data.at(data.size()- 1) == 'C')
+        {
+            modemCheck->start(20);
+        }
+
+        term->putData(data);
+    }
+
     QString tmp;
 
     for (int i = 0; i < data.size(); i ++)
@@ -175,7 +208,8 @@ void MainWindow::readData()
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {
-    if (error == QSerialPort::ResourceError) {
+    if (error == QSerialPort::ResourceError)
+    {
         QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
         closeSerialPort();
     }
@@ -199,4 +233,9 @@ void MainWindow::showStatusMessage(const QString &message)
 void MainWindow::on_toolButton_clicked()
 {
     dlgSS->show();
+}
+
+void MainWindow::on_actionClear_triggered()
+{
+    term->clear();
 }

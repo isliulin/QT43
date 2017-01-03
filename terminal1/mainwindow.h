@@ -75,6 +75,8 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class SettingsDialog;
+class Modem;
+class QTimer;
 
 class MainWindow : public QMainWindow
 {
@@ -90,11 +92,13 @@ private slots:
     void about();
     void writeData(const QByteArray &data);
     void readData();
-
+    void startModem();
     void handleError(QSerialPort::SerialPortError error);
     void showStatus(string s);
 
     void on_toolButton_clicked();
+
+    void on_actionClear_triggered();
 
 private:
     void initActionsConnections();
@@ -108,6 +112,9 @@ private:
     QSerialPort *serial;
     SendSave *dlgSS;
     QTermWidget *term;
+    Modem *modem;
+    bool m_modemEn;
+    QTimer *modemCheck;
 };
 
 #endif // MAINWINDOW_H
