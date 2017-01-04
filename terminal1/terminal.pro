@@ -7,24 +7,24 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     settingsdialog.cpp \
-    crc16.c \
     SendSave/SendSave.cpp \
     SendSave/SSWorker.cpp \
     QTermWidget/QTermScreen.cpp \
     QTermWidget/QTermWidget.cpp \
     Modem/Modem.cpp \
-    Modem/Ymodem.cpp
+    Modem/Ymodem.cpp \
+    Modem/crc16.c
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
-    crc.h \
     SendSave/SendSave.h \
     SendSave/SSWorker.h \
     QTermWidget/QTermScreen.h \
     QTermWidget/QTermWidget.h \
     Modem/Modem.h \
-    Modem/Ymodem.h
+    Modem/Ymodem.h \
+    Modem/crc.h
 
 FORMS += \
     mainwindow.ui \
@@ -34,6 +34,3 @@ FORMS += \
 
 RESOURCES += \
     terminal.qrc
-
-target.path = $$[QT_INSTALL_EXAMPLES]/serialport/terminal
-INSTALLS += target
