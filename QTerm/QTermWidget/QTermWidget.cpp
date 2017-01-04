@@ -1,10 +1,22 @@
 #include "QTermWidget.h"
 
+#include <QTextBlock>
+#include <QTextBlockFormat>
+
 QTermWidget::QTermWidget(QWidget *parent):
     QTermScreen(parent)
 {
     m_Mode = 0;
     setAcceptDrops(false);
+}
+
+int QTermWidget::lineHeight()
+{
+    int h;
+    QTextBlockFormat tb = textCursor().blockFormat();
+
+    h = tb.lineHeight();
+    return h;
 }
 
 void QTermWidget::putData(const QByteArray &data)

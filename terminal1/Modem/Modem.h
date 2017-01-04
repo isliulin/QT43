@@ -19,14 +19,19 @@ public:
 
     void setFile(QString &name);
     void getFile(QString &name);
-    void showTransfer(int filesize, int remain, float speed);
     void startTransfer(char type = 'C');
+    void showStatus(const char *s);
 
 public Q_SLOTS:
     void putData(const QByteArray &data);
 
+private Q_SLOTS:
+    void showTransfer(int total, int remain, float speed);
+    void closed();
+
 Q_SIGNALS:
     void outData(const QByteArray &data);
+    void exitTransfer();
 
 private:
     Ui::Modem *ui;

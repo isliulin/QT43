@@ -153,7 +153,7 @@ void Ymodem::outData(const QByteArray &data)
 
 void Ymodem::showStatus(const char *s)
 {
-
+    ui->showStatus(s);
 }
 
 void Ymodem::run()
@@ -252,7 +252,7 @@ void Ymodem::run()
 
                 isread = false;
                 speed = speed_clc(filesize, remain);
-                ui->showTransfer(filesize, remain, speed);
+                emit showTransfer(filesize, remain, speed);
                 if (remain == 0)
                 {
                     Stage = msEnding;

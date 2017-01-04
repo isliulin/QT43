@@ -24,6 +24,9 @@ public:
     int makeEotRsp(QByteArray &byte);
     int makeFinishRsp(QByteArray &byte);
 
+signals:
+    void showTransfer(int total, int remain, float speed);
+
 private:
     enum modemWaitfor
     {

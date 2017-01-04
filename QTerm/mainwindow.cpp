@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(test, &test->outData, term, &term->putData);
 
     statusBar()->addWidget(ui->test);
+    resize(600, term->lineHeight()*24);
 }
 
 MainWindow::~MainWindow()

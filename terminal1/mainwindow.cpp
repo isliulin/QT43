@@ -103,12 +103,13 @@ MainWindow::MainWindow(QWidget *parent) :
     statusBar()->addWidget(dlgSS->toolButton(2));
 
     modem = new Modem(this);
+    connect(modem, &modem->outData, this, &MainWindow::writeData);
 
     modemCheck = new QTimer;
     modemCheck->setSingleShot(true);
     connect(modemCheck, SIGNAL(timeout()), this, SLOT(startModem()));
 
-
+    connect(modem, &modem->exitTransfer, this, &this->exitTransfer);
 }
 
 MainWindow::~MainWindow()
@@ -134,6 +135,12 @@ void MainWindow::startModem()
         m_modemEn = true;
         modem->startTransfer();
     }
+}
+
+void MainWindow::exitTransfer()
+{
+    m_modemEn = false;
+    modem->hide();
 }
 
 void MainWindow::openSerialPort()

@@ -10,6 +10,8 @@ class QTermWidget : public QTermScreen
 public:
     QTermWidget(QWidget *parent = Q_NULLPTR);
 
+    int lineHeight();
+
 public slots:
     void putData(const QByteArray &data);
 
