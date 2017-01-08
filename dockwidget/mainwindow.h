@@ -18,6 +18,8 @@ public:
 private slots:
     void about(void);
 
+    void on_new_s_triggered();
+
 private:
     void menuInit(void);
 

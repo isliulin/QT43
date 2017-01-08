@@ -13,8 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    NewSession/NewSession.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    NewSession/NewSession.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    NewSession/NewSession.ui

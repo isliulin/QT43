@@ -20,14 +20,14 @@
      <x>0</x>
      <y>0</y>
      <width>722</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>文件</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="new_s"/>
     <addaction name="action_3"/>
     <addaction name="action_4"/>
    </widget>
@@ -90,12 +90,12 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <widget class="QTreeWidget" name="treeWidget">
+    <widget class="QTreeWidget" name="twProject">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>-29</y>
-       <width>241</width>
+       <width>151</width>
        <height>411</height>
       </rect>
      </property>
@@ -106,12 +106,17 @@
       <enum>QFrame::Plain</enum>
      </property>
      <property name="columnCount">
-      <number>0</number>
+      <number>1</number>
      </property>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
     </widget>
    </widget>
   </widget>
-  <action name="action">
+  <action name="new_s">
    <property name="text">
     <string>新建</string>
    </property>
