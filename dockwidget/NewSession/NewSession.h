@@ -3,12 +3,13 @@
 
 #include <QDialog>
 #include <QMap>
+#include <QListWidgetItem>
+
+#include "Setting.h"
 
 namespace Ui {
 class NewSession;
 }
-
-typedef QMap <QString, QString> NewSesSetting;
 
 class NewSession : public QDialog
 {
@@ -18,11 +19,15 @@ public:
     explicit NewSession(QWidget *parent = 0);
     ~NewSession();
 
-    void getSetting(NewSesSetting &s);
+    void getSetting(SessionSetting &s);
+
+private slots:
+    void on_sesType_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
     Ui::NewSession *ui;
-    NewSesSetting nss;
+    SessionSetting nss;
+    QMap <QString, Setting*> wSetting;
 };
 
 #endif // NEWSESSION_H

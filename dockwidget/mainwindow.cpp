@@ -41,14 +41,15 @@ void MainWindow::on_new_s_triggered()
 
     if (ns->result() == 1)
     {
-        NewSesSetting set;
+        SessionSetting set;
 
         ns->getSetting(set);
 
         QTreeWidgetItem *stype = new QTreeWidgetItem;
         stype->setText(0, set["type"]);
         ui->twProject->addTopLevelItem(stype);
-        QTreeWidgetItem *child = new QTreeWidgetItem(QStringList()<<"A0");
+        QTreeWidgetItem *child = new QTreeWidgetItem;
+        child->setText(0, set["name"]);
         stype->addChild(child);
     }
     delete ns;

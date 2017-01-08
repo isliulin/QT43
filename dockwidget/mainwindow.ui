@@ -28,16 +28,7 @@
      <string>文件</string>
     </property>
     <addaction name="new_s"/>
-    <addaction name="action_3"/>
     <addaction name="action_4"/>
-   </widget>
-   <widget class="QMenu" name="menuProject">
-    <property name="title">
-     <string>工程</string>
-    </property>
-    <addaction name="action_5"/>
-    <addaction name="action_6"/>
-    <addaction name="action_7"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -46,7 +37,6 @@
     <addaction name="act_about"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuProject"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">

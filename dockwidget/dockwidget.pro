@@ -14,10 +14,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    NewSession/NewSession.cpp
+    NewSession/NewSession.cpp \
+    NewSession/SerialSetting.cpp \
+    NewSession/TelnetSetting.cpp \
+    NewSession/Setting.cpp
 
 HEADERS  += mainwindow.h \
-    NewSession/NewSession.h
+    NewSession/NewSession.h \
+    NewSession/SerialSetting.h \
+    NewSession/TelnetSetting.h \
+    NewSession/Setting.h
 
 FORMS    += mainwindow.ui \
-    NewSession/NewSession.ui
+    NewSession/NewSession.ui \
+    NewSession/SerialSetting.ui \
+    NewSession/TelnetSetting.ui

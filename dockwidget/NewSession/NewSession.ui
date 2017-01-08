@@ -91,7 +91,7 @@
     <string>会话1</string>
    </property>
   </widget>
-  <widget class="QFrame" name="fmParam">
+  <widget class="QGroupBox" name="fmParam">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -100,11 +100,8 @@
      <height>211</height>
     </rect>
    </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
+   <property name="title">
+    <string>参数</string>
    </property>
   </widget>
  </widget>
