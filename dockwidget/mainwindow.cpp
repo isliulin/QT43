@@ -45,12 +45,55 @@ void MainWindow::on_new_s_triggered()
 
         ns->getSetting(set);
 
-        QTreeWidgetItem *stype = new QTreeWidgetItem;
-        stype->setText(0, set["type"]);
-        ui->twProject->addTopLevelItem(stype);
-        QTreeWidgetItem *child = new QTreeWidgetItem;
-        child->setText(0, set["name"]);
-        stype->addChild(child);
+        addSession(set);
     }
     delete ns;
+}
+
+void MainWindow::addSession(SessionSetting &set)
+{
+    QTreeWidgetItem *child;
+
+    child = addSessionProject(set);
+
+    addSessionWindow(set, child);
+}
+
+QTreeWidgetItem* MainWindow::addSessionProject(SessionSetting &set)
+{
+    QTreeWidgetItem *type = new QTreeWidgetItem;
+    bool addtype = true;
+
+    for (int i = 0; i < ui->twProject->topLevelItemCount(); i ++)
+    {
+        QTreeWidgetItem *tmptype = ui->twProject->topLevelItem(i);
+
+        if (tmptype->text(0) == set["type"])
+        {
+            delete type;
+            type = tmptype;
+            addtype = false;
+            break;
+        }
+    }
+
+    type->setText(0, set["type"]);
+    if (addtype)
+    {
+        ui->twProject->addTopLevelItem(type);
+    }
+
+    QTreeWidgetItem *child = new QTreeWidgetItem;
+    child->setText(0, set["name"]);
+    type->addChild(child);
+
+    return child;
+}
+
+void MainWindow::addSessionWindow(SessionSetting &set, QTreeWidgetItem *item)
+{
+    if (set["type"] == "串口终端")
+    {
+        break;
+    }
 }

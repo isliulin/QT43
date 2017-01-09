@@ -3,6 +3,7 @@
 
 #include "SerialSetting.h"
 #include "TelnetSetting.h"
+#include "TftpsSetting.h"
 
 NewSession::NewSession(QWidget *parent) :
     QDialog(parent),
@@ -15,12 +16,14 @@ NewSession::NewSession(QWidget *parent) :
 
     wSetting["串口终端"] = sset;
     wSetting["串口助手"] = sset;
+    wSetting["tftp服务"] = new TftpsSetting;
     wSetting["telnet"] = new TelnetSetting;
 }
 
 NewSession::~NewSession()
 {
     delete ui;
+    wSetting.clear();
 }
 
 void NewSession::getSetting(SessionSetting &s)

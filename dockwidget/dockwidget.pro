@@ -17,15 +17,18 @@ SOURCES += main.cpp\
     NewSession/NewSession.cpp \
     NewSession/SerialSetting.cpp \
     NewSession/TelnetSetting.cpp \
-    NewSession/Setting.cpp
+    NewSession/Setting.cpp \
+    NewSession/TftpsSetting.cpp
 
 HEADERS  += mainwindow.h \
     NewSession/NewSession.h \
     NewSession/SerialSetting.h \
     NewSession/TelnetSetting.h \
-    NewSession/Setting.h
+    NewSession/Setting.h \
+    NewSession/TftpsSetting.h
 
 FORMS    += mainwindow.ui \
     NewSession/NewSession.ui \
     NewSession/SerialSetting.ui \
-    NewSession/TelnetSetting.ui
+    NewSession/TelnetSetting.ui \
+    NewSession/TftpsSetting.ui

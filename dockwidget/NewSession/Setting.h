@@ -2,6 +2,7 @@
 #define SETTING_H
 
 #include <QWidget>
+#include <QMap>
 
 typedef QMap <QString, QString> SessionSetting;
 

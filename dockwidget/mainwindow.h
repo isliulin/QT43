@@ -2,10 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTreeWidgetItem>
 
 namespace Ui {
 class MainWindow;
 }
+
+#include "NewSession/Setting.h"
 
 class MainWindow : public QMainWindow
 {
@@ -14,6 +17,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    void addSession(SessionSetting &set);
+    QTreeWidgetItem* addSessionProject(SessionSetting &set);
+    void addSessionWindow(SessionSetting &set, QTreeWidgetItem *item);
 
 private slots:
     void about(void);
