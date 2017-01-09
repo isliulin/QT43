@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
-    <height>465</height>
+    <width>891</width>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
@@ -19,7 +22,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>722</width>
+     <width>891</width>
      <height>26</height>
     </rect>
    </property>
@@ -55,10 +58,16 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="minimumSize">
     <size>
-     <width>80</width>
-     <height>60</height>
+     <width>182</width>
+     <height>239</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -80,14 +89,32 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <widget class="QTreeWidget" name="twProject">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>-29</y>
-       <width>151</width>
-       <height>411</height>
+       <x>11</x>
+       <y>11</y>
+       <width>160</width>
+       <height>192</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>160</width>
+       <height>16777215</height>
+      </size>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -98,6 +125,9 @@
      <property name="columnCount">
       <number>1</number>
      </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
      <column>
       <property name="text">
        <string notr="true">1</string>

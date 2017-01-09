@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
+#include <QList>
+#include <QDockWidget>
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +35,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    QList <QDockWidget*> dwlist;
 };
 
 #endif // MAINWINDOW_H

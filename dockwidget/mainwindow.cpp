@@ -1,16 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QVariant>
+#include <QDockWidget>
 
 #define VERSION    "1.0.0"
 
 #include "NewSession/NewSession.h"
+#include "SerialAssistant/SerialAssistant.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QWidget* p = takeCentralWidget();
+    if(p)
+        delete p;
     ui->dockWidget->setWidget(ui->twProject);
     menuInit();
 }
@@ -57,6 +63,15 @@ void MainWindow::addSession(SessionSetting &set)
     child = addSessionProject(set);
 
     addSessionWindow(set, child);
+    int cnt = dwlist.count();
+    if (cnt > 1)
+    {
+        QDockWidget *f, *s;
+
+        f = dwlist.at(cnt - 2);
+        s = dwlist.at(cnt - 1);
+        tabifyDockWidget(f, s);
+    }
 }
 
 QTreeWidgetItem* MainWindow::addSessionProject(SessionSetting &set)
@@ -92,8 +107,34 @@ QTreeWidgetItem* MainWindow::addSessionProject(SessionSetting &set)
 
 void MainWindow::addSessionWindow(SessionSetting &set, QTreeWidgetItem *item)
 {
+    QDockWidget *dock;
+    QVariant var;
+
+    dock= new QDockWidget(set["name"], this);
+    dock->setAllowedAreas(Qt::RightDockWidgetArea);
+
+    var.setValue(dock);
+
+    dwlist.append(dock);
+
     if (set["type"] == "串口终端")
     {
-        break;
+        item->setData(0,Qt::UserRole, var);
+
+        return;
     }
+
+    if (set["type"] == "串口助手")
+    {
+        SerialAssistant *win = new SerialAssistant(dock);
+
+        addDockWidget(Qt::RightDockWidgetArea, dock);
+
+        item->setData(0,Qt::UserRole, var);
+        dock->setWidget(win);
+        return;
+    }
+
+    dwlist.removeLast();
+    delete dock;
 }
