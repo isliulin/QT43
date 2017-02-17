@@ -2,14 +2,6 @@
 #define RFCARDREADER
 
 #include "RFID.h"
-#include <string>
-using namespace std;
-
-typedef struct  
-{
-	string Number;
-	string Name;
-}WorkerInfo;
 
 class RfCardReader : public RFID
 {
@@ -19,9 +11,9 @@ public:
 
 	int Status();
 
-	int WorkerCardRead(WorkerInfo &wi);
-	int CreditCardRead(string &cardid);
-	int M1BankCardRead(string &cardid);
+    bool WorkerCardRead(QString &Name, QString &Number);
+    bool CreditCardRead(QString &cardid);
+    bool M1BankCardRead(QString &cardid);
 
 private:
 	int ErrCnt;

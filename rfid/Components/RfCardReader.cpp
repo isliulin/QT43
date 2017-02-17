@@ -15,24 +15,20 @@ int RfCardReader::Status()
     return Stat;
 }
 
-int RfCardReader::WorkerCardRead(WorkerInfo &wi)
+bool RfCardReader::WorkerCardRead(QString &Name, QString &Number)
 {
 	unsigned char pwd[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-	int ret = 0;
 	unsigned char buf[20];
+    bool ret = false;
 
 	memset(buf, 0, sizeof(buf));
 
     Lock();
 
-    ret = CardScan();
-
-    if (ret != 1)
+    if (!CardScan())
 	{
 		goto EXIT;
 	}
-    
-	ret = 0;
 
 	if (!Authen(1, TYPE_A, pwd, 6))
 	{
@@ -43,22 +39,20 @@ int RfCardReader::WorkerCardRead(WorkerInfo &wi)
 		goto EXIT;
 	}
 
-	wi.Number = (const char*)buf;
-    if (wi.Number.empty())
+    Number = (const char*)buf;
+    if (Number.isEmpty())
         goto EXIT;
-
-    ret = 0;
 
     if (!BlockRead(2, buf, 16))
 	{
 		goto EXIT;
 	}
     
-	wi.Name = (const char*)buf;
-	if (wi.Name.empty())
+    Name = (const char*)buf;
+    if (Name.isEmpty())
 		goto EXIT;
 
-	ret = 1;
+    ret = true;
 
 EXIT:
     Unlock();
@@ -66,22 +60,19 @@ EXIT:
     return ret;
 }
 
-int RfCardReader::M1BankCardRead(string &cardid)
+bool RfCardReader::M1BankCardRead(QString &cardid)
 {
 	unsigned char pwd[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	int ret = 0;
+    bool ret = false;
 	unsigned char buf[20];
 	char id[33];
 
     Lock();
 
-    ret = CardScan();
-	if (ret != 1)
+    if (!CardScan())
 	{
 		goto EXIT;
 	}
-    
-	ret = 0;
 
     if (!Authen(4, TYPE_A, pwd, 6))
 	{
@@ -96,7 +87,7 @@ int RfCardReader::M1BankCardRead(string &cardid)
     memset(id, 0, sizeof(id));
 	BCD2Str(id, buf, 16);
     cardid = id;
-	ret = 1;
+    ret = true;
 
 EXIT:
     Unlock();
@@ -104,24 +95,21 @@ EXIT:
 	return ret;
 }
 
-int RfCardReader::CreditCardRead(string &cardid)
+bool RfCardReader::CreditCardRead(QString &cardid)
 {
 	unsigned char buf[128];
 	unsigned char cos1[] = {0x00, 0xA4, 0x04, 0x00, 0x08, 0xA0, 0x00, 0x00, 0x03, 0x33, 0x01, 0x01, 0x01};
 	unsigned char cos2[] = {0x00, 0xB2, 0x01, 0x14, 0x00};
 	short size;
 	char str[24];
-	int  ret = 0;
+    bool ret = false;
 
     Lock();
 
-    ret = CardScan();
-	if (ret != 1)
+    if (!CardScan())
 	{
 		goto EXIT;
 	}
-
-    ret = 0;
 	
 	if (!CpuCardMode())
 	{    
@@ -155,7 +143,7 @@ int RfCardReader::CreditCardRead(string &cardid)
 
 		cardid = str;
 
-        ret = 1;
+        ret = true;
 	}
 
 EXIT:

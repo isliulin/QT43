@@ -9,6 +9,7 @@
 
 RFID::RFID(void)
 {
+    iscon = false;
     Retry = 350/WAITMS;
 }
 
@@ -111,27 +112,9 @@ bool RFID::ReqSend(short cmd, unsigned char *data, short size)
 	return true;
 }
 
-bool RFID::Alive(void)
+bool RFID::Connected(void)
 {
-    uint8_t mode[1];
-	int size;
-    uint8_t buf[32];
-	bool ret = true;
-
-	mode[0] = 0x26;
-
-	ReqSend(ZM_CMD_SCAN_CARD_AUTO, mode, 1);
-
-	size = Read(buf, 15);
-    Read(buf, 15);
-    Dev.clear();
-
-	if (size == 0)
-	{
-        ret = false;
-	}
-	
-	return ret;
+    return iscon;
 }
 
 void RFID::SetRetry(int retry)
@@ -158,7 +141,7 @@ bool RFID::CardScan()
         errmsg = "扫卡:返回失败";
         goto exit;
     }
-
+    Dev.waitForReadyRead(200);
     ret = true;
 
 exit:

@@ -68,7 +68,7 @@ public:
     bool Open(const char *name, int br = 115200);
     void Close();
 
-    bool Alive(void);
+    bool Connected(void);
     string ErrMsg();
     QString readText();
 
@@ -94,5 +94,6 @@ private:
 	int Write(unsigned char *buf, short size);
 	unsigned char Crc8(unsigned char *buf, short size);
     QString recvstr;
+    bool iscon;
 };
 #endif

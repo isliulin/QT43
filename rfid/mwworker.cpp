@@ -30,7 +30,7 @@ void mwWorker::run()
     string name;
     RfCardReader theNfc;
     bool ret;
-    WorkerInfo wi;
+    QString Name, Number;
     string tmp;
     int mode;
     QFile data("rflog.txt");
@@ -79,21 +79,21 @@ NEXT:
         switch (mode)
         {
         case 1:
-            ret = theNfc.WorkerCardRead(wi);
-            tmp = wi.Name + " " + wi.Number;
+            ret = theNfc.WorkerCardRead(Name, Number);
+            tmp = Name.toStdString() + " " + Number.toStdString();
             break;
         case 2:
-            ret = theNfc.CreditCardRead(tmp);
+            ret = theNfc.CreditCardRead(Number);
             if (!ret)
             {
-                ret = theNfc.M1BankCardRead(tmp);
+                ret = theNfc.M1BankCardRead(Number);
             }
             break;
         case 3:
         {
             string str;
 
-            ret = theNfc.M1BankCardRead(tmp);
+            ret = theNfc.M1BankCardRead(Number);
             str = theNfc.readText().toStdString();
             str += "\r\n";
             data.write(str.c_str());
@@ -101,7 +101,7 @@ NEXT:
         }
             break;
         case 4:
-            ret = theNfc.CreditCardRead(tmp);
+            ret = theNfc.CreditCardRead(Number);
             break;
         }
 
