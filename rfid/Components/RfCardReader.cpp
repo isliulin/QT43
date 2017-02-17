@@ -15,7 +15,7 @@ int RfCardReader::Status()
     return Stat;
 }
 
-bool RfCardReader::WorkerCardRead(QString &Name, QString &Number)
+bool RfCardReader::WorkerCardRead(string &Name, string &Number)
 {
 	unsigned char pwd[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 	unsigned char buf[20];
@@ -40,7 +40,7 @@ bool RfCardReader::WorkerCardRead(QString &Name, QString &Number)
 	}
 
     Number = (const char*)buf;
-    if (Number.isEmpty())
+    if (Number.empty())
         goto EXIT;
 
     if (!BlockRead(2, buf, 16))
@@ -49,7 +49,7 @@ bool RfCardReader::WorkerCardRead(QString &Name, QString &Number)
 	}
     
     Name = (const char*)buf;
-    if (Name.isEmpty())
+    if (Name.empty())
 		goto EXIT;
 
     ret = true;
@@ -60,7 +60,7 @@ EXIT:
     return ret;
 }
 
-bool RfCardReader::M1BankCardRead(QString &cardid)
+bool RfCardReader::M1BankCardRead(string &cardid)
 {
 	unsigned char pwd[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     bool ret = false;
@@ -95,7 +95,7 @@ EXIT:
 	return ret;
 }
 
-bool RfCardReader::CreditCardRead(QString &cardid)
+bool RfCardReader::CreditCardRead(string &cardid)
 {
 	unsigned char buf[128];
 	unsigned char cos1[] = {0x00, 0xA4, 0x04, 0x00, 0x08, 0xA0, 0x00, 0x00, 0x03, 0x33, 0x01, 0x01, 0x01};

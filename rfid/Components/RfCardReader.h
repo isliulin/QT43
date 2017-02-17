@@ -11,9 +11,9 @@ public:
 
 	int Status();
 
-    bool WorkerCardRead(QString &Name, QString &Number);
-    bool CreditCardRead(QString &cardid);
-    bool M1BankCardRead(QString &cardid);
+    bool WorkerCardRead(string &Name, string &Number);
+    bool CreditCardRead(string &cardid);
+    bool M1BankCardRead(string &cardid);
 
 private:
 	int ErrCnt;
