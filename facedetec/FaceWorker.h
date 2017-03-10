@@ -7,6 +7,8 @@
 #include <opencv2/objdetect.hpp>
 using namespace cv;
 
+class QImage;
+
 class FaceWorker : public QObject
 {
     Q_OBJECT
@@ -22,11 +24,13 @@ public slots:
     void DoWork(int cmd, QByteArray param);
 
 private:
-    void LoadCode(QByteArray file);
+    void LoadCode(QByteArray &file);
+    void LoadImage(QByteArray &file);
 
 private:
     QThread thread;
     cv::CascadeClassifier cascade;
+    QImage *image;
 };
 
 #endif // FACEWORKER_H

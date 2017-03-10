@@ -1,8 +1,11 @@
 #include "FaceWorker.h"
 
+#include <QImage>
+
 FaceWorker::FaceWorker(QObject *parent) : QObject(parent)
 {
     moveToThread(&thread);
+    image = NULL;
 }
 
 void FaceWorker::start()
@@ -18,10 +21,24 @@ void FaceWorker::DoWork(int cmd, QByteArray param)
     {
         LoadCode(param);
     }break;
+    case 2:
+    {
+        LoadImage(param);
+    }break;
     }
 }
 
-void FaceWorker::LoadCode(QByteArray file)
+void FaceWorker::LoadImage(QByteArray &file)
 {
-    cascade.load(String(file.toStdString()));
+    if (image == NULL)
+    {
+        image = new QImage;
+    }
+
+    image->load(QString(file));
+}
+
+void FaceWorker::LoadCode(QByteArray &file)
+{
+    cascade.load(String(file.data()));
 }

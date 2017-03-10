@@ -18,10 +18,14 @@ public:
     ~FaceDetec();
 
 signals:
-    void DoWork(int cmd, QByteArray param);
+    void DoWork(int cmd, QByteArray param = QByteArray());
 
 private slots:
     void on_pbload_clicked();
+
+    void on_phload_clicked();
+
+    void on_detec_clicked();
 
 private:
     Ui::FaceDetec *ui;

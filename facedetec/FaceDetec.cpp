@@ -2,6 +2,7 @@
 #include "ui_FaceDetec.h"
 
 #include "FaceWorker.h"
+#include <QFileDialog>
 
 FaceDetec::FaceDetec(QWidget *parent) :
     QWidget(parent),
@@ -22,7 +23,23 @@ FaceDetec::~FaceDetec()
 
 void FaceDetec::on_pbload_clicked()
 {
-    QByteArray file = "E:/test.jpg";
+    QString file;
 
-    emit DoWork(1, file);
+    file = QFileDialog::getOpenFileName(this, "boy", "./", "ALL FILE(*.*)");
+    ui->fncode->setText(file);
+    emit DoWork(1, file.toLocal8Bit());
+}
+
+void FaceDetec::on_phload_clicked()
+{
+    QString file;
+
+    file = QFileDialog::getOpenFileName(this, "boy", "./", "ALL FILE(*.*)");
+    ui->fnphoto->setText(file);
+    emit DoWork(2, file.toLocal8Bit());
+}
+
+void FaceDetec::on_detec_clicked()
+{
+   emit DoWork(3);
 }
