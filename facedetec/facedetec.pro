@@ -15,7 +15,10 @@ INCLUDEPATH += E:\opencv\build\install\include
 QMAKE_LIBDIR += E:\opencv\build\install\x86\mingw\lib
 
 LIBS += libopencv_objdetect320.dll \
-        libopencv_core320.dll
+        libopencv_core320.dll      \
+        libopencv_imgcodecs320.dll \
+        libopencv_imgproc320.dll   \
+        libopencv_highgui320.dll   \
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -25,7 +25,7 @@ void FaceDetec::on_pbload_clicked()
 {
     QString file;
 
-    file = QFileDialog::getOpenFileName(this, "boy", "./", "ALL FILE(*.*)");
+    file = QFileDialog::getOpenFileName(this, "特征码", "./", "ALL FILE(*.*)");
     ui->fncode->setText(file);
     emit DoWork(1, file.toLocal8Bit());
 }
@@ -34,7 +34,7 @@ void FaceDetec::on_phload_clicked()
 {
     QString file;
 
-    file = QFileDialog::getOpenFileName(this, "boy", "./", "ALL FILE(*.*)");
+    file = QFileDialog::getOpenFileName(this, "图片", "./", "ALL FILE(*.*)");
     ui->fnphoto->setText(file);
     emit DoWork(2, file.toLocal8Bit());
 }

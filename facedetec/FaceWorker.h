@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QThread>
 
-#include <opencv2/objdetect.hpp>
+#include <opencv2/opencv.hpp>
 using namespace cv;
 
 class QImage;
@@ -26,11 +26,12 @@ public slots:
 private:
     void LoadCode(QByteArray &file);
     void LoadImage(QByteArray &file);
+    void FaceDetec();
 
 private:
     QThread thread;
     cv::CascadeClassifier cascade;
-    QImage *image;
+    cv::Mat image;
 };
 
 #endif // FACEWORKER_H
