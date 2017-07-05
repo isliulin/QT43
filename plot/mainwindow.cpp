@@ -97,6 +97,7 @@ void MainWindow::initPlot()
   ui->wtPlot->addGraph();
   ui->wtPlot->xAxis->setRange(0, 1);
   ui->wtPlot->yAxis->setRange(0, 4096*2, Qt::AlignCenter);
+  ui->wtPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 }
 
 void MainWindow::exitTransfer()
@@ -193,4 +194,34 @@ void MainWindow::on_toolButton_clicked()
 void MainWindow::on_actionClear_triggered()
 {
 
+}
+
+void MainWindow::plot(short y)
+{
+    static double x = 0;
+    for (int i = 0; i < 10; i ++)
+    {
+        ui->wtPlot->graph()->addData(x, y);
+        x += (double)1/1000;
+    }
+
+    if (x > ui->wtPlot->xAxis->range().upper)
+    {
+        ui->wtPlot->xAxis->setRange(x - 0.99, x + 0.01);
+    }
+    ui->wtPlot->replot();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+
+plot(100);
+
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+
+plot(400);
 }

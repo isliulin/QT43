@@ -96,9 +96,14 @@ private slots:
 
     void on_actionClear_triggered();
 
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
 private:
     void initActionsConnections();
     void initPlot();
+    void plot(short y);
 
 private:
     void showStatusMessage(const QString &message);
