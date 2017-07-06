@@ -96,10 +96,6 @@ private slots:
 
     void on_actionClear_triggered();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
 private:
     void initActionsConnections();
     void initPlot();
@@ -113,7 +109,8 @@ private:
     SettingsDialog *settings;
     QSerialPort *serial;
     bool m_modemEn;
-    QTimer *modemCheck;
+    QByteArray mRemain;
+    double mX;
 };
 
 #endif // MAINWINDOW_H

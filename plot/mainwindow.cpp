@@ -94,10 +94,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::initPlot()
 {
-  ui->wtPlot->addGraph();
-  ui->wtPlot->xAxis->setRange(0, 1);
-  ui->wtPlot->yAxis->setRange(0, 4096*2, Qt::AlignCenter);
-  ui->wtPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    mX = 0;
+    ui->wtPlot->addGraph();
+    ui->wtPlot->xAxis->setRange(0, 0.2);
+    ui->wtPlot->yAxis->setRange(0, 4096*2, Qt::AlignCenter);
+    ui->wtPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 }
 
 void MainWindow::exitTransfer()
@@ -157,9 +158,33 @@ void MainWindow::writeData(const QByteArray &data)
 
 void MainWindow::readData()
 {
-    QByteArray data = serial->readAll();
+    QByteArray data;
+    int cnt;
+    short *y;
+    double step;
 
-    //qDebug(tmp.toStdString().c_str());
+    data = mRemain;
+    data += serial->readAll();
+
+    if (data.size()%2 != 0)
+    {
+        mRemain = data.remove(data.size() - 1, 1);
+    }
+
+    step = (double)1/ui->samRate->value();
+    y = (short*)data.data();
+    for (int i = 0; i < data.size(); i += 2)
+    {
+        ui->wtPlot->graph()->addData(mX, *y);
+        mX += step;
+        y ++;
+    }
+
+    if (mX > ui->wtPlot->xAxis->range().upper)
+    {
+        ui->wtPlot->xAxis->setRange(mX - 0.19, mX + 0.01);
+    }
+    ui->wtPlot->replot();
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -183,7 +208,7 @@ void MainWindow::initActionsConnections()
 
 void MainWindow::showStatusMessage(const QString &message)
 {
-    status->setText(message);
+    statusBar()->showMessage(message);
 }
 
 void MainWindow::on_toolButton_clicked()
@@ -210,18 +235,4 @@ void MainWindow::plot(short y)
         ui->wtPlot->xAxis->setRange(x - 0.99, x + 0.01);
     }
     ui->wtPlot->replot();
-}
-
-
-void MainWindow::on_pushButton_clicked()
-{
-
-plot(100);
-
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-
-plot(400);
 }
