@@ -68,6 +68,82 @@
      <number>8000</number>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>530</y>
+      <width>64</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>数据类型</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>530</y>
+      <width>131</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>short(2byte)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>char(1byte)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>int(4byte)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>float(4byte)</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>530</y>
+      <width>32</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>格式</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>530</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>LE</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>BE</string>
+     </property>
+    </item>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
