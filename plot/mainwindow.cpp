@@ -97,7 +97,7 @@ void MainWindow::initPlot()
     mX = 0;
     ui->wtPlot->addGraph();
     ui->wtPlot->xAxis->setRange(0, 0.2);
-    ui->wtPlot->yAxis->setRange(0, 4096*2, Qt::AlignCenter);
+    ui->wtPlot->yAxis->setRange(0, 6, Qt::AlignCenter);
     ui->wtPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 }
 
@@ -162,6 +162,7 @@ void MainWindow::readData()
     int cnt;
     short *y;
     double step;
+    double scale;
 
     data = mRemain;
     data += serial->readAll();
@@ -173,9 +174,11 @@ void MainWindow::readData()
 
     step = (double)1/ui->samRate->value();
     y = (short*)data.data();
+    scale = ui->Scale->value();
+
     for (int i = 0; i < data.size(); i += 2)
     {
-        ui->wtPlot->graph()->addData(mX, *y);
+        ui->wtPlot->graph()->addData(mX, *y * scale);
         mX += step;
         y ++;
     }
