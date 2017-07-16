@@ -16,6 +16,7 @@ public:
     ~PhView();
 
     void moveCenter(int x, int y);
+    void moveX(int x);
 
 private:
     Ui::PhView *ui;

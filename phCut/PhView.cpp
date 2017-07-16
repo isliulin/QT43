@@ -25,3 +25,14 @@ void PhView::moveCenter(int x, int y)
     ui->cutRect->move(x - w/2, y - h/2);
 }
 
+void PhView::moveX(int x)
+{
+    QPoint pos;
+    int w;
+
+    w = ui->cutRect->width();
+    pos = ui->cutRect->pos();
+    pos.setX(x - w/2);
+    ui->cutRect->move(pos);
+}
+
