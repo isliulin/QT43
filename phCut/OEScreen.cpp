@@ -298,7 +298,7 @@ void OEScreen::onMouseChange(int x, int y)
     parentWidget()->update();
 }
 
-QRect OEScreen::rect()
+QRect OEScreen::rectCut()
 {
     return currentRect_;
 }
