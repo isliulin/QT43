@@ -10,15 +10,26 @@ bool FaceDetec::loadCode(QByteArray &file)
     return cascade.load(String(file.data()));
 }
 
-void FaceDetec::loadImage(QByteArray &file)
+QImage* FaceDetec::loadImage(QString &file)
 {
-    cvimg = imread(String(file.data()), cv::IMREAD_UNCHANGED);
+    cvimg = imread(String(file.toLocal8Bit().data()), cv::IMREAD_UNCHANGED);
+    qimg.load(file);
+
+    return &qimg;
+}
+
+QImage* FaceDetec::qimage()
+{
+    return &qimg;
 }
 
 bool FaceDetec::detecFace(QPoint &center)
 {
     std::vector<Rect> faces;
     Mat frame_gray;
+
+    if (cascade.empty())
+        return false;
 
     cvtColor(cvimg, frame_gray, CV_BGR2GRAY);
     equalizeHist(frame_gray, frame_gray);

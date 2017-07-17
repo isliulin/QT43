@@ -21,6 +21,8 @@ public:
 
     ~OEScreen() {}
 
+    QRect rect();
+
 signals:
 
 

@@ -297,3 +297,8 @@ void OEScreen::onMouseChange(int x, int y)
     /// 改变大小后更新父窗口，防止父窗口未及时刷新而导致的问题
     parentWidget()->update();
 }
+
+QRect OEScreen::rect()
+{
+    return currentRect_;
+}

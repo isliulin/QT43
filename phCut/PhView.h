@@ -17,6 +17,7 @@ public:
 
     void moveCenter(int x, int y);
     void moveX(int x);
+    QRect getCutRect();
 
 private:
     Ui::PhView *ui;

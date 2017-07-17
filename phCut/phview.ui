@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
-    <height>413</height>
+    <width>599</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,10 +28,10 @@
   <widget class="OEScreen" name="cutRect" native="true">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>10</y>
+     <x>170</x>
+     <y>20</y>
      <width>251</width>
-     <height>351</height>
+     <height>309</height>
     </rect>
    </property>
   </widget>

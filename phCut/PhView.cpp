@@ -36,3 +36,7 @@ void PhView::moveX(int x)
     ui->cutRect->move(pos);
 }
 
+QRect PhView::getCutRect()
+{
+
+}

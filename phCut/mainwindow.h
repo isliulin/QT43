@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class FaceDetec;
+class PhFinder;
 
 namespace Ui {
 class MainWindow;
@@ -20,11 +21,27 @@ public:
     void moveSelRect(QPoint &center, QSize &imgs, QSize views);
 
 private slots:
+    void phFinded(QString file);
+    void faceDetec(int index);
+
+private slots:
     void on_pbOk_clicked();
+
+    void on_btSelDir_clicked();
+
+    void on_btFindPh_clicked();
+
+    void on_sizeLock_clicked(bool checked);
+
+    void on_listFile_doubleClicked(const QModelIndex &index);
+
+    void on_btNext_clicked();
 
 private:
     Ui::MainWindow *ui;
     FaceDetec *facedetec;
+    PhFinder *finder;
+    int curfile;
 };
 
 #endif // MAINWINDOW_H
