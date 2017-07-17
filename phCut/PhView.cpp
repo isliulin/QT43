@@ -38,5 +38,5 @@ void PhView::moveX(int x)
 
 QRect PhView::getCutRect()
 {
-
+    return *ui->cutRect->rectCut();
 }

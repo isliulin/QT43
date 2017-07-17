@@ -5,6 +5,7 @@
 
 class FaceDetec;
 class PhFinder;
+class QLabel;
 
 namespace Ui {
 class MainWindow;
@@ -37,11 +38,14 @@ private slots:
 
     void on_btNext_clicked();
 
+    void on_btSave_clicked();
+
 private:
     Ui::MainWindow *ui;
     FaceDetec *facedetec;
     PhFinder *finder;
     int curfile;
+    QLabel *showCut;
 };
 
 #endif // MAINWINDOW_H

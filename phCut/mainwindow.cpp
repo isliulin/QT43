@@ -4,6 +4,8 @@
 #include "FaceDetec.h"
 #include "PhFinder.h"
 #include <QFileDialog>
+#include <QLabel>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QByteArray code("test.xml");
 
     facedetec->loadCode(code);
+
+    showCut = new QLabel(this);
+    showCut->hide();
+    showCut->resize(ui->phView->size());
+    showCut->move(ui->phView->pos());
+    showCut->setFrameShape(QFrame::Box);
+    showCut->setAlignment(Qt::AlignLeading|Qt::AlignHCenter|Qt::AlignVCenter);
+
 }
 
 MainWindow::~MainWindow()
@@ -140,4 +150,28 @@ void MainWindow::on_btNext_clicked()
 
         ui->btNext->setEnabled(true);
     }
+}
+
+void MainWindow::on_btSave_clicked()
+{
+    QRect rc;
+    QImage *img;
+    QString fn("save.jpg");
+    QSize sizei, sizev;
+    int x, y, w, h;
+    float sw, sh;
+
+    rc = ui->phView->getCutRect();
+
+    img = facedetec->qimage();
+    sizei = img->size();
+    sizev = ui->phView->pixmap()->size();
+
+    sw = (float)sizei.width()/sizev.width();
+    sh = (float)sizei.height()/sizev.height();
+    x = rc.x() * sw;
+    y = rc.y() * sh;
+    w = rc.width() * sw;
+    h = rc.height() *sh;
+    img->copy(x, y, w, h).save(fn);
 }

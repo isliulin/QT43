@@ -21,7 +21,7 @@ public:
 
     ~OEScreen() {}
 
-    QRect rectCut();
+    QRect* rectCut();
 
 signals:
 
