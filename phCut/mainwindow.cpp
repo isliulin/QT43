@@ -7,13 +7,15 @@
 #include <QLabel>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     curfile(0),
     isEditing(false),
-    isSaved(true)
+    isSaved(true),
+    isCuted(true)
 {
     ui->setupUi(this);
 
@@ -43,19 +45,34 @@ void MainWindow::phFinded(QString file)
     ui->phCnt->setText(cnt);
 }
 
-void MainWindow::faceDetec(int index)
+bool MainWindow::faceDetec(int index)
 {
     QPoint center;
     float sfw, sfh;
 
     if (index >= ui->listFile->count())
-        return;
+        return false;
 
     if (!isSaved)
     {
         statusBar()->showMessage("照片未保存", 2000);
-        return;
+        return false;
     }
+
+    if (!isCuted)
+    {
+        QMessageBox::StandardButton sb;
+
+        sb = QMessageBox::information(this,
+                                 "下一张",
+                                 "要放弃剪裁这张图片吗?",
+                                 QMessageBox::Yes | QMessageBox::No,
+                                 QMessageBox::No);
+
+        if (sb == QMessageBox::No)
+            return false;
+    }
+    isCuted = false;
 
     ui->listFile->setCurrentRow(index);
     curFileName = ui->listFile->item(index)->text();
@@ -77,6 +94,8 @@ void MainWindow::faceDetec(int index)
 
     cnt = cnt.sprintf("%d", curfile + 1);
     ui->phDone->setText(cnt);
+
+    return true;
 }
 
 void MainWindow::on_btOk_clicked()
@@ -92,6 +111,7 @@ void MainWindow::doCut()
     if (isEditing)
         return;
 
+    isCuted = true;
     isSaved = false;
     isEditing = true;
     img = ui->phView->getCutImage(*facedetec->qimage(), 358, 441);
@@ -159,15 +179,7 @@ void MainWindow::on_sizeLock_clicked(bool checked)
 
 void MainWindow::on_listFile_doubleClicked(const QModelIndex &index)
 {
-    QString file;
 
-    file = ui->listFile->item(index.row())->text();
-    QImage img;
-
-    img.load(file);
-
-    img = img.scaled(ui->phView->size(), Qt::KeepAspectRatio);
-    ui->phView->setPixmap(QPixmap::fromImage(img));
 }
 
 void MainWindow::on_btNext_clicked()
@@ -176,8 +188,8 @@ void MainWindow::on_btNext_clicked()
     {
         ui->btNext->setEnabled(false);
 
-        faceDetec(curfile);
-        curfile ++;
+        if (faceDetec(curfile))
+            curfile ++;
 
         ui->btNext->setEnabled(true);
     }

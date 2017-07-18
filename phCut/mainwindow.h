@@ -26,7 +26,7 @@ private:
 
 private slots:
     void phFinded(QString file);
-    void faceDetec(int index);
+    bool faceDetec(int index);
     void saveCut();
     void doCut();
 
@@ -53,6 +53,7 @@ private:
     QLabel *showCut;
     bool isEditing;
     bool isSaved;
+    bool isCuted;
     float scalefw;
     float scalefh;
     QString curFileName;
