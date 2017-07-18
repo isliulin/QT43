@@ -6,11 +6,14 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QDebug>
+#include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    curfile(0)
+    curfile(0),
+    isEditing(false),
+    isSaved(true)
 {
     ui->setupUi(this);
 
@@ -23,13 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     facedetec->loadCode(code);
 
-    showCut = new QLabel(this);
-    showCut->hide();
-    showCut->resize(ui->phView->size());
-    showCut->move(ui->phView->pos());
-    showCut->setFrameShape(QFrame::Box);
-    showCut->setAlignment(Qt::AlignLeading|Qt::AlignHCenter|Qt::AlignVCenter);
-
+    connect(ui->phView, SIGNAL(doubleClicked()), this, SLOT(doCut()));
 }
 
 MainWindow::~MainWindow()
@@ -48,24 +45,28 @@ void MainWindow::phFinded(QString file)
 
 void MainWindow::faceDetec(int index)
 {
-    QImage img;
-    QString file;
     QPoint center;
-    QSize sizei, sizev;
+    float sfw, sfh;
 
     if (index >= ui->listFile->count())
         return;
 
+    if (!isSaved)
+    {
+        statusBar()->showMessage("照片未保存", 2000);
+        return;
+    }
+
     ui->listFile->setCurrentRow(index);
-    file = ui->listFile->item(index)->text();
-    facedetec->loadImage(file);
-    img = facedetec->qimage()->scaled(ui->phView->size(), Qt::KeepAspectRatio);
-    sizei = facedetec->qimage()->size();
-    sizev = img.size();
-    ui->phView->setPixmap(QPixmap::fromImage(img));
+    curFileName = ui->listFile->item(index)->text();
+    facedetec->loadImage(curFileName);
+
+    ui->phView->showImage(*facedetec->qimage());
+    ui->phView->getScaleFactor(sfw, sfh);
+    ui->phView->setSize(358*sfw, 441*sfh);
     if (facedetec->detecFace(center))
     {
-        moveSelRect(center, sizei, sizev);
+        moveSelRect(center);
     }
     else
     {
@@ -74,21 +75,51 @@ void MainWindow::faceDetec(int index)
 
     QString cnt;
 
-    cnt = cnt.sprintf("%d", curfile);
+    cnt = cnt.sprintf("%d", curfile + 1);
     ui->phDone->setText(cnt);
 }
 
-void MainWindow::on_pbOk_clicked()
+void MainWindow::on_btOk_clicked()
 {
-
+    doCut();
 }
 
-void MainWindow::moveSelRect(QPoint &center, QSize &imgs, QSize views)
+void MainWindow::doCut()
 {
-    float r;
+    QRect cutr;
+    QImage *img;
 
-    r = (float)views.width()/imgs.width();
-    ui->phView->moveX(center.x()*r);
+    if (isEditing)
+        return;
+
+    isSaved = false;
+    isEditing = true;
+    img = ui->phView->getCutImage(*facedetec->qimage(), 358, 441);
+    ui->phView->showCut(*img);
+}
+
+void MainWindow::moveSelRect(QPoint &center)
+{
+    float sfw;
+    float sfh;
+
+    ui->phView->getScaleFactor(sfw, sfh);
+    ui->phView->moveCenter(center.x()*sfw, center.y()*sfh);
+}
+
+void MainWindow::saveCut()
+{
+    if (!isEditing)
+        return;
+
+    ui->btOk->setEnabled(false);
+
+    ui->phView->saveCut(curFileName);
+    isSaved = true;
+    isEditing = false;
+    ui->btOk->setEnabled(true);
+
+    statusBar()->showMessage("已保存", 1500);
 }
 
 void MainWindow::on_btSelDir_clicked()
@@ -99,6 +130,7 @@ void MainWindow::on_btSelDir_clicked()
     if (!dir.isEmpty())
     {
        ui->leFolder->setText(dir);
+       ui->btFindPh->setEnabled(true);
     }
 }
 
@@ -115,8 +147,9 @@ void MainWindow::on_btFindPh_clicked()
     {
         ui->listFile->clear();
         curfile = 0;
-        finder->findReq(path, 1000);
-    }
+        finder->findReq(path, 5000);
+        ui->btFindPh->setEnabled(false);
+    } 
 }
 
 void MainWindow::on_sizeLock_clicked(bool checked)
@@ -145,8 +178,6 @@ void MainWindow::on_btNext_clicked()
 
         faceDetec(curfile);
         curfile ++;
-        if (curfile == ui->listFile->count())
-            curfile = 0;
 
         ui->btNext->setEnabled(true);
     }
@@ -154,24 +185,17 @@ void MainWindow::on_btNext_clicked()
 
 void MainWindow::on_btSave_clicked()
 {
-    QRect rc;
-    QImage *img;
-    QString fn("save.jpg");
-    QSize sizei, sizev;
-    int x, y, w, h;
-    float sw, sh;
+    saveCut();
+}
 
-    rc = ui->phView->getCutRect();
-
-    img = facedetec->qimage();
-    sizei = img->size();
-    sizev = ui->phView->pixmap()->size();
-
-    sw = (float)sizei.width()/sizev.width();
-    sh = (float)sizei.height()/sizev.height();
-    x = rc.x() * sw;
-    y = rc.y() * sh;
-    w = rc.width() * sw;
-    h = rc.height() *sh;
-    img->copy(x, y, w, h).save(fn);
+void MainWindow::keyPressEvent(QKeyEvent *ke)
+{
+    if (ke->key() == Qt::Key_S)
+    {
+        on_btSave_clicked();
+    }
+    else if (ke->key() == Qt::Key_D)
+    {
+        on_btNext_clicked();
+    }
 }

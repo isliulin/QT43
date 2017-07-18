@@ -21,7 +21,8 @@ public:
 
     ~OEScreen() {}
 
-    QRect* rectCut();
+    QRect rectCut();
+    void setScaleFactor(int w, int h);
 
 signals:
 
@@ -64,6 +65,13 @@ protected:
         RIGHTLOWER,
         RIGHTUPPER,
         NONE
+    };
+
+    enum ChangeSide
+    {
+        CS_WIDTH,
+        CS_HEIGHT,
+        CS_BOTH
     };
 
 protected:
@@ -140,7 +148,7 @@ public slots:
      * @param : y 鼠标的纵向位置
      * @date  : 2017年04月16日
      */
-    void onMouseChange(int x,int y);
+    void onMouseChange(int x,int y, int cs);
 
     /**
      * @brief : 保存屏幕到剪切板中
@@ -180,6 +188,8 @@ private:
     QRect           currentRect_;
     /// 右键菜单对象
     QMenu           *menu_;
+    int scaleMode;
+    float scaleFactor;
 
 };
 

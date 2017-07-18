@@ -19,14 +19,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void moveSelRect(QPoint &center, QSize &imgs, QSize views);
+    void moveSelRect(QPoint &center);
+
+private:
+    void keyPressEvent(QKeyEvent *ke);
 
 private slots:
     void phFinded(QString file);
     void faceDetec(int index);
+    void saveCut();
+    void doCut();
 
 private slots:
-    void on_pbOk_clicked();
+    void on_btOk_clicked();
 
     void on_btSelDir_clicked();
 
@@ -46,6 +51,11 @@ private:
     PhFinder *finder;
     int curfile;
     QLabel *showCut;
+    bool isEditing;
+    bool isSaved;
+    float scalefw;
+    float scalefh;
+    QString curFileName;
 };
 
 #endif // MAINWINDOW_H

@@ -6,18 +6,18 @@
 OEScreen::OEScreen(QWidget *parent)
     : QWidget(parent),
       direction_(NONE),
-      isPressed_(false)
+      isPressed_(false),
+      scaleFactor(1),
+      scaleMode(1)
 {
     menu_ = new QMenu(this);
     menu_->addAction(QStringLiteral("完成"), this, SLOT(onSaveScreen()));
     menu_->addSeparator();
     menu_->addAction(QStringLiteral("退出"), this, SLOT(quitScreenshot()));
 
-    /// 双击即完成
-    connect(this, SIGNAL(doubleClick()), this, SLOT(onSaveScreen()));
-
     /// 开启鼠标实时追踪
     setMouseTracking(true);
+    scaleFactor = (float)358/441;
 }
 
 OEScreen::DIRECTION OEScreen::getRegion(const QPoint &cursor)
@@ -172,18 +172,18 @@ void OEScreen::mouseMoveEvent(QMouseEvent * e)
             /// 鼠标进行拖拉拽
             switch(direction_) {
             case LEFT:
-                return onMouseChange(global_x, pt_ll.y() + 1);
+                return onMouseChange(global_x, pt_ll.y() + 1, CS_WIDTH);
             case RIGHT:
-                return onMouseChange(global_x, pt_rl.y() + 1);
+                return onMouseChange(global_x, pt_rl.y() + 1, CS_WIDTH);
             case UPPER:
-                return onMouseChange(pt_lu.x(), gloPoint.y());
+                return onMouseChange(pt_lu.x(), gloPoint.y(), CS_HEIGHT);
             case LOWER:
-                return onMouseChange(pt_rl.x() + 1, gloPoint.y());
+                return onMouseChange(pt_rl.x() + 1, gloPoint.y(), CS_HEIGHT);
             case LEFTUPPER:
             case RIGHTUPPER:
             case LEFTLOWER:
             case RIGHTLOWER:
-                return onMouseChange(global_x, gloPoint.y());
+                return onMouseChange(global_x, gloPoint.y(), CS_HEIGHT);
             default:
                 break;
             }
@@ -191,12 +191,25 @@ void OEScreen::mouseMoveEvent(QMouseEvent * e)
         else
         {
             /// 窗口的移动
-            /// @bug :这里可能存在问题, 不应当使用globalPos
-            move(e->globalPos() - movePos_);
+            QPoint p;
+
+            p = e->globalPos() - movePos_;
+            if (p.x() < 0)
+                p.setX(0);
+            if (p.y() < 0)
+                p.setY(0);
+
+            move(p);
             movePos_ = e->globalPos() - pos();
         }
     }
     currentRect_ = geometry();
+}
+
+void OEScreen::setScaleFactor(int w, int h)
+{
+    scaleFactor = (float)w/h;
+    scaleMode = 1;
 }
 
 void OEScreen::moveEvent(QMoveEvent *)
@@ -278,19 +291,36 @@ void OEScreen::quitScreenshot(void)
     parentWidget()->close();
 }
 
-void OEScreen::onMouseChange(int x, int y)
+void OEScreen::onMouseChange(int x, int y, int cs)
 {
     show();
     if (x < 0 || y < 0)
     {
         return;
     }
-    const int& rx = (x >= originPoint_.x()) ? originPoint_.x() : x;
-    const int& ry = (y >= originPoint_.y()) ? originPoint_.y() : y;
-    const int& rw = abs(x - originPoint_.x());
-    const int& rh = abs(y - originPoint_.y());
-
+    int rx = (x >= originPoint_.x()) ? originPoint_.x() : x;
+    int ry = (y >= originPoint_.y()) ? originPoint_.y() : y;
+    int rw = abs(x - originPoint_.x());
+    int rh = abs(y - originPoint_.y());
+    qDebug("%d, %d, %d, %d", rx, ry, rw, rh);
     /// 改变大小
+    if (scaleMode == 1)
+    {
+        if (cs == CS_HEIGHT)
+        {
+            rw = rh*scaleFactor;
+        }
+        else
+        {
+            rh = rw/scaleFactor;
+        }
+    }
+
+    if (rx < 0)
+        rx = 0;
+    if (ry < 0)
+        ry = 0;
+
     currentRect_ = QRect(rx, ry, rw, rh);
 
     this->setGeometry(currentRect_);
@@ -298,7 +328,14 @@ void OEScreen::onMouseChange(int x, int y)
     parentWidget()->update();
 }
 
-QRect *OEScreen::rectCut()
+QRect OEScreen::rectCut()
 {
-    return &currentRect_;
+    QRect r;
+
+    r.setX(pos().x());
+    r.setY(pos().y());
+    r.setWidth(width());
+    r.setHeight(height());
+
+    return r;
 }

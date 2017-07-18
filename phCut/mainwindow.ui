@@ -27,7 +27,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbOk">
+   <widget class="QPushButton" name="btOk">
     <property name="geometry">
      <rect>
       <x>730</x>
@@ -45,8 +45,8 @@
      <rect>
       <x>320</x>
       <y>60</y>
-      <width>680</width>
-      <height>383</height>
+      <width>672</width>
+      <height>378</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -162,7 +162,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>保存</string>
+     <string>保存(S)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btNext">
@@ -175,7 +175,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>下一张</string>
+     <string>下一张(D)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
