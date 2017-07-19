@@ -23,6 +23,7 @@ public:
 
     QRect rectCut();
     void setScaleFactor(int w, int h);
+    void moveCenter(int cx, int cy);
 
 signals:
 

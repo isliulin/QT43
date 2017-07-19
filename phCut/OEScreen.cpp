@@ -203,6 +203,17 @@ void OEScreen::mouseMoveEvent(QMouseEvent * e)
     currentRect_ = geometry();
 }
 
+void OEScreen::moveCenter(int cx, int cy)
+{
+    QPoint p;
+
+    p.setX(cx - width()/2);
+    p.setY(cy - height()/2);
+
+    limitPos(p);
+    move(p);
+}
+
 void OEScreen::limitPos(QPoint &p)
 {
     int ph, pw;

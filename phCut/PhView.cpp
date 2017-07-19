@@ -27,12 +27,7 @@ PhView::~PhView()
 
 void PhView::moveCenter(int x, int y)
 {
-    int w, h;
-
-    w = ui->cutRect->rect().width();
-    h = ui->cutRect->rect().height();
-
-    ui->cutRect->move(x - w/2, y - h/2);
+    ui->cutRect->moveCenter(x, y);
 }
 
 void PhView::moveX(int x)

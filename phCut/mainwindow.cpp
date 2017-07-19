@@ -111,6 +111,9 @@ void MainWindow::doCut()
     if (isEditing)
         return;
 
+    if (curFileName.isEmpty())
+        return;
+
     isCuted = true;
     isSaved = false;
     isEditing = true;
@@ -130,14 +133,15 @@ void MainWindow::moveSelRect(QPoint &center)
 void MainWindow::saveCut()
 {
     if (!isEditing)
+    {
+        statusBar()->showMessage("已保存", 1500);
         return;
-
-    ui->btOk->setEnabled(false);
+    }
 
     ui->phView->saveCut(curFileName);
     isSaved = true;
     isEditing = false;
-    ui->btOk->setEnabled(true);
+    curFileName.clear();
 
     statusBar()->showMessage("已保存", 1500);
 }
