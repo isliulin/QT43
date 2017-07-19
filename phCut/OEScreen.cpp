@@ -194,16 +194,35 @@ void OEScreen::mouseMoveEvent(QMouseEvent * e)
             QPoint p;
 
             p = e->globalPos() - movePos_;
-            if (p.x() < 0)
-                p.setX(0);
-            if (p.y() < 0)
-                p.setY(0);
+            limitPos(p);
 
             move(p);
             movePos_ = e->globalPos() - pos();
         }
     }
     currentRect_ = geometry();
+}
+
+void OEScreen::limitPos(QPoint &p)
+{
+    int ph, pw;
+    QPoint prl;
+
+    ph = parentWidget()->height();
+    pw = parentWidget()->width();
+
+    if (p.x() < 0)
+        p.setX(0);
+    if (p.y() < 0)
+        p.setY(0);
+
+    prl.setX(p.x() + width());
+    prl.setY(p.y() + height());
+
+    if (prl.y() > ph)
+        p.setY(ph - height());
+    if (prl.x() > pw)
+        p.setX(pw - width());
 }
 
 void OEScreen::setScaleFactor(int w, int h)

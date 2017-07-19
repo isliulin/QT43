@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(finder, SIGNAL(finded(QString)), this, SLOT(phFinded(QString)));
     finder->start();
 
-    QByteArray code("test.xml");
+    QByteArray code("frontface.xml");
 
     facedetec->loadCode(code);
 

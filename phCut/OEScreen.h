@@ -172,6 +172,9 @@ protected slots:
     void quitScreenshot(void);
 
 private:
+    void limitPos(QPoint &pos);
+
+private:
     /// 窗口大小改变时，记录改变方向
     DIRECTION       direction_;
     /// 起点
