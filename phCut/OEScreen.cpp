@@ -338,11 +338,11 @@ void OEScreen::onMouseChange(int x, int y, int cs)
     {
         if (cs == CS_HEIGHT)
         {
-            rw = rh*scaleFactor;
+            rw = rh*scaleFactor + 0.5;
         }
         else
         {
-            rh = rw/scaleFactor;
+            rh = rw/scaleFactor + 0.5;
         }
     }
 
@@ -350,6 +350,10 @@ void OEScreen::onMouseChange(int x, int y, int cs)
         rx = 0;
     if (ry < 0)
         ry = 0;
+    if ((rx + rw) > parentWidget()->width())
+        return;
+    if ((ry + rh) > parentWidget()->height())
+        return;
 
     currentRect_ = QRect(rx, ry, rw, rh);
 
