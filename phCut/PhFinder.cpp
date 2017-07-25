@@ -9,8 +9,8 @@ PhFinder::PhFinder(QObject *parent)
       filecnt(0)
 {
     thread = new QThread;
-    connect(this, SIGNAL(findReq(QString,int)),
-            this, SLOT(findPhoto(QString,int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(findReq(QString,int,int)),
+            this, SLOT(findPhoto(QString,int,int)), Qt::QueuedConnection);
     moveToThread(thread);
 }
 
@@ -19,7 +19,7 @@ void PhFinder::start()
     thread->start();
 }
 
-void PhFinder::findPhoto(QString path, int max)
+void PhFinder::findPhoto(QString path, int maxcnt, int mins)
 {
     QString file;
     QDir dir(path);
@@ -46,11 +46,12 @@ void PhFinder::findPhoto(QString path, int max)
         QFileInfo file_info = dir_iterator.fileInfo();
 
         file = file_info.absoluteFilePath();
-        if (file_info.isDir() && (filecnt > max))
+        if (file_info.isDir() && (filecnt > maxcnt))
         {
+            emit finished();
             break;
         }
-        else if (file_info.size() > 30*1024)
+        else if (file_info.size() >= mins)
         {
             filecnt ++;
             emit finded(file);
@@ -58,4 +59,6 @@ void PhFinder::findPhoto(QString path, int max)
 
         thread->msleep(20);
     }
+
+    emit finished();
 }

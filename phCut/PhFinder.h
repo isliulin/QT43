@@ -15,15 +15,16 @@ public:
     void start();
 
 signals:
-    void findReq(QString dir, int max);
+    void findReq(QString dir, int max, int mins);
     void finded(QString file);
+    void finished();
 
 public slots:
-    void findPhoto(QString dir, int max);
+    void findPhoto(QString dir, int maxcnt, int mins = 0);
 
 private:
     QThread *thread;
-    uint32_t filecnt;
+    int filecnt;
 };
 
 #endif // PHFINDER_H

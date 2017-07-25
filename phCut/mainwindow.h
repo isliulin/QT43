@@ -26,6 +26,7 @@ private:
 
 private slots:
     void phFinded(QString file);
+    void findFinished();
     bool faceDetec(int index);
     void saveCut();
     void doCut();

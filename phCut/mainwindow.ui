@@ -88,7 +88,7 @@
    <widget class="QSpinBox" name="phWidth">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>810</x>
       <y>10</y>
       <width>51</width>
       <height>22</height>
@@ -107,7 +107,7 @@
    <widget class="QSpinBox" name="phHeight">
     <property name="geometry">
      <rect>
-      <x>660</x>
+      <x>870</x>
       <y>10</y>
       <width>51</width>
       <height>22</height>
@@ -126,7 +126,7 @@
    <widget class="QCheckBox" name="sizeLock">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>920</x>
       <y>10</y>
       <width>71</width>
       <height>21</height>
@@ -234,6 +234,32 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="minFleSize">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>10</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>20</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>10</y>
+      <width>96</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>最小文件大小(KB)</string>
     </property>
    </widget>
   </widget>

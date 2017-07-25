@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     facedetec = new FaceDetec;
     finder = new PhFinder;
     connect(finder, SIGNAL(finded(QString)), this, SLOT(phFinded(QString)));
+    connect(finder, SIGNAL(finished()), this, SLOT(findFinished(QString)));
     finder->start();
 
     QByteArray code("frontface.xml");
@@ -155,6 +156,7 @@ void MainWindow::on_btSelDir_clicked()
     {
        ui->leFolder->setText(dir);
        ui->btFindPh->setEnabled(true);
+       ui->btFindPh->setText(QString("查找图片"));
     }
 }
 
@@ -171,9 +173,15 @@ void MainWindow::on_btFindPh_clicked()
     {
         ui->listFile->clear();
         curfile = 0;
-        finder->findReq(path, 5000);
+        finder->findReq(path, 5000, ui->minFleSize->value() * 1024);
         ui->btFindPh->setEnabled(false);
+        ui->btFindPh->setText(QString("查找中.."));
     } 
+}
+
+void MainWindow::findFinished()
+{
+    ui->btFindPh->setText(QString("查找结束"));
 }
 
 void MainWindow::on_sizeLock_clicked(bool checked)
