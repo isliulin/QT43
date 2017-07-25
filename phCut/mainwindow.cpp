@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     facedetec = new FaceDetec;
     finder = new PhFinder;
     connect(finder, SIGNAL(finded(QString)), this, SLOT(phFinded(QString)));
-    connect(finder, SIGNAL(finished()), this, SLOT(findFinished(QString)));
+    connect(finder, SIGNAL(finished()), this, SLOT(findFinished()));
     finder->start();
 
     QByteArray code("frontface.xml");
@@ -50,6 +50,7 @@ bool MainWindow::faceDetec(int index)
 {
     QPoint center;
     float sfw, sfh;
+    int wlock, hlock;
 
     if (index >= ui->listFile->count())
         return false;
@@ -79,9 +80,12 @@ bool MainWindow::faceDetec(int index)
     curFileName = ui->listFile->item(index)->text();
     facedetec->loadImage(curFileName);
 
+    wlock = ui->phWidth->value();
+    hlock = ui->phHeight->value();
+
     ui->phView->showImage(*facedetec->qimage());
     ui->phView->getScaleFactor(sfw, sfh);
-    ui->phView->setSize(358*sfw, 441*sfh);
+    ui->phView->setSize(wlock*sfw, hlock*sfh);
     if (facedetec->detecFace(center))
     {
         moveSelRect(center);
@@ -176,17 +180,28 @@ void MainWindow::on_btFindPh_clicked()
         finder->findReq(path, 5000, ui->minFleSize->value() * 1024);
         ui->btFindPh->setEnabled(false);
         ui->btFindPh->setText(QString("查找中.."));
+        ui->btSelDir->setEnabled(false);
     } 
 }
 
 void MainWindow::findFinished()
 {
     ui->btFindPh->setText(QString("查找结束"));
+    ui->btSelDir->setEnabled(true);
 }
 
 void MainWindow::on_sizeLock_clicked(bool checked)
 {
-
+    if (checked)
+    {
+        ui->phWidth->setEnabled(false);
+        ui->phHeight->setEnabled(false);
+    }
+    else
+    {
+        ui->phWidth->setEnabled(true);
+        ui->phHeight->setEnabled(true);
+    }
 }
 
 void MainWindow::on_listFile_doubleClicked(const QModelIndex &index)

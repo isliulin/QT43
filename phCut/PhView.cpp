@@ -108,4 +108,5 @@ void PhView::getScaleFactor(float &sfw, float &sfh)
 void PhView::setSize(int w, int h)
 {
     ui->cutRect->resize(w, h);
+    ui->cutRect->setScaleFactor(w, h);
 }
