@@ -43,8 +43,15 @@ void MainWindow::on_pushButton_4_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
     SesList sl;
+    Session ses;
 
     prjFile->GetSessionList(sl);
+
+    for (int i = 0; i < sl.count(); i ++)
+    {
+        ses = sl.at(i);
+        qDebug("%s", ses.type.toStdString().c_str());
+    }
 }
 
 void MainWindow::on_pushButton_clicked()

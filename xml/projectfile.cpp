@@ -96,9 +96,9 @@ bool ProjectFile::GetSessionList(SesList &sl)
             ses.name = sesEle.attribute("name");
 
             getSession(sesEle, ses);
-        }
 
-        sl.append(ses);
+            sl.append(ses);
+        }
     }
 
     return ret;
